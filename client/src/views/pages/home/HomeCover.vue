@@ -1,17 +1,29 @@
 <template>
-    <div id="cover">
-        <v-carousel height="100%" cycle hide-delimiter-background :show-arrows="false">
-            <v-carousel-item v-for=" item  in  items " :key="item" :src="require(`@/assets/imgs/cover${item}.jpg`)">
-            </v-carousel-item>
-        </v-carousel>
+    <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img :src="require('@/assets/imgs/cover1.jpg')" class="d-block w-100" alt="...">
+            </div>
+            <div class="carousel-item">
+                <img :src="require('@/assets/imgs/cover2.jpg')" class="d-block w-100" alt="...">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying"
+            data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying"
+            data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
 
 // ------------------------- Khai báo biến ---------------------------
-const items = ref(2);
 
 // ------------------------- Lifecycle --------------------------------
 
@@ -23,17 +35,7 @@ const items = ref(2);
 </script>
 
 <style scoped>
-#cover {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    background-color: var(--color-white);
+.carousel-inner {
     border-radius: var(--border-radius-page);
-    padding: 10px;
-}
-
-#cover>img {
-    object-fit: cover;
-    width: 100%;
 }
 </style>

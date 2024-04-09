@@ -1,5 +1,6 @@
 @import url(./grid.css);
 @import "~@fortawesome/fontawesome-free/css/all.min.css";
+@import "bootstrap/dist/css/bootstrap.min.css";
 
 :root {
     --color-primary: #006fff;
@@ -45,6 +46,11 @@
     font-size: 14px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     box-sizing: border-box;
+}
+
+p,
+pre {
+    margin: 0;
 }
 
 .line {

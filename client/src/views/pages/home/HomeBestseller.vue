@@ -5,7 +5,7 @@
             <router-link to="">Xem thêm <i class="fa-solid fa-chevron-right"></i></router-link>
         </div>
         <div class="product row sm-gutter">
-            <div class="col l-2 m-4 c-5"
+            <div class="col-2"
                 v-for="(item) in ['Iphone 15 Iphone 15 Iphone 15 Iphone 15 15 Iphone 1515 Iphone 15 ', 'Iphone 13', 'Laptop Acer', '4', '5', '6']"
                 :key="item">
                 <router-link :to="{ name: 'DetailProduct', params: { id: item } }" :title="item" class="product-item">

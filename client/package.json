@@ -13,6 +13,7 @@
     "@mdi/font": "5.9.55",
     "@vuepic/vue-datepicker": "^7.4.1",
     "axios": "^1.6.5",
+    "bootstrap": "^5.3.3",
     "core-js": "^3.8.3",
     "lodash": "^4.17.21",
     "moment": "^2.30.1",

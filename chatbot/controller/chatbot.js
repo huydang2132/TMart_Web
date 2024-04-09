@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const MODEL_NAME = "tunedModels/tmartprompt-attj80qw9r2s";
+const MODEL_NAME = "gemini-1.0-pro";
 const API_KEY = process.env.API_KEY;
 
 const genAI = new GoogleGenerativeAI(API_KEY);

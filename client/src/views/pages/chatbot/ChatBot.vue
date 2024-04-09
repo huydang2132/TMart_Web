@@ -12,6 +12,8 @@
                 <div class="body-content" ref="contentBox" @click="handleClickContentbox">
                     <div v-for="(item, index) in data" :key="index"
                         :class="[item.role == 'user' ? 'contentUser' : 'contentSystem', 'content-item']">
+                        <!-- <span class="time">{{ `${new Date(Date.now()).getHours()} : ${new
+            Date(Date.now()).getMinutes()}` }}</span> -->
                         <div class="content-data">
                             <pre>{{ item.content }}</pre>
                         </div>
@@ -113,7 +115,7 @@ const handleClickContentbox = () => {
     width: 55px;
     height: 55px;
     cursor: pointer;
-    z-index: 220;
+    z-index: 500;
     position: relative;
 }
 
@@ -129,7 +131,7 @@ const handleClickContentbox = () => {
 }
 
 .chatbot-box {
-    z-index: 200;
+    z-index: 500;
     width: var(--width-chat-box);
     height: var(--height-chat-box);
     background-color: var(--color-white);

@@ -1,0 +1,21 @@
+package com.project.tmartweb.models.dtos;
+
+import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.UUID;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+public class ImageProductDTO {
+    private String imageName;
+
+    private String url;
+
+    private UUID productId;
+}

@@ -4,7 +4,7 @@
             <h4>Điện thoại</h4>
         </div>
         <div class="product row sm-gutter">
-            <div class="col l-2 m-4 c-5" v-for="(item) in ['111', '222', '333', '4', '5', '6', '444', '555']" :key="item">
+            <div class="col-2" v-for="(item) in ['111', '222', '333', '4', '5', '6', '444', '555']" :key="item">
                 <router-link :to="{ name: 'DetailProduct', params: { id: item } }" :title="item" class="product-item">
                     <div class="product-img">
                         <p class="discount">-25%</p>

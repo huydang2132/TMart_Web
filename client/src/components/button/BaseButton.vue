@@ -1,5 +1,6 @@
 <template>
-    <button :style="'color:' + props.color" ref="refBtn" :class="[btnType(props.type), { 'focus-visible': focusVisible }]">
+    <button :style="'color:' + props.color" ref="refBtn"
+        :class="[btnType(props.type), { 'focus-visible': focusVisible }]">
         <i v-if="icon != null" :class="[icon]" :style="'color:' + props.color"></i>
         {{ props.value }}
         <slot></slot>
