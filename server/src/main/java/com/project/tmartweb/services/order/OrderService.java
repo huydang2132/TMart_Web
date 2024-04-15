@@ -1,15 +1,17 @@
-package com.project.tmartweb.services.imp;
+package com.project.tmartweb.services.order;
 
 import com.project.tmartweb.enums.OrderStatus;
-import com.project.tmartweb.exceptions.DataNotFoundException;
+import com.project.tmartweb.exceptions.NotFoundException;
 import com.project.tmartweb.models.dtos.OrderDTO;
 import com.project.tmartweb.models.entities.Coupon;
 import com.project.tmartweb.models.entities.Order;
 import com.project.tmartweb.models.entities.User;
 import com.project.tmartweb.repositories.OrderRepository;
-import com.project.tmartweb.services.IOrderService;
+import com.project.tmartweb.services.coupon.CouponService;
+import com.project.tmartweb.services.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,7 +55,7 @@ public class OrderService implements IOrderService {
 
     @Override
     public List<Order> getAll() {
-        return orderRepository.findAll();
+        return orderRepository.findAll(Sort.by("createdAt").descending());
     }
 
     @Override
@@ -63,6 +65,11 @@ public class OrderService implements IOrderService {
 
     @Override
     public Order getById(UUID id) {
-        return findById(id).orElseThrow(() -> new DataNotFoundException("Đơn hàng không tôn tại!", "Order not found"));
+        return findById(id).orElseThrow(() -> new NotFoundException("Đơn hàng không tôn tại!", "Order not found"));
+    }
+
+    @Override
+    public List<Order> findByUserId(UUID userId) {
+        return orderRepository.findByUserId(userId);
     }
 }

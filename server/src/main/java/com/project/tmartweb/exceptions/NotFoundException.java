@@ -6,20 +6,20 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter
-public class DataNotFoundException extends RuntimeException {
+public class NotFoundException extends RuntimeException {
     private HttpStatus status;
 
     private String userMessage;
 
     private String devMessage;
 
-    public DataNotFoundException(String devMessage) {
+    public NotFoundException(String devMessage) {
         super(devMessage);
         this.status = HttpStatus.NOT_FOUND;
         this.devMessage = devMessage;
     }
 
-    public DataNotFoundException(String userMessage, String devMessage) {
+    public NotFoundException(String userMessage, String devMessage) {
         super(devMessage);
         this.status = HttpStatus.NOT_FOUND;
         this.userMessage = userMessage;

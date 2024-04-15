@@ -2,7 +2,7 @@ package com.project.tmartweb.web.controllers;
 
 import com.project.tmartweb.models.dtos.ImageProductDTO;
 import com.project.tmartweb.models.entities.ImageProduct;
-import com.project.tmartweb.services.IProductService;
+import com.project.tmartweb.services.product.IProductService;
 import com.project.tmartweb.models.dtos.ProductDTO;
 import com.project.tmartweb.models.entities.Product;
 import jakarta.validation.Valid;

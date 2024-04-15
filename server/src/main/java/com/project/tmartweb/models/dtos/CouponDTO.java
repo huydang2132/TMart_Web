@@ -17,7 +17,7 @@ import java.sql.Timestamp;
 @Setter
 public class CouponDTO extends BaseDTO {
     @NotBlank(message = "Mã giảm giá không được để trống!")
-    private String couponCode;
+    private String code;
 
     private double discount;
 

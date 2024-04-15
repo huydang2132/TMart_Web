@@ -19,3 +19,6 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 api:
   prefix: api/v1
+jwt:
+  expiration: 604800 # 7 days
+  secretKey: Danghuy2132@!

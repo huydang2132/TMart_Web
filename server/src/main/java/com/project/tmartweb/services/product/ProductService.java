@@ -1,15 +1,15 @@
-package com.project.tmartweb.services.imp;
+package com.project.tmartweb.services.product;
 
 import com.project.tmartweb.exceptions.InvalidParamException;
 import com.project.tmartweb.repositories.ImageProductRepository;
 import com.project.tmartweb.repositories.ProductRepository;
-import com.project.tmartweb.services.IProductService;
-import com.project.tmartweb.exceptions.DataNotFoundException;
+import com.project.tmartweb.exceptions.NotFoundException;
 import com.project.tmartweb.models.dtos.ImageProductDTO;
 import com.project.tmartweb.models.dtos.ProductDTO;
 import com.project.tmartweb.models.entities.Category;
 import com.project.tmartweb.models.entities.ImageProduct;
 import com.project.tmartweb.models.entities.Product;
+import com.project.tmartweb.services.category.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -60,7 +60,7 @@ public class ProductService implements IProductService {
 
     @Override
     public List<Product> getAll() {
-        return productRepository.findAllByDeleted(false);
+        return productRepository.findAllByDeletedOrderByCreatedAtDesc(false);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class ProductService implements IProductService {
 
     @Override
     public Product getById(UUID id) {
-        return findById(id).orElseThrow(() -> new DataNotFoundException("Product not found"));
+        return findById(id).orElseThrow(() -> new NotFoundException("Product not found"));
     }
 
     @Override

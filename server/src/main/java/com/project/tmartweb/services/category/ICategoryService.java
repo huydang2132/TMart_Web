@@ -1,4 +1,4 @@
-package com.project.tmartweb.services;
+package com.project.tmartweb.services.category;
 
 import com.project.tmartweb.services.base.IBaseService;
 import com.project.tmartweb.models.dtos.CategoryDTO;

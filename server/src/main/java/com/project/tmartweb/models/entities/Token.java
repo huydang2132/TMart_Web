@@ -19,7 +19,6 @@ public class Token {
     @Column(name = "token", length = 255)
     private String token;
 
-    @Id
     @Column(name = "token_type", length = 50)
     private String tokenType;
 
@@ -32,7 +31,8 @@ public class Token {
     @Column(name = "revoked")
     private Boolean revoked = Boolean.FALSE;
 
-    @ManyToOne
+    @Id
+    @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
 

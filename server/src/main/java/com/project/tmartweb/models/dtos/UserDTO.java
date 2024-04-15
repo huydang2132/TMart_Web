@@ -1,20 +1,20 @@
 package com.project.tmartweb.models.dtos;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.project.tmartweb.enums.RoleId;
 import com.project.tmartweb.models.dtos.base.BaseDTO;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
-import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 public class UserDTO extends BaseDTO {
-    private UUID id;
-
     private String userName;
 
     private String password;
@@ -33,7 +33,7 @@ public class UserDTO extends BaseDTO {
     private String address;
 
     @NotNull(message = "Role cannot be null")
-    private String roleId;
+    private RoleId roleId;
 
     private Boolean deleted = Boolean.FALSE;
 }

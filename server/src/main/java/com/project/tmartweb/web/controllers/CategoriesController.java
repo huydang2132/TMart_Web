@@ -1,6 +1,6 @@
 package com.project.tmartweb.web.controllers;
 
-import com.project.tmartweb.services.ICategoryService;
+import com.project.tmartweb.services.category.ICategoryService;
 import com.project.tmartweb.models.dtos.CategoryDTO;
 import com.project.tmartweb.models.entities.Category;
 import jakarta.validation.Valid;

@@ -13,6 +13,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -50,5 +51,5 @@ public class Coupon {
     private Timestamp updatedAt;
 
     @Column(name = "updated_by")
-    private Timestamp updatedBy;
+    private String updatedBy;
 }

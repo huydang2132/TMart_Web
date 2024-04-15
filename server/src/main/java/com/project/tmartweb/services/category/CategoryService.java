@@ -1,9 +1,8 @@
-package com.project.tmartweb.services.imp;
+package com.project.tmartweb.services.category;
 
 import com.project.tmartweb.repositories.CategoryRepository;
-import com.project.tmartweb.services.ICategoryService;
-import com.project.tmartweb.exceptions.DataConflictException;
-import com.project.tmartweb.exceptions.DataNotFoundException;
+import com.project.tmartweb.exceptions.ConflictException;
+import com.project.tmartweb.exceptions.NotFoundException;
 import com.project.tmartweb.models.dtos.CategoryDTO;
 import com.project.tmartweb.models.entities.Category;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,7 @@ public class CategoryService implements ICategoryService {
     @Override
     public Category insert(CategoryDTO categoryDTO) {
         if (categoryRepository.existsByName(categoryDTO.getName())) {
-            throw new DataConflictException("Category name already exists");
+            throw new ConflictException("Category name already exists");
         }
         Category category = mapper.map(categoryDTO, Category.class);
         return categoryRepository.save(category);
@@ -54,6 +53,6 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public Category getById(UUID id) {
-        return findById(id).orElseThrow(() -> new DataNotFoundException("Category not found"));
+        return findById(id).orElseThrow(() -> new NotFoundException("Category not found"));
     }
 }

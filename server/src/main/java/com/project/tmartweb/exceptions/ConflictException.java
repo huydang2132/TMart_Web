@@ -6,20 +6,20 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter
-public class DataConflictException extends RuntimeException {
+public class ConflictException extends RuntimeException {
     private HttpStatus status;
 
     private String userMessage;
 
     private String devMessage;
 
-    public DataConflictException(String devMessage) {
+    public ConflictException(String devMessage) {
         super(devMessage);
         this.status = HttpStatus.CONFLICT;
         this.devMessage = devMessage;
     }
 
-    public DataConflictException(String userMessage, String devMessage) {
+    public ConflictException(String userMessage, String devMessage) {
         super(devMessage);
         this.status = HttpStatus.CONFLICT;
         this.userMessage = userMessage;

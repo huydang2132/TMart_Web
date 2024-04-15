@@ -1,4 +1,4 @@
-package com.project.tmartweb.services;
+package com.project.tmartweb.services.coupon;
 
 import com.project.tmartweb.models.dtos.CouponDTO;
 import com.project.tmartweb.models.entities.Coupon;

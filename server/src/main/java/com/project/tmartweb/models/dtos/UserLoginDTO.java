@@ -1,8 +1,10 @@
 package com.project.tmartweb.models.dtos;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -11,9 +13,9 @@ import lombok.*;
 public class UserLoginDTO {
     private String userName;
 
+    @NotBlank(message = "Password is required")
     private String password;
 
-    @NotNull(message = "Phone number cannot be null")
     private String phoneNumber;
 
     private String email;

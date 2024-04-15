@@ -12,7 +12,6 @@ import java.util.UUID;
 public interface ProductRepository extends JpaRepository<Product, UUID> {
     boolean existsByTitle(String title);
 
-    Page<Product> findAll(Pageable pageable);
 
-    List<Product> findAllByDeleted(boolean deleted);
+    List<Product> findAllByDeletedOrderByCreatedAtDesc(boolean deleted);
 }

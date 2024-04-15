@@ -1,4 +1,4 @@
-package com.project.tmartweb.services;
+package com.project.tmartweb.services.product;
 
 import com.project.tmartweb.models.dtos.ImageProductDTO;
 import com.project.tmartweb.models.entities.ImageProduct;

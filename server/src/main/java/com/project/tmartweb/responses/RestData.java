@@ -1,8 +1,12 @@
 package com.project.tmartweb.responses;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
+@Setter
+@Getter
 public class RestData<Data> {
     private HttpStatus status;
     @JsonInclude(JsonInclude.Include.NON_NULL)

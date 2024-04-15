@@ -1,17 +1,16 @@
-package com.project.tmartweb.services.imp;
+package com.project.tmartweb.services.coupon;
 
-import com.project.tmartweb.exceptions.DataNotFoundException;
+import com.project.tmartweb.exceptions.NotFoundException;
 import com.project.tmartweb.models.dtos.CouponDTO;
 import com.project.tmartweb.models.entities.Coupon;
 import com.project.tmartweb.repositories.CouponRepository;
-import com.project.tmartweb.services.ICouponService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +38,7 @@ public class CouponService implements ICouponService {
 
     @Override
     public List<Coupon> getAll() {
-        return couponRepository.findAll();
+        return couponRepository.findAll(Sort.by("createdAt").descending());
     }
 
     @Override
@@ -49,6 +48,6 @@ public class CouponService implements ICouponService {
 
     @Override
     public Coupon getById(String id) {
-        return findById(id).orElseThrow(() -> new DataNotFoundException("Mã giảm giá không tồn tại!", "Coupon not found"));
+        return findById(id).orElseThrow(() -> new NotFoundException("Mã giảm giá không tồn tại!", "Coupon not found"));
     }
 }
