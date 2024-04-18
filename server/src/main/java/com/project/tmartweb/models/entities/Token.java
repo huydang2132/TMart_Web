@@ -31,7 +31,6 @@ public class Token {
     @Column(name = "revoked")
     private Boolean revoked = Boolean.FALSE;
 
-    @Id
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;

@@ -1,5 +1,6 @@
 package com.project.tmartweb.web.controllers;
 
+import com.project.tmartweb.enums.RoleId;
 import com.project.tmartweb.models.dtos.UserDTO;
 import com.project.tmartweb.models.dtos.UserLoginDTO;
 import com.project.tmartweb.models.entities.User;
@@ -22,6 +23,20 @@ public class UsersController {
     private IUserService userService;
 
     @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody UserDTO userDTO, BindingResult result) {
+        if (result.hasErrors()) {
+            List<String> errorMessages = result.getFieldErrors()
+                    .stream()
+                    .map(FieldError::getDefaultMessage)
+                    .toList();
+            return ResponseEntity.badRequest().body(errorMessages);
+        }
+        userDTO.setRoleId(RoleId.USER);
+        var res = userService.insert(userDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
+
+    @PostMapping("")
     public ResponseEntity<?> insertUser(@Valid @RequestBody UserDTO userDTO, BindingResult result) {
         if (result.hasErrors()) {
             List<String> errorMessages = result.getFieldErrors()
@@ -30,7 +45,8 @@ public class UsersController {
                     .toList();
             return ResponseEntity.badRequest().body(errorMessages);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(userService.insert(userDTO));
+        var res = userService.insert(userDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
     @PostMapping("/login")
@@ -48,6 +64,12 @@ public class UsersController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable UUID id) {
         var result = userService.getById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    @GetMapping("/token/{token}")
+    public ResponseEntity<?> getByToken(@PathVariable String token) {
+        var result = userService.getByToken(token);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 

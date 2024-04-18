@@ -2,12 +2,6 @@ package com.project.tmartweb.models.dtos;
 
 import com.project.tmartweb.enums.OrderStatus;
 import com.project.tmartweb.models.dtos.base.BaseDTO;
-import com.project.tmartweb.models.entities.Coupon;
-import com.project.tmartweb.models.entities.User;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -36,10 +31,9 @@ public class OrderDTO extends BaseDTO {
 
     private OrderStatus status;
 
-    @Min(0)
-    private double totalMoney;
-
     private UUID userId;
 
     private String couponId;
+
+    private List<OrderItem> orderItems;
 }

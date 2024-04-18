@@ -6,6 +6,7 @@ import lombok.Getter;
 public enum OrderStatus {
     PENDING("pending"),
     PROCESSING("processing"),
+    SHIPPING("shipping"),
     SHIPPED("shipped"),
     CANCELLED("cancelled");
 

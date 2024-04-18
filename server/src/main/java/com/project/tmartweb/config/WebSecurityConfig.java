@@ -1,6 +1,5 @@
 package com.project.tmartweb.config;
 
-import com.project.tmartweb.enums.RoleId;
 import com.project.tmartweb.fillters.JwtTokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +25,6 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((requests) -> {
                     requests
@@ -36,13 +34,14 @@ public class WebSecurityConfig {
                             )
                             .permitAll()
                             .requestMatchers(GET,
-                                    (apiPrefix + "/users/**")).hasRole(RoleId.ADMIN.getRoleName().toUpperCase())
+                                    apiPrefix + "/users/**").hasRole("ADMIN")
                             .requestMatchers(PUT,
-                                    (apiPrefix + "/users/**")).hasRole("ADMIN")
+                                    apiPrefix + "/users/**").hasRole("ADMIN")
                             .requestMatchers(GET,
-                                    (apiPrefix + "/products/**")).hasAnyRole("USER", "ADMIN")
+                                    apiPrefix + "/products/**").hasAnyRole("USER", "ADMIN")
                             .anyRequest().authenticated();
-                });
+                })
+                .csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }
 }

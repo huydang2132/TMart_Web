@@ -2,6 +2,7 @@ package com.project.tmartweb.exceptions;
 
 import com.project.tmartweb.responses.RestData;
 import com.project.tmartweb.responses.RestResponse;
+import jakarta.validation.ValidationException;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,13 @@ public class RestExceptionHandler {
     public ResponseEntity<RestData<?>> handleInvalidParamException(InvalidParamException e) {
         logger.error(e.getMessage());
         return RestResponse.error(e.getStatus(), e.getUserMessage(), e.getDevMessage());
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<RestData<?>> handleValidInputException(ValidationException e) {
+        logger.error(e.getMessage());
+        return RestResponse.error(HttpStatus.BAD_REQUEST, e.getMessage(), e.getMessage());
     }
 
     @ExceptionHandler(UnauthorizedException.class)

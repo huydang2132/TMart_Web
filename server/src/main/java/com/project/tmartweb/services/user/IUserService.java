@@ -10,4 +10,6 @@ public interface IUserService extends IBaseService<User, UserDTO, UUID> {
     String Login(String username, String password);
 
     User getByUserName(String userName);
+
+    User getByToken(String token);
 }

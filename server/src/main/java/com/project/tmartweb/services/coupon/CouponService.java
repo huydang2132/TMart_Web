@@ -1,5 +1,6 @@
 package com.project.tmartweb.services.coupon;
 
+import com.project.tmartweb.exceptions.InvalidParamException;
 import com.project.tmartweb.exceptions.NotFoundException;
 import com.project.tmartweb.models.dtos.CouponDTO;
 import com.project.tmartweb.models.entities.Coupon;
@@ -9,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,5 +51,24 @@ public class CouponService implements ICouponService {
     @Override
     public Coupon getById(String id) {
         return findById(id).orElseThrow(() -> new NotFoundException("Mã giảm giá không tồn tại!", "Coupon not found"));
+    }
+
+    @Override
+    public Coupon useCoupon(String code) {
+        Coupon coupon = getById(code);
+        if (coupon.getExpired()) {
+            throw new InvalidParamException("Mã giảm giá đã hết hạn!", "Coupon is expired");
+        }
+        if (coupon.getExpirationDate().compareTo(new Timestamp(System.currentTimeMillis())) < 0) {
+            coupon.setExpired(Boolean.TRUE);
+            couponRepository.save(coupon);
+            throw new InvalidParamException("Mã giảm giá đã hết hạn!", "Coupon is expired");
+        }
+        if (coupon.getQuantity() == 0) {
+            throw new InvalidParamException("Mã giảm giá đã hết lượt sử dụng!", "Coupon is out of stock");
+        }
+        coupon.setQuantity(coupon.getQuantity() - 1);
+        couponRepository.save(coupon);
+        return coupon;
     }
 }

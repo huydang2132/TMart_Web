@@ -187,6 +187,7 @@ const handleClickContentbox = () => {
 .box-body .body-content .content-item .content-data>pre {
     width: inherit;
     text-wrap: wrap;
+    font-size: 1rem;
 }
 
 .contentSystem {

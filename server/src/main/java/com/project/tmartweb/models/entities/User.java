@@ -1,5 +1,6 @@
 package com.project.tmartweb.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.tmartweb.models.entities.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,7 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "user_name", unique = true)
     private String userName;
 
+    @JsonIgnore
     @Column(name = "password", length = 200)
     private String password;
 
@@ -53,10 +55,15 @@ public class User extends BaseEntity implements UserDetails {
     @JoinColumn(name = "role_id")
     private Role role;
 
+    @JsonIgnore
+    @OneToOne
+    @Transient
+    private Token token;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + this.getRole().getRoleName().toUpperCase()));
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + this.getRole().getId().toString()));
         return authorities;
     }
 

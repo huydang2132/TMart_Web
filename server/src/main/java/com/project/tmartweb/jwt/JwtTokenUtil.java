@@ -22,19 +22,20 @@ public class JwtTokenUtil {
     @Value("${jwt.expiration}")
     private int expiration;
 
+    @SuppressWarnings("deprecation")
     private static final Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     private static final Logger logger = Logger.getLogger(JwtTokenUtil.class.getName());
 
     public String generateToken(User user) {
         Map<String, Object> claims = Map.of(
-                "id", user.getId(),
-                "username", user.getUsername()
-        );
+                "id", user.getId());
         try {
+            @SuppressWarnings("deprecation")
             String token = Jwts.builder()
-                    .setClaims(claims)
-                    .setExpiration(new Date(System.currentTimeMillis() + expiration * 1000L))
+                    .claims(claims)
+                    .subject(user.getUsername())
+                    .expiration(new Date(System.currentTimeMillis() + expiration * 1000L))
                     .signWith(SignatureAlgorithm.HS256, secretKey)
                     .compact();
             return token;
@@ -43,10 +44,10 @@ public class JwtTokenUtil {
         }
     }
 
-//    private Key getSecretKey() {
-//        byte[] keyBytes = secretKey.getBytes();
-//        return Keys.hmacShaKeyFor(keyBytes);
-//    }
+    // private Key getSecretKey() {
+    // byte[] keyBytes = secretKey.getBytes();
+    // return Keys.hmacShaKeyFor(keyBytes);
+    // }
 
     private Claims getAllClaims(String token) {
         return Jwts.parser()
@@ -72,6 +73,6 @@ public class JwtTokenUtil {
 
     public boolean validateToken(String token, UserDetails userDetails) {
         final String username = getUserNameFromToken(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 }

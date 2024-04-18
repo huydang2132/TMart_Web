@@ -4,9 +4,11 @@ import com.project.tmartweb.exceptions.NotFoundException;
 import com.project.tmartweb.jwt.JwtTokenUtil;
 import com.project.tmartweb.models.dtos.UserDTO;
 import com.project.tmartweb.models.entities.Role;
+import com.project.tmartweb.models.entities.Token;
 import com.project.tmartweb.models.entities.User;
 import com.project.tmartweb.repositories.UserRepository;
 import com.project.tmartweb.services.role.RoleService;
+import com.project.tmartweb.services.token.ITokenService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -29,6 +31,7 @@ public class UserService implements IUserService {
     private final JwtTokenUtil jwtTokenUtil;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final ITokenService tokenService;
 
     @Override
     public String Login(String username, String password) {
@@ -47,6 +50,12 @@ public class UserService implements IUserService {
     @Override
     public User getByUserName(String userName) {
         return userRepository.findByUserName(userName).orElseThrow(() -> new NotFoundException("Người dùng không tồn tại", "User not found"));
+    }
+
+    @Override
+    public User getByToken(String token) {
+        Token tokenModel = tokenService.getById(token);
+        return tokenModel.getUser();
     }
 
     @Override
