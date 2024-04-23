@@ -1,7 +1,7 @@
 package com.project.tmartweb.fillters;
 
+import com.project.tmartweb.domain.entities.User;
 import com.project.tmartweb.jwt.JwtTokenUtil;
-import com.project.tmartweb.models.entities.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -69,9 +69,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private boolean isByPassToken(@NonNull HttpServletRequest request) {
         final List<Pair<String, String>> bypassTokens = Arrays.asList(
                 Pair.of((API_PREFIX + "/users/login"), "POST"),
-                Pair.of((API_PREFIX + "/users"), "POST"),
+                Pair.of((API_PREFIX + "/users/register"), "POST"),
                 Pair.of((API_PREFIX + "/products"), "GET"),
-                Pair.of((API_PREFIX + "/categories"), "GET")
+                Pair.of((API_PREFIX + "/categories"), "GET"),
+                Pair.of((API_PREFIX + "/images/upload"), "POST")
         );
         String requestPath = request.getServletPath();
         String requestMethod = request.getMethod();

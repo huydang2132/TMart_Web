@@ -3,17 +3,26 @@
         <div class="sidebar-title">
             <h3>DANH MỤC</h3>
         </div>
-        <router-link :to="{ name: 'ProductCatalogry', params: { id: item } }"
-            v-for="(item) in ['Điện thoại', 'Apple Watch', 'Máy tính bảng']" :key="item">
-            {{ item }}
+        <router-link :to="{ name: 'ProductCatalogry', params: { id: item.id } }" v-for="(item) in categories.data"
+            :key="item.id">
+            {{ item.name }}
         </router-link>
     </nav>
 </template>
 
-<script>
-export default {
-    name: 'TheSidebar'
-}
+<script setup>
+import { useCategoryStore } from '@/stores/category';
+import { onMounted, ref } from 'vue';
+
+const categories = ref([]);
+
+const categoryStore = useCategoryStore();
+
+onMounted(async () => {
+    await categoryStore.fecthGetAll();
+    categories.value = categoryStore.categories;
+})
+
 </script>
 
 <style scoped>

@@ -1,20 +1,23 @@
 package com.project.tmartweb.services.order_detail;
 
+import com.project.tmartweb.domain.dtos.OrderDetailDTO;
+import com.project.tmartweb.domain.entities.Order;
+import com.project.tmartweb.domain.entities.OrderDetail;
+import com.project.tmartweb.domain.entities.Product;
+import com.project.tmartweb.domain.paginate.BasePagination;
+import com.project.tmartweb.domain.paginate.PaginationDTO;
 import com.project.tmartweb.exceptions.NotFoundException;
 import com.project.tmartweb.helpers.Calculator;
-import com.project.tmartweb.models.dtos.OrderDetailDTO;
-import com.project.tmartweb.models.entities.Order;
-import com.project.tmartweb.models.entities.OrderDetail;
-import com.project.tmartweb.models.entities.Product;
 import com.project.tmartweb.repositories.OrderDetailRepository;
 import com.project.tmartweb.repositories.OrderRepository;
 import com.project.tmartweb.services.product.IProductService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -55,8 +58,12 @@ public class OrderDetailService implements IOrderDetailService {
     }
 
     @Override
-    public List<OrderDetail> getAll() {
-        return orderDetailRepository.findAll();
+    public PaginationDTO<OrderDetail> getAll(Integer page, Integer perPage) {
+        if (page == null && perPage == null) {
+            return new PaginationDTO<>(orderDetailRepository.findAll(), null);
+        }
+        BasePagination<OrderDetail, OrderDetailRepository> basePagination = new BasePagination<>(orderDetailRepository);
+        return basePagination.paginate(page, perPage);
     }
 
     @Override
@@ -68,5 +75,15 @@ public class OrderDetailService implements IOrderDetailService {
     public OrderDetail getById(UUID id) {
         return findById(id).
                 orElseThrow(() -> new NotFoundException("Chi tiết đơn hàng không tồn tại!", "Order detail not found"));
+    }
+
+    @Override
+    public PaginationDTO<OrderDetail> getAllByOrder(UUID id, Integer page, Integer perPage) {
+        if (page == null && perPage == null) {
+            return new PaginationDTO<>(orderDetailRepository.findAll(), null);
+        }
+        BasePagination<OrderDetail, OrderDetailRepository> basePagination = new BasePagination<>(orderDetailRepository);
+        Page<OrderDetail> orderDetails = orderDetailRepository.findAllByOrderId(id, PageRequest.of(page, perPage));
+        return basePagination.paginate(page, perPage, orderDetails);
     }
 }

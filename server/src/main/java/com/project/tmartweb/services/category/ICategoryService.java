@@ -1,8 +1,8 @@
 package com.project.tmartweb.services.category;
 
+import com.project.tmartweb.domain.dtos.CategoryDTO;
+import com.project.tmartweb.domain.entities.Category;
 import com.project.tmartweb.services.base.IBaseService;
-import com.project.tmartweb.models.dtos.CategoryDTO;
-import com.project.tmartweb.models.entities.Category;
 
 import java.util.UUID;
 

@@ -1,15 +1,15 @@
 <template>
-  <TheContainer />
+  <TheFrontSide />
 </template>
 
 <script>
-import TheContainer from './views/layouts/TheContainer.vue';
-
+import TheFrontSide from './views/layouts/TheFrontSide.vue';
 export default {
+
   name: 'App',
 
   components: {
-    TheContainer
+    TheFrontSide
   },
 
   data: () => ({

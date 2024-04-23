@@ -1,6 +1,6 @@
 package com.project.tmartweb.repositories;
 
-import com.project.tmartweb.models.entities.ImageProduct;
+import com.project.tmartweb.domain.entities.ImageProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

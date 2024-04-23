@@ -1,6 +1,6 @@
 package com.project.tmartweb.jwt;
 
-import com.project.tmartweb.models.entities.User;
+import com.project.tmartweb.domain.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
@@ -55,6 +56,10 @@ public class JwtTokenUtil {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    public Timestamp getExpirationDate(String token) {
+        return new Timestamp(getClaim(token, Claims::getExpiration).getTime());
     }
 
     public <T> T getClaim(String token, Function<Claims, T> claimsResolver) {

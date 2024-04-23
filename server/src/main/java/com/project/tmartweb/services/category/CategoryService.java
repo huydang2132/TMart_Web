@@ -1,15 +1,16 @@
 package com.project.tmartweb.services.category;
 
-import com.project.tmartweb.repositories.CategoryRepository;
+import com.project.tmartweb.domain.dtos.CategoryDTO;
+import com.project.tmartweb.domain.entities.Category;
+import com.project.tmartweb.domain.paginate.BasePagination;
+import com.project.tmartweb.domain.paginate.PaginationDTO;
 import com.project.tmartweb.exceptions.ConflictException;
 import com.project.tmartweb.exceptions.NotFoundException;
-import com.project.tmartweb.models.dtos.CategoryDTO;
-import com.project.tmartweb.models.entities.Category;
+import com.project.tmartweb.repositories.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -42,8 +43,13 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public List<Category> getAll() {
-        return categoryRepository.findAll();
+    public PaginationDTO<Category> getAll(Integer page, Integer perPage) {
+        if (page == null && perPage == null) {
+            return new PaginationDTO<>(categoryRepository.findAll(), null);
+        }
+        BasePagination<Category, CategoryRepository> basePagination = new BasePagination<>(categoryRepository);
+        PaginationDTO<Category> pageRequest = basePagination.paginate(page, perPage);
+        return new PaginationDTO<>(pageRequest.getData(), pageRequest.getPagination());
     }
 
     @Override

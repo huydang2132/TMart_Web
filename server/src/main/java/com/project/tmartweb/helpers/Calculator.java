@@ -1,7 +1,7 @@
 package com.project.tmartweb.helpers;
 
 
-import com.project.tmartweb.models.entities.OrderDetail;
+import com.project.tmartweb.domain.entities.OrderDetail;
 
 import java.util.List;
 

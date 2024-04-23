@@ -1,24 +1,25 @@
 package com.project.tmartweb.services.user;
 
+import com.project.tmartweb.domain.dtos.UserDTO;
+import com.project.tmartweb.domain.dtos.UserLoginDTO;
+import com.project.tmartweb.domain.entities.Role;
+import com.project.tmartweb.domain.entities.Token;
+import com.project.tmartweb.domain.entities.User;
+import com.project.tmartweb.domain.paginate.PaginationDTO;
+import com.project.tmartweb.exceptions.ConflictException;
 import com.project.tmartweb.exceptions.NotFoundException;
 import com.project.tmartweb.jwt.JwtTokenUtil;
-import com.project.tmartweb.models.dtos.UserDTO;
-import com.project.tmartweb.models.entities.Role;
-import com.project.tmartweb.models.entities.Token;
-import com.project.tmartweb.models.entities.User;
+import com.project.tmartweb.repositories.TokenRepository;
 import com.project.tmartweb.repositories.UserRepository;
 import com.project.tmartweb.services.role.RoleService;
 import com.project.tmartweb.services.token.ITokenService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -32,9 +33,12 @@ public class UserService implements IUserService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final ITokenService tokenService;
+    private final TokenRepository tokenRepository;
 
     @Override
-    public String Login(String username, String password) {
+    public String Login(UserLoginDTO userLoginDTO) {
+        String username = userLoginDTO.getUserName();
+        String password = userLoginDTO.getPassword();
         Optional<User> user = userRepository.findByUserName(username);
         if (user.isEmpty() || !passwordEncoder.matches(password, user.get().getPassword())) {
             throw new NotFoundException("Tên đăng nhập hoặc mật khẩu không tồn tại", "User or password not found");
@@ -44,7 +48,14 @@ public class UserService implements IUserService {
                         username, password, user.get().getAuthorities()
                 );
         authenticationManager.authenticate(userToken);
-        return jwtTokenUtil.generateToken(user.get());
+        String tokenString = jwtTokenUtil.generateToken(user.get());
+        Token token = new Token();
+        token.setUser(user.get());
+        token.setToken(tokenString);
+        token.setExpirationDate(jwtTokenUtil.getExpirationDate(tokenString));
+        token.setTokenType("Authentication");
+        tokenRepository.save(token);
+        return tokenString;
     }
 
     @Override
@@ -55,14 +66,20 @@ public class UserService implements IUserService {
     @Override
     public User getByToken(String token) {
         Token tokenModel = tokenService.getById(token);
+        if (tokenModel.getExpired()) {
+            throw new NotFoundException("Token đã hết hạn", "Token expired");
+        }
         return tokenModel.getUser();
     }
 
     @Override
     public User insert(UserDTO userDTO) {
         String phoneNumber = userDTO.getPhoneNumber();
-        if (userRepository.existsByPhoneNumber(phoneNumber)) {
-            throw new DataIntegrityViolationException("Phone number is already exists");
+        if (phoneNumber != null && userRepository.existsByPhoneNumber(phoneNumber)) {
+            throw new ConflictException("Số điện thoại dã tồn tại", "Phone number is already exists");
+        }
+        if (userRepository.existsByEmail(userDTO.getEmail())) {
+            throw new ConflictException("Email đã tồn tại", "Email is already exists");
         }
         User user = mapper.map(userDTO, User.class);
         Role role = roleService.getById(userDTO.getRoleId());
@@ -90,8 +107,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<User> getAll() {
-        return userRepository.findAll(Sort.by("createdAt").descending());
+    public PaginationDTO<User> getAll(Integer page, Integer perPage) {
+        return null;
     }
 
     @Override

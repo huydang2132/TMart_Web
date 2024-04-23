@@ -16,7 +16,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100%;
+    height: 100vh;
     flex-direction: column;
 }
 

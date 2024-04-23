@@ -1,7 +1,7 @@
 package com.project.tmartweb.services.order;
 
-import com.project.tmartweb.models.dtos.OrderDTO;
-import com.project.tmartweb.models.entities.Order;
+import com.project.tmartweb.domain.dtos.OrderDTO;
+import com.project.tmartweb.domain.entities.Order;
 import com.project.tmartweb.services.base.IBaseService;
 
 import java.util.List;

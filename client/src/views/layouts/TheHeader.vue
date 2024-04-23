@@ -23,12 +23,13 @@
                         <span class="quantity-notify">3</span>
                     </router-link>
                 </div>
-                <div class="account-tile" @mouseover="isShowAccOption = true" @mouseleave="isShowAccOption = false">
+                <div @click="handleClickAccount" class="account-tile" @mouseover="isShowAccOption = true"
+                    @mouseleave="isShowAccOption = false">
                     <img :src="require('@/assets/imgs/avatar.png')" alt="">
-                    <span>Đăng nhập</span>
+                    <span>{{ authStore.isLoggedIn ? 'Tài khoản' : 'Đăng nhập' }}</span>
                 </div>
-                <div @mouseover="isShowAccOption = true" @mouseleave="isShowAccOption = false" v-show="isShowAccOption"
-                    class="account-box">
+                <div v-if="authStore.isLoggedIn" @mouseover="isShowAccOption = true"
+                    @mouseleave="isShowAccOption = false" v-show="isShowAccOption" class="account-box">
                     <div class="account-router-link">
                         <router-link :to="{ name: 'AccountPage' }">Thông tin tài khoản</router-link>
                     </div>
@@ -36,7 +37,7 @@
                         <router-link :to="{ name: 'OrdersPage' }">Đơn hàng</router-link>
                     </div>
                     <div class="account-router-link">
-                        <button>Đăng xuất</button>
+                        <button @click="handleLogout">Đăng xuất</button>
                     </div>
                 </div>
             </div>
@@ -52,7 +53,7 @@
 </template>
 
 <script>
-import router from '@/routers/router';
+import { useAuthStore } from '@/stores/auth';
 import _ from 'lodash';
 
 export default {
@@ -61,6 +62,7 @@ export default {
         return {
             searchValue: '',
             isShowAccOption: false,
+            authStore: false
         }
     },
     methods: {
@@ -68,14 +70,14 @@ export default {
          * Hàm chuyển hướng đến trang chủ
          */
         handleRedirectHome() {
-            router.push('/');
+            this.$router.push({ name: "HomePage" });
         },
         /**
          * Hàm chuyển hướng đến giỏ hàng
          * Created by: DDHuy (17-01-2024)
          */
         handleRedirectCart() {
-            router.push('/cart');
+            this.$router.push({ name: 'CartPage' });
         },
         /**
          * Hàm xử lý chức năng tìm kiếm
@@ -83,6 +85,20 @@ export default {
         handleSearch: _.debounce(function () {
             console.log('tìm kiếm', this.searchValue);
         }, 500),
+        handleClickAccount() {
+            if (this.authStore.isLoggedIn) {
+                this.$router.push({ name: 'AccountPage' })
+            }
+            else {
+                this.$router.push({ name: 'Login' })
+            }
+        },
+        handleLogout() {
+            this.authStore.fetchLogout();
+        }
+    },
+    created() {
+        this.authStore = useAuthStore();
     },
     mounted() {
         this.$nextTick(() => {

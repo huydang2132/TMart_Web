@@ -97,15 +97,16 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { nextTick, ref } from 'vue';
 import router from '@/routers/router';
 
 // ------------------------- Khai báo biến ----------------------
 const quantity = ref(1);
 
-
 // ------------------------ Lifecle -----------------------------
+nextTick(async () => {
 
+})
 
 // ------------------------ Watcher -----------------------------
 

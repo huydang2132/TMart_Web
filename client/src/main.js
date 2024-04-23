@@ -1,8 +1,9 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './routers/router';
-import "bootstrap";
+import { createPinia } from 'pinia';
 
+const pinia = createPinia()
 const app = createApp(App);
 
 // Components
@@ -15,6 +16,9 @@ import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import BaseDatepicker from '@/components/input/BaseDatepicker.vue';
 import DotsLoader from './components/loading/DotsLoader.vue';
+import BaseCarousel from '@/components/carousel/BaseCarousel.vue';
+import CarouselGallery from '@/components/carousel/CarouselGallery.vue';
+import { Slide } from 'vue3-carousel';
 
 app.component('b-button', BaseButton);
 app.component('b-input', BaseInput);
@@ -24,17 +28,21 @@ app.component('b-checkbox', BaseCheckbox);
 app.component('VueDatePicker', VueDatePicker);
 app.component('b-datepicker', BaseDatepicker);
 app.component('dots-loader', DotsLoader);
+app.component('b-carousel', BaseCarousel);
+app.component('carousel-gallery', CarouselGallery);
+app.component('V-Slide', Slide);
 
 // Method
 import helper from './helpers/helper';
-import _ from 'lodash';
+import formatValue from './helpers/formatValue';
 
 app.config.globalProperties.$helper = helper;
-app.config.globalProperties.$_ = _;
+app.config.globalProperties.$formatValue = formatValue;
 
 // Vuetify
 import vuetify from './plugins/vuetify'
 
+app.use(pinia);
 app.use(router);
 app.use(vuetify);
 app.mount('#app');

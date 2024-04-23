@@ -1,9 +1,10 @@
 <template>
-    <div class="dialog" @click.self="this.beforeCloseDialog">
-        <div class="dialog__container " :class="hideEffect ? 'hide-dialog' : 'show-dialog'">
+    <div class="dialog">
+        <div class="dialog__container " :class="hideEffect ? 'hide-dialog' : 'show-dialog'"
+            v-click-outside="beforeCloseDialog">
             <div class="dialog__header">
                 <h3>{{ titleDialog }}</h3>
-                <b-button icon="icon icon-close" title="Đóng" @click="this.beforeCloseDialog">
+                <b-button icon="icon icon-close" title="Đóng" @click="beforeCloseDialog">
                 </b-button>
             </div>
             <div class="dialog__body">
@@ -12,14 +13,14 @@
             </div>
             <div class="dialog__footer">
                 <div class="dialog__footer--left">
-                    <b-button v-if="btnExtraLeft !== null" type="extra" :value="btnExtraLeft"
-                        @click="this.beforeCloseDialog"></b-button>
+                    <b-button v-if="btnExtraLeft !== null" type="secondary" :value="btnExtraLeft"
+                        @click="beforeCloseDialog"></b-button>
                 </div>
                 <div class="dialog__footer--right">
-                    <b-button v-if="btnExtraRight !== null" type="extra" :value="btnExtraRight"
-                        @click="this.beforeCloseDialog(); this.handleBtnExtraRight()"></b-button>
+                    <b-button v-if="btnExtraRight !== null" type="secondary" :value="btnExtraRight"
+                        @click="beforeCloseDialog(); handleBtnExtraRight()"></b-button>
                     <b-button ref="refBtnPrimary" v-if="btnPrimary !== null" type="primary" :value="btnPrimary"
-                        @click="this.beforeCloseDialog(); this.handleBtnPrimary($event)"></b-button>
+                        @click="beforeCloseDialog(); handleBtnPrimary($event)"></b-button>
                 </div>
 
             </div>

@@ -1,7 +1,7 @@
 package com.project.tmartweb.web.controllers;
 
-import com.project.tmartweb.models.dtos.OrderDTO;
-import com.project.tmartweb.models.entities.Order;
+import com.project.tmartweb.domain.dtos.OrderDTO;
+import com.project.tmartweb.domain.entities.Order;
 import com.project.tmartweb.services.order.IOrderService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +19,11 @@ public class OrdersController {
     private IOrderService orderService;
 
     @GetMapping("")
-    public ResponseEntity<List<Order>> getAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(orderService.getAll());
+    public ResponseEntity<?> getAll(
+            @RequestParam Integer page,
+            @RequestParam Integer perPage
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.getAll(page, perPage));
     }
 
     @GetMapping("/{id}")

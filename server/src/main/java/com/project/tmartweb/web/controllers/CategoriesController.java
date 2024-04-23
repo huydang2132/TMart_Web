@@ -1,8 +1,8 @@
 package com.project.tmartweb.web.controllers;
 
+import com.project.tmartweb.domain.dtos.CategoryDTO;
+import com.project.tmartweb.domain.entities.Category;
 import com.project.tmartweb.services.category.ICategoryService;
-import com.project.tmartweb.models.dtos.CategoryDTO;
-import com.project.tmartweb.models.entities.Category;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,8 +21,8 @@ public class CategoriesController {
     private ICategoryService iCategoryService;
 
     @GetMapping("")
-    public ResponseEntity<List<Category>> getAllCategories() {
-        List<Category> categories = iCategoryService.getAll();
+    public ResponseEntity<?> getAllCategories() {
+        var categories = iCategoryService.getAll(null, null);
         return ResponseEntity.ok(categories);
     }
 

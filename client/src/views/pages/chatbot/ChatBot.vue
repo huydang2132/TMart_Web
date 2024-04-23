@@ -3,7 +3,7 @@
         <div class="chatbot-icon" @click="showChatbot">
             <img :src="require('@/assets/imgs/chatbot.png')" alt="">
         </div>
-        <div class="chatbot-box" v-if="isShowChatbot">
+        <div class="chatbot-box" v-if="isShowChatbot" v-click-outside="hideChatbot">
             <div class="box-header">
                 <h4>Trợ lý AI</h4>
                 <b-button icon="fa-solid fa-xmark" @click="hideChatbot" title="Đóng"></b-button>

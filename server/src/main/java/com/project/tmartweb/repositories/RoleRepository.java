@@ -1,7 +1,7 @@
 package com.project.tmartweb.repositories;
 
-import com.project.tmartweb.enums.RoleId;
-import com.project.tmartweb.models.entities.Role;
+import com.project.tmartweb.domain.entities.Role;
+import com.project.tmartweb.domain.enums.RoleId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

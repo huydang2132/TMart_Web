@@ -2,10 +2,10 @@ package com.project.tmartweb.services.base;
 
 import java.util.List;
 
-public interface IBaseServiceMultiple<Entity, EntityDTO> {
+public interface IBaseServiceMultiple<Entity, EntityDTO, Type> {
     List<Entity> insertMultiple(List<EntityDTO> dtos);
 
     List<Entity> updateMultiple(List<EntityDTO> dtos);
 
-    List<Entity> deleteMultiple(List<Entity> entities);
+    int deleteMultiple(List<Type> types);
 }

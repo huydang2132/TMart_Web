@@ -1,11 +1,11 @@
 package com.project.tmartweb.services.base;
 
-import java.util.List;
+import com.project.tmartweb.domain.paginate.PaginationDTO;
+
 import java.util.Optional;
-import java.util.UUID;
 
 public interface IBaseServiceReadOnly<Entity, DataType> {
-    List<Entity> getAll();
+    PaginationDTO<Entity> getAll(Integer page, Integer perPage);
 
     Optional<Entity> findById(DataType id);
 

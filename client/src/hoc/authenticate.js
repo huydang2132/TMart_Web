@@ -1,14 +1,14 @@
 import { defineComponent } from 'vue';
-import { useStore } from 'pinia';
+import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
 
 export function userIsAuthenticated(Component) {
     return defineComponent({
         setup(props, { slots }) {
-            const store = useStore(); // Sử dụng store của Pinia
+            const store = useAuthStore(); // Sử dụng store của Pinia
             const router = useRouter();
 
-            if (!store.user.isLoggedIn) {
+            if (!store.isLoggedIn) {
                 router.push({ name: 'Login' });
             }
 
@@ -20,10 +20,10 @@ export function userIsAuthenticated(Component) {
 export function userIsNotAuthenticated(Component) {
     return defineComponent({
         setup(props, { slots }) {
-            const store = useStore(); // Sử dụng store của Pinia
+            const store = useAuthStore(); // Sử dụng store của Pinia
             const router = useRouter();
 
-            if (store.user.isLoggedIn) {
+            if (store.isLoggedIn) {
                 const redirectPath = router.currentRoute.value.query.redirect || '/';
                 router.push(redirectPath);
             }

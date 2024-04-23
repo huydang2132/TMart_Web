@@ -49,7 +49,8 @@
                     <div @click="redirectOrderDetail(item)" class="content-body">
                         <img :src="require('@/assets/imgs/Iphone15-promax.webp')" alt="">
                         <div class="product-info">
-                            <p class="product-name">Đồng Hồ Thông Minh Xiaomi Redmi Watch 3 / Watch 3 Active - Hàng Chính
+                            <p class="product-name">Đồng Hồ Thông Minh Xiaomi Redmi Watch 3 / Watch 3 Active - Hàng
+                                Chính
                                 Hãng FPT - Black BHR7266GL</p>
                             <p class="product-quantity">Số lượng: 1</p>
                         </div>
@@ -61,8 +62,8 @@
                             <p>1.157.000 ₫</p>
                         </div>
                         <div class="option">
-                            <b-button value="Mua lại" type="extra" />
-                            <b-button @click="redirectOrderDetail(item)" value="Xem chi tiết" type="extra" />
+                            <b-button value="Mua lại" type="secondary" />
+                            <b-button @click="redirectOrderDetail(item)" value="Xem chi tiết" type="secondary" />
                         </div>
                     </div>
                 </div>

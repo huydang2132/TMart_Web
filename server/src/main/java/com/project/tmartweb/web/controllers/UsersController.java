@@ -1,12 +1,16 @@
 package com.project.tmartweb.web.controllers;
 
-import com.project.tmartweb.enums.RoleId;
-import com.project.tmartweb.models.dtos.UserDTO;
-import com.project.tmartweb.models.dtos.UserLoginDTO;
-import com.project.tmartweb.models.entities.User;
+import com.project.tmartweb.domain.dtos.UserDTO;
+import com.project.tmartweb.domain.dtos.UserLoginDTO;
+import com.project.tmartweb.domain.entities.User;
+import com.project.tmartweb.domain.enums.RoleId;
+import com.project.tmartweb.helpers.GenerateValue;
+import com.project.tmartweb.responses.AuthTokenResponse;
 import com.project.tmartweb.services.user.IUserService;
+import com.project.tmartweb.utils.LocalizationUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -18,9 +22,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("${api.prefix}/users")
+@RequiredArgsConstructor
 public class UsersController {
-    @Autowired
-    private IUserService userService;
+    private final IUserService userService;
+    private final LocalizationUtils localizationUtils;
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody UserDTO userDTO, BindingResult result) {
@@ -31,9 +36,10 @@ public class UsersController {
                     .toList();
             return ResponseEntity.badRequest().body(errorMessages);
         }
+        userDTO.setUserName(GenerateValue.generateUsername());
         userDTO.setRoleId(RoleId.USER);
         var res = userService.insert(userDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(res);
+        return ResponseEntity.status(HttpStatus.CREATED).body(res);
     }
 
     @PostMapping("")
@@ -46,18 +52,27 @@ public class UsersController {
             return ResponseEntity.badRequest().body(errorMessages);
         }
         var res = userService.insert(userDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(res);
+        return ResponseEntity.status(HttpStatus.CREATED).body(res);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody UserLoginDTO userLoginDTO) {
-        String token = userService.Login(userLoginDTO.getUserName(), userLoginDTO.getPassword());
-        return ResponseEntity.status(HttpStatus.OK).body(token);
+    public ResponseEntity<?> login(
+            @Valid @RequestBody UserLoginDTO userLoginDTO,
+            HttpServletRequest request
+    ) {
+        String token = userService.Login(userLoginDTO);
+        return ResponseEntity.status(200).body(
+                new AuthTokenResponse(localizationUtils.getLocalizeMessage("user.login.login_success")
+                        , token)
+        );
     }
 
     @GetMapping("")
-    public ResponseEntity<?> getAll() {
-        var result = userService.getAll();
+    public ResponseEntity<?> getAll(
+            @RequestParam Integer page,
+            @RequestParam Integer perPage
+    ) {
+        var result = userService.getAll(page, perPage);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
@@ -70,7 +85,8 @@ public class UsersController {
     @GetMapping("/token/{token}")
     public ResponseEntity<?> getByToken(@PathVariable String token) {
         var result = userService.getByToken(token);
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(result);
     }
 
     @GetMapping("/username/{username}")

@@ -1,17 +1,17 @@
 package com.project.tmartweb.services.coupon;
 
+import com.project.tmartweb.domain.dtos.CouponDTO;
+import com.project.tmartweb.domain.entities.Coupon;
+import com.project.tmartweb.domain.paginate.BasePagination;
+import com.project.tmartweb.domain.paginate.PaginationDTO;
 import com.project.tmartweb.exceptions.InvalidParamException;
 import com.project.tmartweb.exceptions.NotFoundException;
-import com.project.tmartweb.models.dtos.CouponDTO;
-import com.project.tmartweb.models.entities.Coupon;
 import com.project.tmartweb.repositories.CouponRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,8 +39,12 @@ public class CouponService implements ICouponService {
     }
 
     @Override
-    public List<Coupon> getAll() {
-        return couponRepository.findAll(Sort.by("createdAt").descending());
+    public PaginationDTO<Coupon> getAll(Integer page, Integer perPage) {
+        if (page == null && perPage == null) {
+            return new PaginationDTO<>(couponRepository.findAll(), null);
+        }
+        BasePagination<Coupon, CouponRepository> basePagination = new BasePagination<>(couponRepository);
+        return basePagination.paginate(page, perPage);
     }
 
     @Override

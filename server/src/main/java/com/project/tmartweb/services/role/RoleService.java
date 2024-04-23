@@ -1,14 +1,14 @@
 package com.project.tmartweb.services.role;
 
-import com.project.tmartweb.enums.RoleId;
+import com.project.tmartweb.domain.entities.Role;
+import com.project.tmartweb.domain.enums.RoleId;
+import com.project.tmartweb.domain.paginate.BasePagination;
+import com.project.tmartweb.domain.paginate.PaginationDTO;
 import com.project.tmartweb.exceptions.NotFoundException;
-import com.project.tmartweb.models.entities.Role;
 import com.project.tmartweb.repositories.RoleRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,8 +17,12 @@ public class RoleService implements IRoleService {
     private final RoleRepository roleRepository;
 
     @Override
-    public List<Role> getAll() {
-        return roleRepository.findAll(Sort.by("createdAt").descending());
+    public PaginationDTO<Role> getAll(Integer page, Integer perPage) {
+        if (page == null && perPage == null) {
+            return new PaginationDTO<>(roleRepository.findAll(), null);
+        }
+        BasePagination<Role, RoleRepository> basePagination = new BasePagination<>(roleRepository);
+        return basePagination.paginate(page, perPage);
     }
 
     @Override

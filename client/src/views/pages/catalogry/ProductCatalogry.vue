@@ -1,37 +1,62 @@
 <template>
     <div class="product-catalogry">
         <div class="header">
-            <h4>Điện thoại</h4>
+            <h4>{{ category.name }}</h4>
         </div>
         <div class="product row sm-gutter">
-            <div class="col-2" v-for="(item) in ['111', '222', '333', '4', '5', '6', '444', '555']" :key="item">
-                <router-link :to="{ name: 'DetailProduct', params: { id: item } }" :title="item" class="product-item">
-                    <div class="product-img">
-                        <p class="discount">-25%</p>
-                        <img :src="require('@/assets/imgs/Iphone15-promax.webp')" alt="">
-                    </div>
-                    <div class="product-name">
-                        <p>{{ item }}</p>
-                    </div>
-                    <div class="product-star ">
-                        <b-rating :value="4.3" :stars="5" fontSize="12" isReadonly />
-                        <p class="number-sales">Đã bán: {{ this.$helper.formatNumber(54170009) }}</p>
-                    </div>
-                    <div class="product-price">
-                        <p class="price-new">300.000đ</p>
-                        <p class="price-old">350.000đ</p>
-                    </div>
+            <div class="col-2 product__item" v-for="(item) in productsByCategoryData" :key="item.id">
+                <router-link :to="{ name: 'DetailProduct', params: { id: item.id } }" :title="item.title"
+                    class="product-item">
+                    <ProductTag :item="item"></ProductTag>
                 </router-link>
             </div>
         </div>
         <div class="link-more">
-            <router-link to="/products">Xem thêm</router-link>
+            <b-button @click="handleLoadMore" class="btn-more">Xem thêm</b-button>
         </div>
     </div>
 </template>
 
 <script setup>
+import { useCategoryStore } from '@/stores/category';
+import ProductTag from '../product/ProductTag.vue';
+import { useProductStore } from '@/stores/product';
+import { nextTick, onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
 
+const productStore = useProductStore();
+const categoryStore = useCategoryStore();
+const route = useRoute();
+const productsByCategoryData = ref([]);
+const category = ref({});
+const categoryId = ref(route.params.id);
+const page = ref(0);
+const perPage = ref(6);
+const totalPage = ref(0);
+
+nextTick(async () => {
+    await fetchGetAllByCategory();
+    await categoryStore.fecthGetById(categoryId.value);
+    totalPage.value = productStore.productsByCategory.pagination.lastPage;
+    category.value = categoryStore.category;
+    productsByCategoryData.value = productStore.getProductsByCategory;
+})
+
+onMounted(() => {
+
+})
+
+// -------------------- Methods ---------------------------
+const fetchGetAllByCategory = async () => {
+    await productStore.getAllByCategory(categoryId.value, page.value, perPage.value);
+}
+
+const handleLoadMore = async () => {
+    if (page.value >= totalPage.value) return;
+    page.value += 1;
+    await productStore.getAllByCategory(categoryId.value, page.value, perPage.value);
+    productsByCategoryData.value.push(...productStore.getProductsByCategory);
+}
 </script>
 
 <style scoped>
@@ -63,88 +88,12 @@
     padding: 20px 0;
 }
 
-.product-item {
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius-page);
-    padding: 5px;
+.product a {
     text-decoration: none;
-    display: block;
-    transition: transform ease-in 0.1s;
-    will-change: transform;
-    box-shadow: 0 2px 5px var(--color-box-shadow);
-    color: var(--color-text);
-    margin-bottom: 10px;
 }
 
-.product-item:hover {
-    transform: translateY(-1px);
-}
-
-.product-img {
-    position: relative;
-}
-
-.discount {
-    position: absolute;
-    padding: 5px;
-    left: 0px;
-    top: 0px;
-    background-color: var(--color-pink);
-    border-radius: var(--border-radius-page);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    color: var(--color-red);
-    font-size: 0.9rem;
-}
-
-.product-item .product-img>img {
-    object-fit: cover;
-    width: 100%;
-}
-
-.product-name {
-    padding: 5px 10px;
-    height: 50px;
-    width: 100%;
-    position: relative;
-}
-
-.product-name>p {
-    width: inherit;
-    display: -webkit-box;
-    line-height: 20px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-clamp: 2;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-}
-
-.product-star {
-    display: flex;
-    padding: 2px 10px;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-.product-star .number-sales {
-    font-size: 0.8rem;
-}
-
-.product-price {
-    padding: 5px 10px;
-    line-height: 20px;
-}
-
-.product-price .price-new {
-    color: var(--color-red);
-    font-weight: 600;
-}
-
-.product-price .price-old {
-    text-decoration: line-through;
+.product .product__item {
+    padding: 10px;
 }
 
 .link-more {
@@ -153,7 +102,7 @@
     padding-bottom: 10px;
 }
 
-.link-more>a {
+.link-more .btn-more {
     text-decoration: none;
     background-color: var(--color-white);
     border: 1px solid var(--color-primary);
@@ -166,7 +115,7 @@
     font-weight: 600;
 }
 
-.link-more>a:hover {
+.link-more .btn-more:hover {
     background-color: var(--color-primary);
     color: var(--color-white);
 }

@@ -1,12 +1,12 @@
 package com.project.tmartweb.services.token;
 
+import com.project.tmartweb.domain.entities.Token;
+import com.project.tmartweb.domain.paginate.PaginationDTO;
 import com.project.tmartweb.exceptions.NotFoundException;
-import com.project.tmartweb.models.entities.Token;
 import com.project.tmartweb.repositories.TokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -15,8 +15,8 @@ public class TokenService implements ITokenService {
     private final TokenRepository tokenRepository;
 
     @Override
-    public List<Token> getAll() {
-        return List.of();
+    public PaginationDTO<Token> getAll(Integer page, Integer perPage) {
+        return null;
     }
 
     @Override

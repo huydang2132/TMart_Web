@@ -35,8 +35,8 @@ const focusVisible = ref(false)
 
 const btnType = (type) => {
     switch (type) {
-        case 'extra':
-            return 'btn-extra';
+        case 'secondary':
+            return 'btn-secondary';
         case 'primary':
             return 'btn-primary';
     }
@@ -76,13 +76,13 @@ button>i {
     font-size: 15px;
 }
 
-button.btn-extra {
+button.btn-secondary {
     background-color: var(--color-primary-opacity);
     color: var(--color-primary);
     border: 1px solid var(--color-primary);
 }
 
-button.btn-extra:hover {
+button.btn-secondary:hover {
     background-color: var(--color-white);
 }
 

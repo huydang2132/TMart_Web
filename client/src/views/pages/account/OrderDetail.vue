@@ -7,7 +7,8 @@
                     <h5>Địa chỉ người nhận</h5>
                     <div class="detail-header-address header-item-content">
                         <b class="full-name">Đặng Đình Huy</b>
-                        <p class="address">Địa chỉ: Khu 9 Xóm Hội - Xã Mê Linh, Xã Mê Linh, Huyện Mê Linh, Hà Nội, Việt Nam
+                        <p class="address">Địa chỉ: Khu 9 Xóm Hội - Xã Mê Linh, Xã Mê Linh, Huyện Mê Linh, Hà Nội, Việt
+                            Nam
                         </p>
                         <p class="phone-number">Điện thoại: 0378858091</p>
                     </div>
@@ -84,7 +85,7 @@
                         </div>
                     </div>
                     <div class="btn">
-                        <b-button type="extra">Mua lại</b-button>
+                        <b-button type="secondary">Mua lại</b-button>
                     </div>
                 </div>
             </div>

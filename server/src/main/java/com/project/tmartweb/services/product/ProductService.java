@@ -1,20 +1,26 @@
 package com.project.tmartweb.services.product;
 
+import com.project.tmartweb.domain.dtos.ImageProductDTO;
+import com.project.tmartweb.domain.dtos.ProductDTO;
+import com.project.tmartweb.domain.entities.Category;
+import com.project.tmartweb.domain.entities.ImageProduct;
+import com.project.tmartweb.domain.entities.Product;
+import com.project.tmartweb.domain.paginate.BasePagination;
+import com.project.tmartweb.domain.paginate.Pagination;
+import com.project.tmartweb.domain.paginate.PaginationDTO;
 import com.project.tmartweb.exceptions.InvalidParamException;
+import com.project.tmartweb.exceptions.NotFoundException;
 import com.project.tmartweb.repositories.ImageProductRepository;
 import com.project.tmartweb.repositories.ProductRepository;
-import com.project.tmartweb.exceptions.NotFoundException;
-import com.project.tmartweb.models.dtos.ImageProductDTO;
-import com.project.tmartweb.models.dtos.ProductDTO;
-import com.project.tmartweb.models.entities.Category;
-import com.project.tmartweb.models.entities.ImageProduct;
-import com.project.tmartweb.models.entities.Product;
 import com.project.tmartweb.services.category.CategoryService;
+import com.project.tmartweb.services.file.IFileService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,10 +33,14 @@ public class ProductService implements IProductService {
     private final CategoryService categoryService;
     private final ModelMapper mapper;
     private final ImageProductRepository imageProductRepository;
+    private final IFileService fileService;
 
     @Override
-    public Page<Product> getAllProductsPageRequest(PageRequest pageRequest) {
-        return productRepository.findAll(pageRequest);
+    public PaginationDTO<Product> getAllProductsByCategory(UUID categoryId, Integer page, Integer perPage) {
+        PageRequest pageRequest = PageRequest.of(page, perPage, Sort.by("createdAt").descending());
+        Page<Product> pageData = productRepository.findAllByCategory_IdAndDeleted(categoryId, false, pageRequest);
+        BasePagination<Product, ProductRepository> pagination = new BasePagination<>(productRepository);
+        return pagination.paginate(page, perPage, pageData);
     }
 
     @Override
@@ -39,6 +49,14 @@ public class ProductService implements IProductService {
         Product product = mapper.map(productDTO, Product.class);
         product.setCategory(category);
         product.setCreatedBy(productDTO.getCreatedBy());
+        for (MultipartFile file : productDTO.getFiles()) {
+            String url = fileService.uploadFile(file);
+            ImageProduct imageProduct = new ImageProduct();
+            imageProduct.setUrl(url);
+            imageProduct.setProduct(product);
+            imageProductRepository.save(imageProduct);
+        }
+
         return productRepository.save(product);
     }
 
@@ -59,8 +77,15 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<Product> getAll() {
-        return productRepository.findAllByDeletedOrderByCreatedAtDesc(false);
+    public PaginationDTO<Product> getAll(Integer page, Integer perPage) {
+        if (page == null && perPage == null) {
+            return new PaginationDTO<>(productRepository.findAll(), null);
+        }
+        Page<Product> pageData = productRepository.findAllByDeleted(false,
+                PageRequest.of(page, perPage, Sort.by("createdAt").descending()));
+        Pagination pagination = new Pagination(page, perPage, pageData.getTotalPages() - 1,
+                pageData.getTotalElements());
+        return new PaginationDTO<>(pageData.getContent(), pagination);
     }
 
     @Override
@@ -85,18 +110,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<Product> deleteMultiple(List<Product> products) {
-        return List.of();
-    }
-
-    @Override
-    public ImageProduct insertImageProduct(UUID productId, ImageProductDTO imageProductDTO) {
-        Product product = getById(productId);
-        ImageProduct imageProduct = mapper.map(imageProductDTO, ImageProduct.class);
-        int size = imageProductRepository.findByProductId(productId).size();
-        if (size >= 5) {
-            throw new InvalidParamException("Do not have more than 5 image");
-        }
-        return imageProductRepository.save(imageProduct);
+    public int deleteMultiple(List<UUID> ids) {
+        return 0;
     }
 }
