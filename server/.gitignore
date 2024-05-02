@@ -21,6 +21,8 @@ target/
 *.ipr
 bin
 
+/resources/application.yml
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -33,3 +35,4 @@ build/
 
 ### VS Code ###
 .vscode/
+/src/main/resources/application.yml

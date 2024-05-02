@@ -1,6 +1,7 @@
 package com.project.tmartweb.web.controllers;
 
-import com.project.tmartweb.services.order_detail.IOrderDetailService;
+import com.project.tmartweb.application.services.order_detail.IOrderDetailService;
+import com.project.tmartweb.web.base.RolesAdminUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ public class OrderDetailController {
     private IOrderDetailService orderDetailService;
 
     @GetMapping("")
+    @RolesAdminUser
     public ResponseEntity<?> getAllOrderDetails(
             @RequestParam Integer page,
             @RequestParam Integer perPage
@@ -23,12 +25,14 @@ public class OrderDetailController {
     }
 
     @GetMapping("/{id}")
+    @RolesAdminUser
     public ResponseEntity<?> getOrderDetail(@PathVariable UUID id) {
         var result = orderDetailService.getById(id);
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/order/{id}")
+    @RolesAdminUser
     public ResponseEntity<?> getAllOrderDetailsByOrder(
             @PathVariable UUID id,
             @RequestParam Integer page,

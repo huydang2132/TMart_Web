@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 
@@ -36,5 +37,6 @@ public class Token {
     private User user;
 
     @Column(name = "created_at")
+    @CreationTimestamp
     private Timestamp createdAt;
 }

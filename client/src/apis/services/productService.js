@@ -1,6 +1,9 @@
 import axios from '../axios';
+import baseService from './baseService';
 
-class productService {
+class productService extends baseService {
+    endpoint = "/products";
+
     async getAll(page, perPage) {
         try {
             const res = await axios.get('/products', { params: { page: page, perPage: perPage } });
@@ -19,13 +22,18 @@ class productService {
         }
     }
 
-    async getById(id) {
-        try {
-            const res = await axios.get(`/products/${id}`);
-            return res.data;
-        } catch (error) {
-            console.error(error);
-        }
+    async getAllDeleted(page, perPage) {
+        const res = await axios.get('/products/deleted', { params: { page: page, perPage: perPage } });
+        return res;
+    }
+
+    async uploadImage(id, data) {
+        const res = await axios.post(`${this.endpoint}/upload-image/${id}`, data, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        return res;
     }
 }
 

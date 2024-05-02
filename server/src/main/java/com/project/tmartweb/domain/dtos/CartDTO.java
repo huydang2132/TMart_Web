@@ -14,10 +14,14 @@ import java.util.UUID;
 @Getter
 @Setter
 public class CartDTO extends BaseDTO {
+    private UUID id;
+
     @Min(1)
     private int quantity;
 
     private UUID userId;
 
     private UUID productId;
+
+    private String classify;
 }

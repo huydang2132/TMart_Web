@@ -1,8 +1,9 @@
 package com.project.tmartweb.web.controllers;
 
+import com.project.tmartweb.application.services.cart.ICartService;
 import com.project.tmartweb.domain.dtos.CartDTO;
 import com.project.tmartweb.domain.entities.Cart;
-import com.project.tmartweb.services.cart.ICartService;
+import com.project.tmartweb.web.base.RolesAdminUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,22 +17,25 @@ public class CartsController {
     private ICartService cartService;
 
     @GetMapping("/user/{id}")
+    @RolesAdminUser
     public ResponseEntity<?> getAllCarts(
             @PathVariable UUID id,
-            @RequestParam Integer page,
-            @RequestParam Integer perPage
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer perPage
     ) {
         var result = cartService.getAllByUser(id, page, perPage);
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/{id}")
+    @RolesAdminUser
     public ResponseEntity<?> getCart(@PathVariable UUID id) {
         var result = cartService.getById(id);
         return ResponseEntity.ok(result);
     }
 
     @DeleteMapping("/{id}")
+    @RolesAdminUser
     public ResponseEntity<?> deleteCart(@PathVariable UUID id) {
         Cart cart = cartService.getById(id);
         cartService.delete(cart);
@@ -39,12 +43,14 @@ public class CartsController {
     }
 
     @PostMapping("")
+    @RolesAdminUser
     public ResponseEntity<?> insertCart(@RequestBody CartDTO cartDTO) {
         var result = cartService.insert(cartDTO);
         return ResponseEntity.status(201).body(result);
     }
 
     @PutMapping("/{id}")
+    @RolesAdminUser
     public ResponseEntity<?> updateCart(@PathVariable UUID id, @RequestBody CartDTO cartDTO) {
         var result = cartService.update(id, cartDTO);
         return ResponseEntity.ok(result);

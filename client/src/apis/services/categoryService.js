@@ -1,6 +1,9 @@
 import axios from '../axios';
+import baseService from './baseService';
 
-class categoryService {
+class categoryService extends baseService {
+    endpoint = "/categories";
+
     gettAll = async () => {
         try {
             const res = await axios.get('/categories');

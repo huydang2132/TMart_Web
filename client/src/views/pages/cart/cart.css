@@ -142,6 +142,9 @@
 .select-quantity>input {
     width: 60px;
     height: 30px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--color-border);
+    outline: none;
     text-align: center;
 }
 
@@ -188,8 +191,20 @@
     gap: 10px;
 }
 
-.cart-sell-voucher>button {
-    background-color: transparent;
+.cart-sell-voucher .voucher-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cart-sell-voucher .voucher-content>input {
+    flex: 4;
+    border-radius: 10px;
+}
+
+.cart-sell-voucher .voucher-content>button {
+    border-radius: 10px;
+    flex: 1;
 }
 
 .buy-now-bill {

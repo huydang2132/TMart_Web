@@ -1,7 +1,10 @@
 package com.project.tmartweb.web.controllers;
 
+import com.project.tmartweb.application.services.notification.INotificationService;
 import com.project.tmartweb.domain.dtos.NotificationDTO;
-import com.project.tmartweb.services.notification.INotificationService;
+import com.project.tmartweb.web.base.RoleAdmin;
+import com.project.tmartweb.web.base.RoleUser;
+import com.project.tmartweb.web.base.RolesAdminUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +18,7 @@ public class NotificationsController {
     private INotificationService notificationService;
 
     @GetMapping("")
+    @RoleAdmin
     public ResponseEntity<?> getAllNotifications(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer perPage
@@ -24,6 +28,7 @@ public class NotificationsController {
     }
 
     @GetMapping("/{id}")
+    @RolesAdminUser
     public ResponseEntity<?> getNotification(
             @PathVariable UUID id
     ) {
@@ -32,6 +37,7 @@ public class NotificationsController {
     }
 
     @PutMapping("/read/{id}")
+    @RoleUser
     public ResponseEntity<?> readNotification(
             @PathVariable UUID id
     ) {
@@ -50,6 +56,7 @@ public class NotificationsController {
     }
 
     @PostMapping("")
+    @RoleAdmin
     public ResponseEntity<?> insertNotification(
             @RequestBody NotificationDTO notificationDTO
     ) {
@@ -58,6 +65,7 @@ public class NotificationsController {
     }
 
     @PutMapping("/{id}")
+    @RoleUser
     public ResponseEntity<?> updateNotification(
             @PathVariable UUID id,
             @RequestBody NotificationDTO notificationDTO
@@ -67,6 +75,7 @@ public class NotificationsController {
     }
 
     @DeleteMapping("/{id}")
+    @RoleAdmin
     public ResponseEntity<?> deleteNotification(
             @PathVariable UUID id
     ) {

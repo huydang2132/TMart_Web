@@ -1,16 +1,14 @@
 package com.project.tmartweb.web.controllers;
 
+import com.project.tmartweb.application.services.role.IRoleService;
 import com.project.tmartweb.domain.enums.RoleId;
-import com.project.tmartweb.services.role.IRoleService;
+import com.project.tmartweb.web.base.RestAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("${api.prefix}/roles")
+@RestAPI("${api.prefix}/roles")
 public class RolesController {
     @Autowired
     private IRoleService roleService;

@@ -5,8 +5,8 @@ class baseService {
 
     endpoint = "";
 
-    async getAll() {
-        const res = await axios.get(this.endpoint);
+    async getAll(page, perPage) {
+        const res = await axios.get(this.endpoint, { params: { page: page, perPage: perPage } });
         return res;
     }
 

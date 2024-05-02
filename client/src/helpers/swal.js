@@ -12,3 +12,19 @@ export const dialog = (title, icon, text, confirmButtonText = 'OK', showCancelBu
         confirmButtonText: confirmButtonText
     })
 }
+
+export const dialogConfirm = (title, text, callback, confirmButtonText = 'Đồng ý') => {
+    Swal.fire({
+        title: title,
+        text: text,
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: confirmButtonText,
+        cancelButtonText: 'Hủy',
+        preConfirm: async () => {
+            callback()
+        }
+    })
+}

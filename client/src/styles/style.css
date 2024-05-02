@@ -71,6 +71,11 @@ pre {
     position: relative;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
 .required::after {
     content: "*";
     position: absolute;

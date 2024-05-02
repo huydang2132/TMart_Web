@@ -19,39 +19,31 @@
                 <div class="account-info-row">
                     <div class="info-content-item user-name">
                         <label for="userName">Tên đăng nhập</label>
-                        <b-input id="userName" readonly />
+                        <b-input v-model="userInfor.userName" id="userName" />
                     </div>
                     <div class="info-content-item full-name">
                         <label for="fullName">Họ tên</label>
-                        <b-input id="fullName" />
+                        <b-input v-model="userInfor.fullName" id="fullName" />
                     </div>
                 </div>
                 <div class="account-info-row">
                     <div class="info-content-item email">
                         <label for="email">Email</label>
-                        <b-input id="email" />
+                        <b-input v-model="userInfor.email" id="email" />
                     </div>
                     <div class="info-content-item phone-number">
                         <label for="phoneNumber">Số điện thoại</label>
-                        <b-input id="phoneNumber" />
+                        <b-input v-model="userInfor.phoneNumber" id="phoneNumber" />
                     </div>
                 </div>
                 <div class="account-info-row">
                     <div class="info-content-item date-birth">
                         <label for="dateOfBirth">Ngày sinh</label>
-                        <b-datepicker v-model="date" />
-                    </div>
-                    <div class="info-content-item gender">
-                        <label for="gender">Giới tính</label>
-                        <div class="radio-gender">
-                            <b-checkbox type="radio" label="Nam" name="gender" />
-                            <b-checkbox type="radio" label="Nữ" name="gender" />
-                            <b-checkbox type="radio" label="Khác" name="gender" />
-                        </div>
+                        <b-datepicker v-model="userInfor.dateOfBirth" id="dateOfBirth" />
                     </div>
                 </div>
                 <div class="account-btn">
-                    <b-button value="Lưu thay đổi" type="primary" />
+                    <b-button @click="hadnleSaveChange()" value="Lưu thay đổi" type="primary" />
                 </div>
             </div>
         </div>
@@ -59,27 +51,45 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { useUserStore } from '@/stores/user';
+import { nextTick, ref } from 'vue';
 
 
 // ---------------------- Props ----------------------
-const urlImg = ref(null);
-const date = ref();
 
 // ---------------------- Khai báo biến --------------
-
+const userStore = useUserStore();
+const urlImg = ref(null);
+const isChangeImg = ref(false);
+const userInfor = ref({});
+const fileImg = ref(null);
 
 // ---------------------- Watcher --------------------
 
 
 // ---------------------- Lifecycle ------------------
-
+nextTick(async () => {
+    await userStore.fetchGetById();
+    userInfor.value = userStore.userInfor;
+    urlImg.value = userStore.userInfor.image;
+})
 
 // ---------------------- Hàm xử lý ------------------
 const handleChangeImg = (event) => {
     urlImg.value = URL.createObjectURL(event.target.files[0]);
+    fileImg.value = event.target.files[0];
+    console.log(event.target.files[0]);
+    isChangeImg.value = true;
 }
 
+const hadnleSaveChange = async () => {
+    if (isChangeImg.value) {
+        let formData = new FormData();
+        formData.append("image", fileImg.value);
+        await userStore.fetchPostImage(formData);
+    }
+    await userStore.fetchEditProfile(userInfor.value);
+}
 
 </script>
 

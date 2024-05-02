@@ -13,7 +13,7 @@ import lombok.Setter;
 public class UserLoginDTO {
     private String userName;
 
-    @NotBlank(message = "Password is required")
+    @NotBlank(message = "Mật khẩu không được để trống!")
     private String password;
 
     private String phoneNumber;

@@ -1,7 +1,13 @@
 <template>
-    <div class="input">
-        <input :class="[`${props.type}-custom`]" :type="props.type" :id="uid" :name="name" />
-        <label :class="[`${props.type}-custom-label`]" :for="uid">{{ label }}</label>
+    <div v-if="type === 'checkbox'" class="form-check">
+        <input :class="[`form-check-input`]" :indeterminate="indeterminate" :value="value" v-model="inputValue"
+            type="checkbox" :id="id !== null ? id : uid" :name="name" />
+        <label v-if="label !== null" :class="[`form-check-label`]" :for="id !== null ? id : uid">{{ label }}</label>
+    </div>
+    <div v-else-if="type === 'radio'" class="form-check">
+        <input :class="[`form-check-input`]" :value="value" v-model="inputValue" type="radio"
+            :id="id !== null ? id : uid" :name="name" />
+        <label v-if="label !== null" :class="[`form-check-label`]" :for="id !== null ? id : uid">{{ label }}</label>
     </div>
 </template>
 
@@ -23,6 +29,23 @@ const props = defineProps({
     name: {
         type: String,
         default: null
+    },
+    value: null,
+    size: {
+        type: String,
+        default: '18'
+    },
+    id: {
+        type: String,
+        default: null
+    },
+    checked: {
+        type: Boolean,
+        default: false
+    },
+    indeterminate: {
+        type: Boolean,
+        default: false
     }
 })
 
@@ -48,67 +71,21 @@ watch(() => inputValue.value, (newVal) => {
 </script>
 
 <style scoped>
-.checkbox-custom,
-.radio-custom {
-    opacity: 0;
-    position: absolute;
+.form-check {
+    display: flex;
+    gap: 5px;
+    align-items: center;
 }
 
-.checkbox-custom,
-.checkbox-custom-label,
-.radio-custom,
-.radio-custom-label {
-    display: inline-flex;
-    vertical-align: middle;
-    cursor: pointer;
-    gap: 6px;
-}
-
-.checkbox-custom-label,
-.radio-custom-label {
-    position: relative;
-}
-
-.checkbox-custom+.checkbox-custom-label:before,
-.radio-custom+.radio-custom-label:before {
-    content: '';
-    background: #fff;
-    border: 1px solid var(--color-border);
-    display: inline-flex;
-    vertical-align: middle;
+.form-check-input {
     width: 18px;
     height: 18px;
-    align-items: center;
-    justify-content: center;
+    cursor: pointer;
 }
 
-.checkbox-custom:hover+.checkbox-custom-label:before,
-.radio-custom:hover+.radio-custom-label:before {
-    border: 1px solid var(--color-primary);
-}
-
-.checkbox-custom:checked+.checkbox-custom-label:before {
-    content: "\f00c";
-    font-family: 'FontAwesome';
-    background: var(--color-primary);
-    color: #fff;
-    font-size: 13px;
-    border: 1px solid var(--color-primary);
-}
-
-.radio-custom+.radio-custom-label:before {
-    border-radius: 50%;
-}
-
-.checkbox-custom+.checkbox-custom-label:before {
-    border-radius: 4px;
-}
-
-.radio-custom:checked+.radio-custom-label:before {
-    content: "\f111";
-    font-family: 'FontAwesome';
-    color: var(--color-primary);
-    font-size: 13px;
-    border: 1px solid var(--color-primary);
+.form-check-label {
+    font-size: 1rem;
+    padding-top: 5px;
+    cursor: pointer;
 }
 </style>

@@ -54,7 +54,8 @@
                     <p class="quantity-tile">Số lượng</p>
                     <div class="select-quantity">
                         <b-button @click="reduce" icon="fa-solid fa-minus" />
-                        <b-input @input="validInputQuantity" @keydown="handleArrowUpDown($event)" v-model="quantity" />
+                        <input min="1" :max="quantityProduct" @input="validInputQuantity" type="number"
+                            v-model="quantity" />
                         <b-button @click="increment" icon="fa-solid fa-plus" />
                     </div>
                     <p class="quantity">{{ $helper.formatNumber(product.quantity) }} sản phẩm có sẵn</p>
@@ -83,6 +84,7 @@ import router from '@/routers/router';
 import { useRoute } from 'vue-router';
 import { useProductStore } from '@/stores/product';
 import { useCartStore } from '@/stores/cart';
+import { useUserStore } from '@/stores/user';
 
 
 // --------------------- Khai báo biến ----------------------
@@ -94,6 +96,7 @@ const productId = ref(route.params.id);
 const quantityProduct = ref(0);
 
 const cartStore = useCartStore();
+const userStore = useUserStore();
 
 // --------------------- Lifecycle vue ----------------------
 watch(() => star.value, () => {
@@ -103,7 +106,7 @@ const productStore = useProductStore();
 
 nextTick(async () => {
     await productStore.fetchGetById(productId.value);
-    product.value = productStore.getProduct;
+    product.value = productStore.product;
     quantityProduct.value = product.value.quantity;
     console.log(product.value);
 })
@@ -111,28 +114,12 @@ nextTick(async () => {
 // --------------------- Hàm xử lý --------------------------
 
 const validInputQuantity = () => {
-    const pattern = /[^0-9]/;
     const maxQuantity = product.value.quantity;
-    if (pattern.test(quantity.value)) {
-        quantity.value = quantity.value.replace(/[^0-9]/, '')
-    }
-    if (quantity.value < 1) {
-        quantity.value = 1;
-    }
-    else if (quantity.value > maxQuantity) {
+    if (quantity.value > maxQuantity) {
         quantity.value = maxQuantity;
     }
     else {
         quantity.value = Number.parseInt(quantity.value);
-    }
-}
-
-const handleArrowUpDown = (e) => {
-    if (e.keyCode == '38') {
-        increment();
-    }
-    else if (e.keyCode == '40') {
-        reduce();
     }
 }
 
@@ -149,7 +136,12 @@ const handleBuyNow = () => {
 }
 
 const handleAddToCart = () => {
-    cartStore.fetchInsert({ productId: productId.value, quantity: quantity.value });
+    cartStore.fetchInsert({
+        productId: productId.value,
+        quantity: quantity.value,
+        userId: userStore.userId,
+        createdBy: userStore.fullName
+    });
 }
 </script>
 

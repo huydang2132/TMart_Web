@@ -16,12 +16,13 @@ const user = reactive({
 const authStore = useAuthStore();
 const route = useRoute();
 if (authStore.isLoggedIn) {
-    router.push({ name: 'HomePage' })
+    router.replace({ name: 'HomePage' })
 }
 
 // ---------------------- Methods -----------------------
 const onSubmit = async () => {
     await authStore.fetchLogin(user);
+
     if (authStore.isLoggedIn) {
         route.query.redirect ? router.replace(route.query.redirect) : router.replace({ name: 'HomePage' });
     }

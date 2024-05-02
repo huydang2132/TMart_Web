@@ -1,8 +1,11 @@
 package com.project.tmartweb.web.controllers;
 
+import com.project.tmartweb.application.services.feedback.IFeedbackService;
 import com.project.tmartweb.domain.dtos.FeedbackDTO;
 import com.project.tmartweb.domain.entities.Feedback;
-import com.project.tmartweb.services.feedback.IFeedbackService;
+import com.project.tmartweb.web.base.RoleAdmin;
+import com.project.tmartweb.web.base.RoleUser;
+import com.project.tmartweb.web.base.RolesAdminUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +19,7 @@ public class FeedbacksController {
     private IFeedbackService feedbackService;
 
     @GetMapping("")
+    @RoleAdmin
     public ResponseEntity<?> getAllFeedbacks(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer perPage
@@ -35,6 +39,7 @@ public class FeedbacksController {
     }
 
     @GetMapping("/{id}")
+    @RolesAdminUser
     public ResponseEntity<?> getFeedbackById(
             @PathVariable("id") UUID id
     ) {
@@ -43,6 +48,7 @@ public class FeedbacksController {
     }
 
     @PutMapping("/{id}")
+    @RoleAdmin
     public ResponseEntity<?> updateFeedbackById(
             @PathVariable("id") UUID id,
             @RequestBody FeedbackDTO feedbackDTO
@@ -52,6 +58,7 @@ public class FeedbacksController {
     }
 
     @PostMapping("")
+    @RoleUser
     public ResponseEntity<?> insertFeedback(
             @RequestBody FeedbackDTO feedbackDTO
     ) {
@@ -60,6 +67,7 @@ public class FeedbacksController {
     }
 
     @DeleteMapping("/{id}")
+    @RoleAdmin
     public ResponseEntity<?> deleteFeedbackById(
             @PathVariable("id") UUID id
     ) {

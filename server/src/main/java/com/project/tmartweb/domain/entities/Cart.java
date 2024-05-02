@@ -28,4 +28,7 @@ public class Cart extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+
+    @Column(name = "classify")
+    private String classify;
 }

@@ -1,11 +1,11 @@
 package com.project.tmartweb.domain.dtos;
 
 import com.project.tmartweb.domain.dtos.base.BaseDTO;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -14,8 +14,7 @@ import java.util.UUID;
 @Getter
 @Setter
 public class GalleryDTO extends BaseDTO {
-    @Size(max = 100)
-    private String image;
+    private MultipartFile image;
 
     private UUID productId;
 }

@@ -25,13 +25,15 @@
                 </div>
                 <div @click="handleClickAccount" class="account-tile" @mouseover="isShowAccOption = true"
                     @mouseleave="isShowAccOption = false">
-                    <img :src="require('@/assets/imgs/avatar.png')" alt="">
-                    <span>{{ authStore.isLoggedIn ? 'Tài khoản' : 'Đăng nhập' }}</span>
+                    <span>{{ authStore.isLoggedIn ? `Tài khoản` : 'Đăng nhập' }}</span>
                 </div>
                 <div v-if="authStore.isLoggedIn" @mouseover="isShowAccOption = true"
                     @mouseleave="isShowAccOption = false" v-show="isShowAccOption" class="account-box">
                     <div class="account-router-link">
                         <router-link :to="{ name: 'AccountPage' }">Thông tin tài khoản</router-link>
+                    </div>
+                    <div class="account-router-link">
+                        <router-link :to="{ name: 'OrdersPage' }">Đổi mật khẩu</router-link>
                     </div>
                     <div class="account-router-link">
                         <router-link :to="{ name: 'OrdersPage' }">Đơn hàng</router-link>
@@ -45,7 +47,8 @@
         <div class="cart">
             <div class="cart-item">
                 <b-button @click="handleRedirectCart" icon="fa-solid fa-cart-shopping">
-                    <span class="quantity-notify">3</span>
+                    <span v-if="cartStore.cartByUser?.data?.length > 0" class="quantity-notify">
+                        {{ cartStore.cartByUser?.data?.length }}</span>
                 </b-button>
             </div>
         </div>
@@ -54,7 +57,10 @@
 
 <script>
 import { useAuthStore } from '@/stores/auth';
+import { useCartStore } from '@/stores/cart';
+import { useUserStore } from '@/stores/user';
 import _ from 'lodash';
+import { nextTick } from 'vue';
 
 export default {
     name: 'TheHeader',
@@ -62,7 +68,11 @@ export default {
         return {
             searchValue: '',
             isShowAccOption: false,
-            authStore: false
+            authStore: null,
+            cartStore: null,
+            cartData: null,
+            userStore: null,
+            userInfor: null
         }
     },
     methods: {
@@ -97,17 +107,30 @@ export default {
             this.authStore.fetchLogout();
         }
     },
-    created() {
+    async created() {
         this.authStore = useAuthStore();
+        this.cartStore = useCartStore();
+        this.userStore = useUserStore();
+        await this.userStore.fetchGetById();
+        nextTick(async () => {
+
+            this.userInfor = this.userStore.userInfor;
+        })
     },
     mounted() {
         this.$nextTick(() => {
             this.$refs.refInputSearch.focus();
         })
+        nextTick(async () => {
+            if (this.authStore.isLoggedIn) {
+                await this.cartStore.fetchGetAllByUser();
+                this.cartData = this.cartStore.cartByUser.data;
+            }
+        })
     },
-    watch: {
+    updated() {
 
-    },
+    }
 }
 </script>
 
@@ -199,7 +222,7 @@ export default {
 
 #header .redirect {
     display: flex;
-    width: 28%;
+    width: 30%;
     justify-content: flex-end;
 }
 
@@ -261,7 +284,8 @@ export default {
 
 .redirect .redirect__account .account-tile>img {
     object-fit: cover;
-    width: 15px;
+    width: 25px;
+    border-radius: 50%;
 }
 
 .redirect .redirect__account .account-tile {

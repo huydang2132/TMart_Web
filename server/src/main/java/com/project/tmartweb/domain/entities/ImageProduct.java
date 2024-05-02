@@ -18,7 +18,7 @@ public class ImageProduct extends BaseEntity {
     @Column(name = "image_name", length = 100)
     private String imageName;
 
-    @Column(name = "url", length = 100)
+    @Column(name = "url")
     private String url;
 
     @JsonBackReference

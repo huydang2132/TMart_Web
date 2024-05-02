@@ -1,14 +1,16 @@
 <template>
-    <VueDatePicker v-model="dateInput" :format="format" locale="vi"
+    <VueDatePicker :id="props.id" v-model="dateInput" :format="format" locale="vi"
         :day-names="['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']" :enable-time-picker="false" month-name-format="long"
         auto-apply autocomplete="on" />
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, defineProps } from 'vue';
 
 // ---------------------- Props ----------------------
-
+const props = defineProps({
+    id: String
+})
 
 // ---------------------- Khai báo biến --------------
 const dateInput = ref(null);

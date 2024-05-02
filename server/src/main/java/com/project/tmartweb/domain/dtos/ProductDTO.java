@@ -5,9 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -23,11 +21,9 @@ public class ProductDTO extends BaseDTO {
 
     private double discount;
 
+    private int quantity;
+
     private String description;
 
     private Boolean deleted = Boolean.FALSE;
-
-    private String classify;
-
-    private List<MultipartFile> files;
 }

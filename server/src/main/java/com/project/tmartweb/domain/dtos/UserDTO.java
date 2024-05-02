@@ -2,7 +2,6 @@ package com.project.tmartweb.domain.dtos;
 
 import com.project.tmartweb.domain.dtos.base.BaseDTO;
 import com.project.tmartweb.domain.enums.RoleId;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +16,6 @@ import java.util.Date;
 public class UserDTO extends BaseDTO {
     private String userName;
 
-    @NotBlank(message = "Password cannot be blank")
     private String password;
 
     private String image;

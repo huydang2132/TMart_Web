@@ -1,21 +1,21 @@
 <template>
-  <TheFrontSide />
+  <router-view :key="$route.fullPath"></router-view>
 </template>
 
-<script>
-import TheFrontSide from './views/layouts/TheFrontSide.vue';
-export default {
+<script setup>
+import { nextTick, watch } from 'vue';
+import { useUserStore } from './stores/user';
+import { useAuthStore } from './stores/auth';
 
-  name: 'App',
+const userSotore = useUserStore();
+const authStore = useAuthStore();
 
-  components: {
-    TheFrontSide
-  },
 
-  data: () => ({
-    //
-  }),
-}
+watch(() => authStore.isLoggedIn, () => {
+  nextTick(async () => {
+    await userSotore.fetchGetById();
+  })
+})
 </script>
 
 <style src="./styles/style.css"></style>

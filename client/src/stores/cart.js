@@ -5,7 +5,10 @@ import { defineStore } from 'pinia'
 
 export const useCartStore = defineStore('cart', {
     state: () => ({
-        carts: {}
+        carts: {},
+        cart: {},
+        cartByUser: {},
+        cartItems: [],
     }),
     getters: {},
     actions: {
@@ -19,10 +22,21 @@ export const useCartStore = defineStore('cart', {
             }
         },
 
+        async fetchGetAllByUser() {
+            try {
+                const userId = JSON.parse(localStorage.getItem('user'))?.id
+                const res = await cartService.getAllByUser(userId);
+                this.cartByUser = res.data;
+            } catch (error) {
+                toastify('Lỗi không lấy được đơn hàng', 'error');
+                console.error(error);
+            }
+        },
+
         async fetchGetById(id) {
             try {
                 const res = await cartService.getById(id);
-                this.carts = res.data;
+                this.cart = res.data;
             } catch (error) {
                 toastify('Lỗi không lấy được đơn hàng', 'error');
                 console.error(error);
@@ -32,7 +46,7 @@ export const useCartStore = defineStore('cart', {
         async fetchDelete(id) {
             try {
                 const res = await cartService.delete(id);
-                this.carts = res.data;
+                console.log(res);
             } catch (error) {
                 dialog('Xóa đơn hàng thất bại', 'error', error.response.data.userMessage);
                 console.error(error);
@@ -44,6 +58,7 @@ export const useCartStore = defineStore('cart', {
                 const res = await cartService.insert(data);
                 if (res.status === 201) {
                     toastify('Thêm vào giỏ hàng thành công!', 'success');
+                    this.fetchGetAllByUser();
                 }
                 this.carts = res.data;
             } catch (error) {
@@ -55,11 +70,15 @@ export const useCartStore = defineStore('cart', {
         async fetchUpdate(id, data) {
             try {
                 const res = await cartService.update(id, data);
-                this.carts = res.data;
+                this.cart = res.data;
             } catch (error) {
                 dialog('Cập nhật giỏ hàng thất bại', 'error', error.response.data.userMessage);
                 console.error(error);
             }
+        },
+
+        fetchGetCartItems(cartItems) {
+            this.cartItems = cartItems;
         }
     },
 })

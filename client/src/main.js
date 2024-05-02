@@ -19,6 +19,7 @@ import DotsLoader from './components/loading/DotsLoader.vue';
 import BaseCarousel from '@/components/carousel/BaseCarousel.vue';
 import CarouselGallery from '@/components/carousel/CarouselGallery.vue';
 import { Slide } from 'vue3-carousel';
+import SpinnerLoader from '@/components/loading/SpinnerLoader.vue';
 
 app.component('b-button', BaseButton);
 app.component('b-input', BaseInput);
@@ -31,6 +32,7 @@ app.component('dots-loader', DotsLoader);
 app.component('b-carousel', BaseCarousel);
 app.component('carousel-gallery', CarouselGallery);
 app.component('V-Slide', Slide);
+app.component('spinner-loader', SpinnerLoader);
 
 // Method
 import helper from './helpers/helper';

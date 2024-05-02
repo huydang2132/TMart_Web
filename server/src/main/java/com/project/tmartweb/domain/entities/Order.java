@@ -8,8 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Timestamp;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -28,9 +26,6 @@ public class Order extends BaseEntity {
 
     @Column(name = "note", length = 200)
     private String note;
-
-    @Column(name = "order_date")
-    private Timestamp orderDate;
 
     @Column(name = "status", length = 100)
     @Enumerated(EnumType.STRING)

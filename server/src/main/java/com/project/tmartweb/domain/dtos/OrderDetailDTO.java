@@ -20,6 +20,8 @@ public class OrderDetailDTO extends BaseDTO {
     @Min(1)
     private int quantity;
 
+    private String classify;
+
     private UUID orderId;
 
     private UUID productId;

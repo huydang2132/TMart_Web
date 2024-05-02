@@ -29,8 +29,8 @@ const productStore = useProductStore();
 
 nextTick(async () => {
     await productStore.fetchGetAll(page.value, perPage.value);
-    totalPage.value = productStore.products.pagination.lastPage;
-    productsData.value = productStore.products.data;
+    totalPage.value = productStore.products?.pagination?.lastPage;
+    productsData.value = productStore.products?.data;
 })
 
 // --------------------------- Methods ------------------------------

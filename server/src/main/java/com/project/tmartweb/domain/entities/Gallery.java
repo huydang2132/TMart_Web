@@ -14,7 +14,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "galeries")
 public class Gallery extends BaseEntity {
-    @Column(name = "image", length = 100)
+    @Column(name = "image")
     private String image;
 
     @ManyToOne

@@ -2,10 +2,11 @@ import authService from '@/apis/services/authService';
 import { defineStore } from 'pinia';
 import { dialog } from '@/helpers/swal';
 import router from '@/routers/router';
+import { useUserStore } from './user';
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
-        isLoggedIn: localStorage.getItem('user') ? true : false
+        isLoggedIn: localStorage.getItem('user') ? true : false,
     }),
     getters: {
         getIsLoggedIn(state) {
@@ -17,18 +18,22 @@ export const useAuthStore = defineStore('auth', {
             try {
                 const res = await authService.login(data);
                 if (res.status === 200) {
-                    localStorage.setItem('user', res.data.token);
+                    const user = JSON.stringify(res.data);
+                    console.log(user);
+                    localStorage.setItem('user', user);
                     this.isLoggedIn = true;
                 }
             } catch (error) {
-                dialog('Đăng nhập thất bại', 'error', error.response.data.userMessage);
+                dialog('Đăng nhập thất bại', 'error', error?.response?.data?.userMessage);
                 console.error(error);
             }
         },
 
         fetchLogout() {
-            localStorage.removeItem('user');
             this.isLoggedIn = false;
+            localStorage.removeItem('user');
+            const userStore = useUserStore();
+            userStore.fetchLogout();
         },
 
         async fetchRegister(data) {
@@ -40,7 +45,7 @@ export const useAuthStore = defineStore('auth', {
                 }
                 return res.data;
             } catch (error) {
-                dialog('Đăng nhập thất bại', 'error', error.response.data.userMessage);
+                dialog('Đăng nhập thất bại', 'error', error?.response?.data?.userMessage);
                 console.error(error);
             }
         }

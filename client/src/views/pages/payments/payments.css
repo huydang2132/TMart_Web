@@ -45,6 +45,17 @@
     color: var(--color-primary);
 }
 
+.address .address-content-change {
+    display: grid;
+    gap: 15px;
+    align-items: center;
+    padding-top: 10px;
+}
+
+.address .address-content-change>button {
+    width: 150px;
+}
+
 .product-info .product-info-title,
 .product-info .product-info-content {
     display: flex;

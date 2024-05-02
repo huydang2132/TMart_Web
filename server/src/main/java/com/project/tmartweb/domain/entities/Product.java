@@ -1,6 +1,5 @@
 package com.project.tmartweb.domain.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.tmartweb.domain.entities.base.BaseEntity;
 import jakarta.persistence.*;
@@ -31,12 +30,8 @@ public class Product extends BaseEntity {
 
     private Boolean deleted = Boolean.FALSE;
 
-    @Column(name = "classify")
-    private String classify;
-
     @ManyToOne
     @JoinColumn(name = "category_id")
-    @JsonIgnore
     private Category category;
 
     @JsonManagedReference

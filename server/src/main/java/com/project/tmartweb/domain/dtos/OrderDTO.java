@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,13 +26,11 @@ public class OrderDTO extends BaseDTO {
 
     private String note;
 
-    private Timestamp orderDate;
-
     private OrderStatus status;
 
     private UUID userId;
 
     private String couponId;
 
-    private List<OrderItem> orderItems;
+    private List<CartDTO> cartItems;
 }
