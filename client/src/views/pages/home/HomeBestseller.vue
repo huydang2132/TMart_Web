@@ -1,17 +1,20 @@
 <template>
     <div id="bestseller">
+        <div class="loading" v-if="loading">
+            <spinner-loader />
+        </div>
         <div class="header">
             <h4>Sản phẩm bán chạy</h4>
-            <router-link to="">Xem thêm <i class="fa-solid fa-chevron-right"></i></router-link>
+            <router-link :to="{ name: 'ProductBestSeller' }">
+                Xem thêm <i class="fa-solid fa-chevron-right"></i>
+            </router-link>
         </div>
         <div class="product row sm-gutter">
             <b-carousel id="carousel" :breakpoints="breakpoints" :pagination="false">
-                <V-Slide
-                    v-for="(item) in ['Iphone 15 Iphone 15 Iphone 15 Iphone 15 15 Iphone 1515 Iphone 15 ', 'Iphone 13', 'Laptop Acer', '4', '5', '6']"
-                    :key="item">
-                    <router-link :to="{ name: 'DetailProduct', params: { id: item } }" :title="item"
+                <V-Slide v-for="(item) in productListBestSeller" :key="item?.id">
+                    <router-link :to="{ name: 'DetailProduct', params: { id: item?.id } }" :title="item?.title"
                         class="product-item">
-                        <ProductTag></ProductTag>
+                        <ProductTag :item="item"></ProductTag>
                     </router-link>
                 </V-Slide>
             </b-carousel>
@@ -20,8 +23,10 @@
 </template>
 
 <script setup>
+import { useProductStore } from '@/stores/product';
 import ProductTag from '@/views/pages/product/ProductTag.vue';
-import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
+import { nextTick, ref } from 'vue';
 
 const breakpoints = ref({
     700: {
@@ -34,15 +39,37 @@ const breakpoints = ref({
     }
 })
 
+const productStore = useProductStore();
+const { loading, productListBestSeller } = storeToRefs(productStore);
+
+const page = ref(0);
+const perPage = ref(12);
+
+nextTick(async () => {
+    await productStore.fetchGetAllBestSeller(page.value, perPage.value);
+})
+
 
 </script>
 
 <style scoped>
+.loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
 #bestseller {
     width: 100%;
     background-color: var(--color-white);
     border-radius: var(--border-radius-page);
     padding: 10px;
+    position: relative;
 }
 
 .header {

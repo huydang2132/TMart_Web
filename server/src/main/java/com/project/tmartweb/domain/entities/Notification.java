@@ -14,6 +14,9 @@ import lombok.Setter;
 @Entity
 @Table(name = "notifications")
 public class Notification extends BaseEntity {
+    @Column(name = "title")
+    private String title;
+
     @Column(name = "content")
     private String content;
 
@@ -25,6 +28,6 @@ public class Notification extends BaseEntity {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "order_detail_id")
-    private OrderDetail orderDetail;
+    @JoinColumn(name = "order_id")
+    private Order order;
 }

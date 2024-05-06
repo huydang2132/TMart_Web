@@ -1,9 +1,6 @@
 package com.project.tmartweb.application.services.order;
 
-import com.project.tmartweb.application.repositories.CouponRepository;
-import com.project.tmartweb.application.repositories.OrderDetailRepository;
-import com.project.tmartweb.application.repositories.OrderRepository;
-import com.project.tmartweb.application.repositories.ProductRepository;
+import com.project.tmartweb.application.repositories.*;
 import com.project.tmartweb.application.services.cart.CartService;
 import com.project.tmartweb.application.services.coupon.CouponService;
 import com.project.tmartweb.application.services.product.ProductService;
@@ -42,6 +39,7 @@ public class OrderService implements IOrderService {
     private final ModelMapper mapper;
     private final ProductService productService;
     private final ProductRepository productRepository;
+    private final NotificationRepository notificationRepository;
 
     @Override
     @Transactional
@@ -78,6 +76,13 @@ public class OrderService implements IOrderService {
         order.setCoupon(coupon);
         order.setUser(user);
         order.setStatus(OrderStatus.PENDING);
+        Notification notification = new Notification();
+        notification.setOrder(order);
+        notification.setTitle("Đơn hàng đã tạo thành công");
+        notification.setContent("Đơn hàng " + order.getId() + " đã được tạo thành công. " +
+                " Bạn có thể theo dõi đơn hàng tại đây.");
+        notification.setUser(user);
+        notificationRepository.save(notification);
         order.setTotalMoney(Calculator.totalMoneyOrder(orderDetails, discount));
         return orderRepository.save(order);
     }
@@ -87,6 +92,29 @@ public class OrderService implements IOrderService {
     public Order update(UUID id, OrderDTO orderDTO) {
         Order order = getById(id);
         order.setStatus(orderDTO.getStatus());
+        Notification notification = new Notification();
+        notification.setUser(order.getUser());
+        notification.setOrder(order);
+        if (orderDTO.getStatus() == OrderStatus.PROCESSED) {
+            notification.setTitle("Đơn hàng đã xử lý thành công.");
+            notification.setContent("Đơn hàng của bạn đã được xử lý thành công. " +
+                    " Chúng tôi sẽ giao cho đơn vị vận chuyển trong thời gian sớm nhất.");
+        }
+        if (orderDTO.getStatus() == OrderStatus.SHIPPING) {
+            notification.setTitle("Đơn hàng đang được giao.");
+            notification.setContent("Đơn hàng của bạn đã được giao cho đơn vị vận chuyển. " +
+                    " Hãy chú ý điện thoại nhé, đơn hàng sẽ được giao tới bạn trong thời gian sớm nhất có thể.");
+        }
+        if (orderDTO.getStatus() == OrderStatus.SHIPPED) {
+            notification.setTitle("Đơn hàng đã giao thành công.");
+            notification.setContent("Đơn hàng của bạn đã được giao thành công. " +
+                    " Hãy đánh trải nghiệm, đánh giá sản phẩm và nếu có lỗi gì hãy liên hệ với chúng tôi ngay nhé.");
+        }
+        if (orderDTO.getStatus() == OrderStatus.CANCELLED) {
+            notification.setTitle("Đơn hàng đã hủy thành công.");
+            notification.setContent("Đơn hàng của bạn đã được hủy thành công. ");
+        }
+        notificationRepository.save(notification);
         order.setAddress(orderDTO.getAddress());
         return orderRepository.save(order);
     }
@@ -118,8 +146,8 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public List<Order> findByUserId(UUID userId) {
-        return orderRepository.findByUserId(userId);
+    public List<Order> findByUserId(UUID userId, OrderStatus status, String keyword) {
+        return orderRepository.findByUserId(userId, status, keyword);
     }
 
     @Override

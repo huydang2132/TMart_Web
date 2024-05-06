@@ -14,4 +14,12 @@ public interface IProductService
     PaginationDTO<Product> getAllProductsByCategory(UUID categoryId, Integer page, Integer perPage);
 
     PaginationDTO<Product> getAllDeleted(Integer page, Integer perPage);
+
+    PaginationDTO<Product> getAllBySoldQuantity(Integer page, Integer perPage);
+
+    PaginationDTO<Product> getAllByDiscount(Integer page, Integer perPage);
+
+    PaginationDTO<Product> getAllBySearch(
+            String keyword, String direction, String price,
+            Integer page, Integer perPage);
 }

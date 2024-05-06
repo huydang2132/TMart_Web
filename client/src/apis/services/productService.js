@@ -4,9 +4,17 @@ import baseService from './baseService';
 class productService extends baseService {
     endpoint = "/products";
 
-    async getAll(page, perPage) {
+    async getAll(page, perPage, keyword) {
         try {
-            const res = await axios.get('/products', { params: { page: page, perPage: perPage } });
+            const res = await axios.get('/products',
+                {
+                    params: {
+                        page: page,
+                        perPage: perPage,
+                        keyword: keyword
+                    }
+                }
+            );
             return res.data;
         } catch (error) {
             console.error(error);
@@ -22,8 +30,16 @@ class productService extends baseService {
         }
     }
 
-    async getAllDeleted(page, perPage) {
-        const res = await axios.get('/products/deleted', { params: { page: page, perPage: perPage } });
+    async getAllDeleted(page, perPage, keyword) {
+        const res = await axios.get('/products/deleted',
+            {
+                params: {
+                    page: page,
+                    perPage: perPage,
+                    keyword: keyword
+                }
+            }
+        );
         return res;
     }
 
@@ -33,6 +49,26 @@ class productService extends baseService {
                 'Content-Type': 'multipart/form-data'
             }
         });
+        return res;
+    }
+
+    async getAllBestSeller(page, perPage) {
+        const res = await axios.get('/products/best-seller', { params: { page, perPage } });
+        return res;
+    }
+
+    async getAllSale(page, perPage) {
+        const res = await axios.get('/products/sale', { params: { page, perPage } });
+        return res;
+    }
+
+    async searchProduct(keyword, page, perPage, price, feedback) {
+        const res = await axios.get('/products/search',
+            {
+                params: {
+                    keyword, page, perPage, price, feedback
+                }
+            });
         return res;
     }
 }

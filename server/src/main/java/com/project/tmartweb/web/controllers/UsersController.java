@@ -29,7 +29,7 @@ public class UsersController {
     private final IUserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody UserDTO userDTO, BindingResult result) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody UserDTO userDTO) {
         userDTO.setUserName(GenerateValue.generateUsername());
         userDTO.setRoleId(RoleId.USER);
         var res = userService.insert(userDTO);

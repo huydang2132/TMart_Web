@@ -8,7 +8,6 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -32,7 +31,7 @@ public class CategoriesController {
 
     @PostMapping("")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> insertCategory(@Valid @RequestBody CategoryDTO categoryDTO, BindingResult result) {
+    public ResponseEntity<?> insertCategory(@Valid @RequestBody CategoryDTO categoryDTO) {
         Category category = iCategoryService.insert(categoryDTO);
         return ResponseEntity.status(201).body(category);
     }

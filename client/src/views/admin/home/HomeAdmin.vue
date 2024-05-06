@@ -4,7 +4,7 @@
 
 <template>
     <div class="home-admin">
-        Home Admin
+        <h2>Hệ thống quản trị</h2>
     </div>
 </template>
 

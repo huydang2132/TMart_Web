@@ -90,6 +90,42 @@ const routes = [
                             authenticate: true
                         }
                     },
+                    {
+                        path: '/product/best-seller',
+                        name: 'ProductBestSeller',
+                        component: () => import('@/views/pages/product/ProductBestSeller.vue'),
+                        meta: {
+                            title: 'Sản phẩm bán chạy',
+                            authenticate: false
+                        }
+                    },
+                    {
+                        path: '/product/sale',
+                        name: 'ProductSale',
+                        component: () => import('@/views/pages/product/ProductSale.vue'),
+                        meta: {
+                            title: 'Sản phẩm giảm giá',
+                            authenticate: false
+                        }
+                    },
+                    {
+                        path: '/product/search/:keyword',
+                        name: 'ProductSearch',
+                        component: () => import('@/views/pages/product/ProductSearch.vue'),
+                        meta: {
+                            title: 'TMart - Mua sắm online giá tốt',
+                            authenticate: false
+                        }
+                    },
+                    {
+                        path: '/user/change-password',
+                        name: 'ChangePassword',
+                        component: () => import('@/views/pages/account/ChangePassword.vue'),
+                        meta: {
+                            title: 'Thay đổi mật khẩu',
+                            authenticate: true
+                        }
+                    },
                 ]
             },
         ]

@@ -10,8 +10,10 @@ class orderService extends baseService {
         return res;
     }
 
-    async getAllByUser(id) {
-        const res = await axios.get(`${this.endpoint}/user/${id}`);
+    async getAllByUser(id, status, keyword) {
+        const res = await axios.get(`${this.endpoint}/user/${id}`,
+            { params: { status: status, keyword: keyword } }
+        );
         return res;
     }
 }

@@ -17,8 +17,8 @@ public class CouponController {
     @GetMapping("")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<?> getAllCoupons(
-            @RequestParam(defaultValue = "1") Integer page,
-            @RequestParam(defaultValue = "10") Integer perPage
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer perPage
     ) {
         var result = couponService.getAll(page, perPage);
         return ResponseEntity.status(200).body(result);

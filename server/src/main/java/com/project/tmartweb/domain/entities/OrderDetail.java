@@ -1,6 +1,6 @@
 package com.project.tmartweb.domain.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.tmartweb.domain.entities.base.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
@@ -28,6 +28,7 @@ public class OrderDetail extends BaseEntity {
     @Min(0)
     private double totalMoney;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
@@ -35,8 +36,7 @@ public class OrderDetail extends BaseEntity {
     @Column(name = "classify")
     private String classify;
 
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 }

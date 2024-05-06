@@ -36,11 +36,10 @@ public class Product extends BaseEntity {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "product")
-    private List<OrderDetail> orderDetails;
-
-    @JsonManagedReference
-    @OneToMany(mappedBy = "product")
     private List<ImageProduct> imageProducts;
+
+    @Transient
+    private int soldQuantity;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "product")

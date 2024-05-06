@@ -1,10 +1,12 @@
 package com.project.tmartweb.application.services.product;
 
+import com.project.tmartweb.application.repositories.OrderDetailRepository;
 import com.project.tmartweb.application.repositories.ProductRepository;
 import com.project.tmartweb.application.services.category.CategoryService;
 import com.project.tmartweb.config.exceptions.NotFoundException;
 import com.project.tmartweb.domain.dtos.ProductDTO;
 import com.project.tmartweb.domain.entities.Category;
+import com.project.tmartweb.domain.entities.OrderDetail;
 import com.project.tmartweb.domain.entities.Product;
 import com.project.tmartweb.domain.paginate.BasePagination;
 import com.project.tmartweb.domain.paginate.Pagination;
@@ -25,26 +27,64 @@ import java.util.UUID;
 public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
+    private final OrderDetailRepository orderDetailRepository;
     private final ModelMapper mapper;
 
     @Override
     public PaginationDTO<Product> getAllProductsByCategory(UUID categoryId, Integer page, Integer perPage) {
         PageRequest pageRequest = PageRequest.of(page, perPage, Sort.by("createdAt").descending());
         Page<Product> pageData = productRepository.findAllByCategory_IdAndDeleted(categoryId, false, pageRequest);
+        setSoldQuantity(pageData.getContent());
         BasePagination<Product, ProductRepository> pagination = new BasePagination<>(productRepository);
         return pagination.paginate(page, perPage, pageData);
     }
 
     @Override
-    public PaginationDTO<Product> getAllDeleted(Integer page, Integer perPage) {
+    public PaginationDTO<Product> getAllDeleted(
+            Integer page,
+            Integer perPage
+    ) {
         if (page == null && perPage == null) {
-            return new PaginationDTO<>(productRepository.findAllByDeleted(true,
-                    Sort.by("updatedAt").descending()), null);
+            List<Product> products = productRepository.findAllByDeleted(true,
+                    Sort.by("createdAt").descending());
+            setSoldQuantity(products);
+            return new PaginationDTO<>(products, null);
         }
         Page<Product> pageData = productRepository.findAllByDeleted(true,
                 PageRequest.of(page, perPage, Sort.by("createdAt").descending()));
+        setSoldQuantity(pageData.getContent());
         BasePagination<Product, ProductRepository> pagination = new BasePagination<>(productRepository);
         return pagination.paginate(page, perPage, pageData);
+    }
+
+    @Override
+    public PaginationDTO<Product> getAllBySoldQuantity(Integer page, Integer perPage) {
+        Page<Product> products = productRepository.findAllBySoldQuantity(PageRequest.of(page, perPage));
+        setSoldQuantity(products.getContent());
+        BasePagination<Product, ProductRepository> pagination = new BasePagination<>();
+        return pagination.paginate(page, perPage, products);
+    }
+
+    @Override
+    public PaginationDTO<Product> getAllByDiscount(Integer page, Integer perPage) {
+        Page<Product> products = productRepository.findAllByDiscount(PageRequest.of(page, perPage));
+        setSoldQuantity(products.getContent());
+        BasePagination<Product, ProductRepository> pagination = new BasePagination<>();
+        return pagination.paginate(page, perPage, products);
+    }
+
+    @Override
+    public PaginationDTO<Product> getAllBySearch(
+            String keyword,
+            String feedback,
+            String price,
+            Integer page,
+            Integer perPage
+    ) {
+        Page<Product> products = productRepository.findAllBySearch(keyword, feedback, price,
+                PageRequest.of(page, perPage));
+        BasePagination<Product, ProductRepository> pagination = new BasePagination<>();
+        return pagination.paginate(page, perPage, products);
     }
 
     @Override
@@ -75,10 +115,14 @@ public class ProductService implements IProductService {
     @Override
     public PaginationDTO<Product> getAll(Integer page, Integer perPage) {
         if (page == null && perPage == null) {
-            return new PaginationDTO<>(productRepository.findAll(), null);
+            List<Product> products = productRepository.findAllByDeleted(false,
+                    Sort.by("createdAt").descending());
+            setSoldQuantity(products);
+            return new PaginationDTO<>(products, null);
         }
         Page<Product> pageData = productRepository.findAllByDeleted(false,
                 PageRequest.of(page, perPage, Sort.by("createdAt").descending()));
+        setSoldQuantity(pageData.getContent());
         Pagination pagination = new Pagination(page, perPage, pageData.getTotalPages() - 1,
                 pageData.getTotalElements());
         return new PaginationDTO<>(pageData.getContent(), pagination);
@@ -108,5 +152,12 @@ public class ProductService implements IProductService {
     @Override
     public int deleteMultiple(List<UUID> ids) {
         return 0;
+    }
+
+    private void setSoldQuantity(List<Product> products) {
+        for (Product product : products) {
+            List<OrderDetail> orderDetails = orderDetailRepository.findAllByProduct(product);
+            product.setSoldQuantity(orderDetails.size());
+        }
     }
 }

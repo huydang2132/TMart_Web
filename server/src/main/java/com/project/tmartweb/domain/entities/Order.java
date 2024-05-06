@@ -1,5 +1,7 @@
 package com.project.tmartweb.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.tmartweb.domain.entities.base.BaseEntity;
 import com.project.tmartweb.domain.enums.OrderStatus;
 import jakarta.persistence.*;
@@ -7,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,11 +38,19 @@ public class Order extends BaseEntity {
     @Column(name = "total_money")
     private double totalMoney;
 
+    @Column(name = "payment_method")
+    private String paymentMethod;
+
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "coupon_code")
     private Coupon coupon;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "order")
+    private List<OrderDetail> orderDetails;
 }

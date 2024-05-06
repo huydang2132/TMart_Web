@@ -143,6 +143,8 @@ const selectAll = computed({
 nextTick(async () => {
     await cartStore.fetchGetAllByUser();
     cartData.value = cartStore.cartByUser.data;
+    cartSelected.value = cartData.value;
+    selectAll.value = true;
 })
 
 onUpdated(async () => {
@@ -157,6 +159,9 @@ onUpdated(async () => {
 
         if (data.length > 0) {
             handleCaculatorTotalMoney();
+        }
+        else {
+            totalMoney.value = 0
         }
     })
 })

@@ -1,10 +1,46 @@
+<script lang="js" setup>
+import { useProductStore } from '@/stores/product';
+import { storeToRefs } from 'pinia';
+import { nextTick, ref } from 'vue';
+import ProductTag from './ProductTag.vue';
+
+// ------------------------- Ref, reactive, emits, computed ----------------------
+const productStore = useProductStore();
+const { loading, productListSale, pagination } = storeToRefs(productStore);
+const page = ref(1);
+const perPage = ref(12);
+const totalPage = ref(0);
+const productsData = ref([]);
+
+// ------------------------- Lifecycle ----------------------
+nextTick(async () => {
+    await productStore.fetchGetAllSale(page.value - 1, perPage.value);
+    totalPage.value = pagination.value.lastPage + 1;
+    productsData.value = productListSale.value
+    console.log(productsData.value);
+})
+
+// ------------------------- Methods -----------------------
+const handleLoadMore = async () => {
+    if (page.value < totalPage.value) {
+        page.value += 1;
+        await productStore.fetchGetAllSale(page.value - 1, perPage.value);
+        productsData.value = [...productsData.value, ...productListSale.value];
+    }
+}
+
+</script>
+
 <template>
     <div class="product-catalogry">
+        <div class="loading" v-if="loading">
+            <spinner-loader></spinner-loader>
+        </div>
         <div class="header">
-            <h4>{{ category.name }}</h4>
+            <h4>Sản phẩm giảm giá</h4>
         </div>
         <div class="product row sm-gutter">
-            <div class="col-2 product__item" v-for="(item) in productsByCategoryData" :key="item.id">
+            <div class="col-2 product__item" v-for="(item) in productsData" :key="item.id">
                 <router-link :to="{ name: 'DetailProduct', params: { id: item.id } }" :title="item?.title"
                     class="product-item">
                     <ProductTag :item="item"></ProductTag>
@@ -17,50 +53,20 @@
     </div>
 </template>
 
-<script setup>
-import { useCategoryStore } from '@/stores/category';
-import ProductTag from '../product/ProductTag.vue';
-import { useProductStore } from '@/stores/product';
-import { nextTick, onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
-
-const productStore = useProductStore();
-const categoryStore = useCategoryStore();
-const route = useRoute();
-const productsByCategoryData = ref([]);
-const category = ref({});
-const categoryId = ref(route.params.id);
-const page = ref(0);
-const perPage = ref(6);
-const totalPage = ref(0);
-
-nextTick(async () => {
-    await fetchGetAllByCategory();
-    await categoryStore.fecthGetById(categoryId.value);
-    totalPage.value = productStore.productsByCategory.pagination.lastPage;
-    category.value = categoryStore.category;
-    productsByCategoryData.value = productStore.getProductsByCategory;
-})
-
-onMounted(() => {
-
-})
-
-// -------------------- Methods ---------------------------
-const fetchGetAllByCategory = async () => {
-    await productStore.getAllByCategory(categoryId.value, page.value, perPage.value);
+<style lang="css" scoped>
+.loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
 }
 
-const handleLoadMore = async () => {
-    if (page.value >= totalPage.value) return;
-    page.value += 1;
-    await productStore.getAllByCategory(categoryId.value, page.value, perPage.value);
-    productsByCategoryData.value.push(...productStore.getProductsByCategory);
-}
-</script>
-
-<style scoped>
 .product-catalogry {
+    position: relative;
     width: 100%;
     background-color: var(--color-white);
     border-radius: var(--border-radius-page);

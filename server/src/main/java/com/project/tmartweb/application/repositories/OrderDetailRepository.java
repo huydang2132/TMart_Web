@@ -1,6 +1,7 @@
 package com.project.tmartweb.application.repositories;
 
 import com.project.tmartweb.domain.entities.OrderDetail;
+import com.project.tmartweb.domain.entities.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,6 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, UUID> 
     Page<OrderDetail> findAllByOrderId(UUID orderId, Pageable pageable);
 
     List<OrderDetail> findAllByOrderId(UUID orderId);
+
+    List<OrderDetail> findAllByProduct(Product product);
 }

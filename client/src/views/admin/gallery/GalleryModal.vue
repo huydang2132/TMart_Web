@@ -13,6 +13,7 @@ const emits = defineEmits(['closeModal']);
 
 const galleryStore = useGalleryStore();
 const productStore = useProductStore();
+
 const { gallery } = storeToRefs(galleryStore);
 
 nextTick(async () => {

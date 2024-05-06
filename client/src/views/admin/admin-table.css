@@ -39,11 +39,28 @@
     background-color: transparent;
 }
 
+.admin-table table .action>button>i {
+    font-size: 1.2rem;
+}
+
 .admin-table table .action>button.btn-edit {
     color: var(--color-orange);
 }
 
 .admin-table table .action>button.btn-delete {
+    color: var(--color-red);
+}
+
+.admin-table table .action>button.btn-confirm>i,
+.admin-table table .action>button.btn-cancel>i {
+    font-size: 1.3rem;
+}
+
+.admin-table table .action>button.btn-confirm {
+    color: var(--color-green);
+}
+
+.admin-table table .action>button.btn-cancel {
     color: var(--color-red);
 }
 
@@ -70,4 +87,46 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
+}
+
+.status {
+    padding: 5px 10px;
+    border-radius: 10px;
+    color: var(--color-white);
+    font-weight: 500;
+    background-color: var(--color-green);
+    width: fit-content;
+}
+
+.status.expired {
+    background-color: var(--color-red);
+}
+
+.status-order-item {
+    padding: 5px 10px;
+    border-radius: 10px;
+    color: var(--color-white);
+    font-weight: 500;
+    width: fit-content;
+    cursor: pointer;
+}
+
+.status-order-item.pending {
+    background-color: var(--color-orange);
+}
+
+.status-order-item.processed {
+    background-color: var(--color-yellow);
+}
+
+.status-order-item.shipping {
+    background-color: var(--color-blue);
+}
+
+.status-order-item.shipped {
+    background-color: var(--color-green);
+}
+
+.status-order-item.cancelled {
+    background-color: var(--color-red);
 }

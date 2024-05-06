@@ -1,11 +1,14 @@
 <template>
     <div id="products">
+        <div class="loading" v-if="loading">
+            <spinner-loader />
+        </div>
         <div class="header">
             <h4>Sản phẩm đề xuất</h4>
         </div>
         <div class="product row sm-gutter">
-            <div class="col-xxl-2 product-item" v-for="(item) in productsData" :key="item">
-                <router-link :to="{ name: 'DetailProduct', params: { id: item.id } }" :title="item"
+            <div class="col-xxl-2 product-item" v-for="(item) in productsData" :key="item?.id">
+                <router-link :to="{ name: 'DetailProduct', params: { id: item?.id } }" :title="item?.title"
                     class="product-item">
                     <ProductTag :item="item"></ProductTag>
                 </router-link>
@@ -21,16 +24,18 @@
 import { nextTick, ref } from 'vue';
 import ProductTag from '../product/ProductTag.vue';
 import { useProductStore } from '@/stores/product';
+import { storeToRefs } from 'pinia';
 const page = ref(0);
 const perPage = ref(6);
 const totalPage = ref(0);
 const productsData = ref([]);
 const productStore = useProductStore();
+const { loading } = storeToRefs(productStore);
 
 nextTick(async () => {
     await productStore.fetchGetAll(page.value, perPage.value);
-    totalPage.value = productStore.products?.pagination?.lastPage;
-    productsData.value = productStore.products?.data;
+    totalPage.value = productStore?.products?.pagination?.lastPage;
+    productsData.value = productStore?.products?.data;
 })
 
 // --------------------------- Methods ------------------------------
@@ -38,18 +43,30 @@ const handleLoadMore = async () => {
     if (page.value < totalPage.value) {
         page.value++;
         await productStore.fetchGetAll(page.value, perPage.value);
-        productsData.value = [...productsData.value, ...productStore.getProducts];
+        productsData.value = [...productsData?.value, ...productStore.getProducts];
     }
 }
 
 </script>
 
 <style scoped>
+.loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
 #products {
     width: 100%;
     background-color: var(--color-white);
     border-radius: var(--border-radius-page);
     padding: 10px;
+    position: relative;
 }
 
 .header {

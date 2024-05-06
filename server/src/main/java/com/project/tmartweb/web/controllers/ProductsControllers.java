@@ -27,8 +27,21 @@ public class ProductsControllers {
     @GetMapping("")
     public ResponseEntity<?> getAllProducts(
             @RequestParam(required = false) Integer page,
-            @RequestParam(required = false) Integer perPage) {
+            @RequestParam(required = false) Integer perPage
+    ) {
         return ResponseEntity.ok(iProductService.getAll(page, perPage));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchProducts(
+            @RequestParam(name = "keyword") String keyword,
+            @RequestParam(name = "page") int page,
+            @RequestParam(name = "perPage") int perPage,
+            @RequestParam(name = "feedback", defaultValue = "asc") String feedback,
+            @RequestParam(name = "price", defaultValue = "asc") String price
+    ) {
+        var res = iProductService.getAllBySearch(keyword, feedback, price, page, perPage);
+        return ResponseEntity.ok(res);
     }
 
     @GetMapping("/category/{id}")
@@ -51,6 +64,24 @@ public class ProductsControllers {
             @RequestParam(required = false) Integer perPage
     ) {
         var response = iProductService.getAllDeleted(page, perPage);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/best-seller")
+    public ResponseEntity<?> getAllProductsBySoldQuantity(
+            @RequestParam(name = "page", required = false) int page,
+            @RequestParam(name = "perPage", required = false) int perPage
+    ) {
+        var response = iProductService.getAllBySoldQuantity(page, perPage);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/sale")
+    public ResponseEntity<?> getAllProductsByDiscount(
+            @RequestParam(name = "page", required = false) int page,
+            @RequestParam(name = "perPage", required = false) int perPage
+    ) {
+        var response = iProductService.getAllByDiscount(page, perPage);
         return ResponseEntity.ok(response);
     }
 

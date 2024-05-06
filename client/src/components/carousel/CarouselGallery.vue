@@ -53,15 +53,14 @@ const slideTo = (val) => {
         <Carousel id="gallery" :items-to-show="1" :autoplay="props.autoplay" :wrap-around="props.wrapAround"
             v-model="currentSlide">
             <Slide v-for="slide in props.slides" :key="slide">
-                <img class="carousel__item" :src="require('@/assets/imgs/Iphone15-promax.webp')" alt="">
+                <img class="carousel__item" :src="slide?.url" alt="">
             </Slide>
         </Carousel>
 
         <Carousel id="thumbnails" :breakpoints="breakpoints" :autoplay="props.autoplay" :wrap-around="props.wrapAround"
             v-model="currentSlide">
             <Slide v-for="slide in props.slides" :key="slide">
-                <img class="carousel__item" @click="slideTo(slide - 1)"
-                    :src="require('@/assets/imgs/Iphone15-promax.webp')" alt="">
+                <img class="carousel__item" @click="slideTo(slide - 1)" :src="slide?.url" alt="">
             </Slide>
 
             <template #addons>

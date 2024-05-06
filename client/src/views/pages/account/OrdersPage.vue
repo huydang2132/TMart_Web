@@ -6,23 +6,29 @@
             </div>
             <div class="order-header">
                 <div class="order-menu">
-                    <div class="order-menu-item order-all active">
+                    <div @click="handleFilter(null)"
+                        :class="['order-menu-item', 'order-all', { 'active': status === null }]">
                         <p>Tất cả đơn</p>
                     </div>
-                    <div class="order-menu-item order-peding">
+                    <div @click="handleFilter('PENDING')"
+                        :class="['order-menu-item', 'order-peding', { 'active': status === 'PENDING' }]">
                         <p>Đang xử lý</p>
                     </div>
-                    <div class="order-menu-item order-shipping">
+                    <div @click="handleFilter('PROCESSED')"
+                        :class="['order-menu-item', 'order-processed', { 'active': status === 'PROCESSED' }]">
+                        <p>Đã xử lý</p>
+                    </div>
+                    <div @click="handleFilter('SHIPPING')"
+                        :class="['order-menu-item', 'order-shipping', { 'active': status === 'SHIPPING' }]">
                         <p>Đang vận chuyển</p>
                     </div>
-                    <div class="order-menu-item order-done">
+                    <div @click="handleFilter('SHIPPED')"
+                        :class="['order-menu-item', 'order-done', { 'active': status === 'SHIPPED' }]">
                         <p>Đã giao</p>
                     </div>
-                    <div class="order-menu-item order-cancel">
+                    <div @click="handleFilter('CANCELLED')"
+                        :class="['order-menu-item', 'order-cancel', { 'active': status === 'CANCELLED' }]">
                         <p>Đã hủy</p>
-                    </div>
-                    <div class="order-menu-item order-exchange">
-                        <p>Đổi trả</p>
                     </div>
                 </div>
             </div>
@@ -31,39 +37,43 @@
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
                 <div class="search-input">
-                    <b-input ref="refInputSearch" placeholder="Tìm theo mã hoặc tên sản phẩm" />
+                    <b-input v-model="keyword" ref="refInputSearch" placeholder="Tìm theo tên sản phẩm" />
                 </div>
                 <div class="search-button">
-                    <b-button value="Tìm đơn hàng" />
+                    <b-button @click="findByKeyword()" value="Tìm đơn hàng" />
                 </div>
             </div>
-            <div class="order-body order-component" v-for="item in 3" :key="item">
+            <div class="order-body order-component" v-for="item in ordersByUser" :key="item">
+                <div class="loading" v-if="loadingOrder">
+                    <spinner-loader />
+                </div>
                 <div class="order-body-content">
                     <div class="content-header">
-                        <div class="order-status">
-                            <i class="fa-solid fa-ban"></i>
-                            <p>Đã hủy</p>
+                        <div :class="['order-status', item?.status.toLowerCase()]">
+                            <p>{{ statusOrder(item?.status) }}</p>
                         </div>
                     </div>
                     <div class="line"></div>
-                    <div @click="redirectOrderDetail(item)" class="content-body">
-                        <img :src="require('@/assets/imgs/Iphone15-promax.webp')" alt="">
-                        <div class="product-info">
-                            <p class="product-name">Đồng Hồ Thông Minh Xiaomi Redmi Watch 3 / Watch 3 Active - Hàng
-                                Chính
-                                Hãng FPT - Black BHR7266GL</p>
-                            <p class="product-quantity">Số lượng: 1</p>
+                    <div @click="redirectOrderDetail(item.id)" class="content-body">
+                        <div v-for="orderDetail in item.orderDetails" :key="orderDetail.id" class="product-info">
+                            <img :src="orderDetail?.product?.imageProducts[0]?.url" alt="">
+                            <div>
+                                <p class=" product-name">
+                                    {{ orderDetail?.product?.title }}
+                                </p>
+                                <p class="product-quantity">Số lượng: {{ orderDetail.quantity }}</p>
+                            </div>
                         </div>
                     </div>
                     <div class="line"></div>
                     <div class="content-footer">
                         <div class="total-amount">
                             <span>Tổng tiền:</span>
-                            <p>1.157.000 ₫</p>
+                            <p>{{ $formatValue.formatMoney(item.totalMoney) }}</p>
                         </div>
                         <div class="option">
                             <b-button value="Mua lại" type="secondary" />
-                            <b-button @click="redirectOrderDetail(item)" value="Xem chi tiết" type="secondary" />
+                            <b-button @click="redirectOrderDetail(item.id)" value="Xem chi tiết" type="secondary" />
                         </div>
                     </div>
                 </div>
@@ -74,18 +84,35 @@
 
 <script setup>
 import router from '@/routers/router';
-import { onMounted, ref } from 'vue';
+import { useOrderStore } from '@/stores/order';
+import { useUserStore } from '@/stores/user';
+import _ from 'lodash';
+import { storeToRefs } from 'pinia';
+import { nextTick, onMounted, ref, watch } from 'vue';
 
 // ---------------------- Props ----------------------
 
 
 // ---------------------- Khai báo biến --------------
 const refInputSearch = ref(null);
+const orderStore = useOrderStore();
+const userStore = useUserStore();
+const { ordersByUser, loadingOrder } = storeToRefs(orderStore);
+const { userId } = storeToRefs(userStore);
+const keyword = ref(null);
+const status = ref(null);
 
 // ---------------------- Watcher --------------------
-
+watch(() => keyword.value, async () => {
+    await findByKeyword()
+})
 
 // ---------------------- Lifecycle ------------------
+nextTick(async () => {
+    await orderStore.fetchGetAllByUser(userId.value);
+    console.log(ordersByUser.value);
+})
+
 onMounted(() => {
     refInputSearch.value.focus();
 })
@@ -93,6 +120,32 @@ onMounted(() => {
 // ---------------------- Hàm xử lý ------------------
 const redirectOrderDetail = (id) => {
     router.push({ name: 'OrderDetail', params: { id: id } })
+}
+
+const statusOrder = (status) => {
+    switch (status) {
+        case 'PENDING':
+            return 'Đang xử lý';
+        case 'PROCESSED':
+            return 'Đã xử lý';
+        case 'SHIPPING':
+            return 'Đang vận chuyển';
+        case 'SHIPPED':
+            return 'Đã giao';
+        case 'CANCELLED':
+            return 'Đã hủy';
+        default:
+            return '';
+    }
+}
+
+const findByKeyword = _.debounce(async function () {
+    await orderStore.fetchGetAllByUser(userId.value, status.value, keyword.value);
+}, 500)
+
+const handleFilter = (statusOrder) => {
+    status.value = statusOrder;
+    findByKeyword();
 }
 
 </script>

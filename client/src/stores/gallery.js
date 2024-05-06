@@ -6,8 +6,10 @@ import { dialog } from '@/helpers/swal';
 export const useGalleryStore = defineStore('gallery', {
     state: () => ({
         isLoading: false,
+        isSuccess: false,
         gallery: {},
-        galleries: {},
+        galleryList: [],
+        pagination: {}
     }),
     getters: {},
     actions: {
@@ -16,7 +18,8 @@ export const useGalleryStore = defineStore('gallery', {
                 this.isLoading = true;
                 const res = await galleryService.getAll();
                 if (res.status === 200) {
-                    this.galleries = res.data;
+                    this.galleryList = res.data.data;
+                    this.pagination = res.data.pagination;
                 }
             } catch (error) {
                 toastify('Lấy dữ liệu thất bại', 'error');
@@ -44,10 +47,12 @@ export const useGalleryStore = defineStore('gallery', {
         async fetchInsert(productId, image) {
             try {
                 this.isLoading = true;
+                this.isSuccess = false;
                 const res = await galleryService.insert(productId, image);
                 if (res.status === 201) {
                     toastify('Thêm thành công', 'success');
                     this.fetchGetAll();
+                    this.isSuccess = true;
                 }
             } catch (error) {
                 dialog('Thêm thất bại', 'error', error?.response?.data?.userMessage);
@@ -60,10 +65,12 @@ export const useGalleryStore = defineStore('gallery', {
         async fetchUpdate(id, productId, image) {
             try {
                 this.isLoading = true;
+                this.isSuccess = false;
                 const res = await galleryService.update(id, productId, image);
                 if (res.status === 200) {
                     toastify('Cập nhật thành công', 'success');
                     this.fetchGetAll();
+                    this.isSuccess = true;
                 }
             } catch (error) {
                 dialog('Cập nhật thất bại', 'error', error?.response?.data?.userMessage);

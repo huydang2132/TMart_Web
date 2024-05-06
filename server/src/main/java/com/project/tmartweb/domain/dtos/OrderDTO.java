@@ -32,5 +32,7 @@ public class OrderDTO extends BaseDTO {
 
     private String couponId;
 
+    private String paymentMethod;
+
     private List<CartDTO> cartItems;
 }

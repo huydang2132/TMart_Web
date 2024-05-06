@@ -14,6 +14,8 @@ import java.util.UUID;
 @Getter
 @Setter
 public class NotificationDTO extends BaseDTO {
+    private String title;
+
     @NotBlank(message = "Nội dung thông báo không được để trống!")
     private String content;
 
@@ -21,5 +23,5 @@ public class NotificationDTO extends BaseDTO {
 
     private UUID userId;
 
-    private UUID orderDetailId;
+    private UUID orderId;
 }

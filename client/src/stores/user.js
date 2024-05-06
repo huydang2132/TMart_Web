@@ -99,7 +99,7 @@ export const useUserStore = defineStore('user', {
                 this.isLoading = true;
                 const res = await userSerive.changePassword(this.userId, data);
                 if (res.status === 200) {
-                    toastify('Đổi mật khẩu thành công', 'success');
+                    dialog('Thông báo', 'success', 'Thay đổi mật khẩu thành công!');
                 }
             } catch (error) {
                 dialog('Đổi mật khẩu thất bại', 'error', error?.response?.data?.userMessage);

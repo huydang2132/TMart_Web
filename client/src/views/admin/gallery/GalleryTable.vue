@@ -5,12 +5,11 @@ import { nextTick, ref } from 'vue';
 import GalleryModal from './GalleryModal.vue';
 
 const galleryStore = useGalleryStore();
-const page = ref(0);
 const showModal = ref(false);
 const statusForm = ref('ADD');
 const galleryId = ref(null);
 
-const { isLoading, galleries } = storeToRefs(galleryStore);
+const { isLoading, galleryList } = storeToRefs(galleryStore);
 nextTick(async () => {
     await galleryStore.fetchGetAll();
 })
@@ -54,8 +53,8 @@ const handleCloseModal = () => {
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(item, index) in galleries.data" :key="item?.id">
-                    <th width="50px" scope="row">{{ (index + 1) + (perPage * (page - 1)) }}</th>
+                <tr v-for="(item, index) in galleryList" :key="item?.id">
+                    <th width="50px" scope="row">{{ index + 1 }}</th>
                     <td class="value-too-long" :title="item?.title">
                         <span>{{ item?.product.title }}</span>
                     </td>

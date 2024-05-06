@@ -9,45 +9,57 @@ export const useOrderStore = defineStore('order', {
         totalMoney: 0,
         orderItem: [],
         coupon: null,
-        orders: {},
+        orderList: [],
+        pagination: {},
         order: {},
-        ordersByUser: {},
+        ordersByUser: [],
+        loadingOrder: false,
+        successOrder: false
     }),
     getters: {},
     actions: {
 
-        async fetchGetAllOrder() {
+        async fetchGetAllOrder(page, perPage) {
             try {
-                const res = await orderService.getAll();
-                console.log(res);
+                this.loadingOrder = true;
+                this.successOrder = false;
+                const res = await orderService.getAll(page, perPage);
                 if (res.status === 200) {
-                    this.orders = res.data;
+                    this.orderList = res.data.data;
+                    this.pagination = res.data.pagination;
+                    this.successOrder = true;
                 }
             } catch (error) {
                 dialog('Lấy đơn hàng thất bại', 'error', error?.response?.data?.userMessage);
                 console.error(error);
+            } finally {
+                this.loadingOrder = false;
             }
         },
 
         async fetchGetById(id) {
             try {
+                this.loadingOrder = true;
+                this.successOrder = false;
                 const res = await orderService.getById(id);
-                console.log(res);
                 if (res.status === 200) {
                     this.order = res.data;
+                    this.successOrder = true;
                 }
             } catch (error) {
                 dialog('Lấy đơn hàng thất bại', 'error', error?.response?.data?.userMessage);
                 console.error(error);
+            } finally {
+                this.loadingOrder = false;
             }
         },
 
-        async fetchUpdateOrder(id, data) {
+        async fetchUpdateOrder(id, data, page, perPage) {
             try {
                 const res = await orderService.update(id, data);
-                console.log(res);
                 if (res.status === 200) {
-                    dialog('Cập nhật đơn hàng thành công', 'success', null);
+                    toastify('Cập nhật đơn hàng thành công', 'success');
+                    this.fetchGetAllOrder(page, perPage);
                 }
             } catch (error) {
                 dialog('Cập nhật đơn hàng thất bại', 'error', error?.response?.data?.userMessage);
@@ -58,7 +70,6 @@ export const useOrderStore = defineStore('order', {
         async fetchInsertOrder(data) {
             try {
                 const res = await orderService.insert(data);
-                console.log(res);
                 if (res.status === 201) {
                     router.push({ name: 'HomePage' })
                     dialog('Đặt hàng thành công', 'success', null);
@@ -79,12 +90,11 @@ export const useOrderStore = defineStore('order', {
             }
         },
 
-        async fetchGetAllByUser(id) {
+        async fetchGetAllByUser(id, status, keyword) {
             try {
-                const res = await orderService.getAllByUser(id);
+                const res = await orderService.getAllByUser(id, status, keyword);
                 if (res.status === 200) {
                     this.ordersByUser = res.data;
-                    console.log(res);
                 }
             } catch (error) {
                 toastify('Lỗi không lấy được đơn hàng', 'error');

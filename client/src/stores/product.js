@@ -5,6 +5,9 @@ import { toastify } from '@/helpers/toastify';
 
 export const useProductStore = defineStore('product', {
     state: () => ({
+        productListBestSeller: [],
+        productListSale: [],
+        pagination: {},
         products: {},
         productsByCategory: {},
         product: {},
@@ -20,9 +23,9 @@ export const useProductStore = defineStore('product', {
         },
     },
     actions: {
-        async fetchGetAll(page, perPage) {
+        async fetchGetAll(page, perPage, keyword) {
             this.loading = true;
-            const res = await productService.getAll(page, perPage);
+            const res = await productService.getAll(page, perPage, keyword);
             if (res) {
                 this.products = res;
                 this.loading = false;
@@ -105,5 +108,49 @@ export const useProductStore = defineStore('product', {
                 console.error(error);
             }
         },
+
+        async fetchGetAllBestSeller(page, perPage) {
+            try {
+                this.loading = true;
+                const res = await productService.getAllBestSeller(page, perPage);
+                if (res.status === 200) {
+                    this.productListBestSeller = res.data.data;
+                    this.pagination = res.data.pagination;
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        async fetchGetAllSale(page, perPage) {
+            try {
+                const res = await productService.getAllSale(page, perPage);
+                if (res.status === 200) {
+                    this.productListSale = res.data.data;
+                    this.pagination = res.data.pagination;
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        async fetchSearchProduct(keyword, page, perPage, price, feedback) {
+            try {
+                this.loading = true;
+                const res = await productService.searchProduct(keyword, page, perPage, price, feedback);
+                if (res.status === 200) {
+                    this.products = res.data;
+                }
+            } catch (error) {
+                toastify('Lỗi tìm sản phẩm', 'error');
+                console.error(error);
+            } finally {
+                this.loading = false;
+            }
+        }
     },
 })

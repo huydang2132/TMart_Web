@@ -2,7 +2,7 @@
     <div class="detail-product">
         <div class="product-infor">
             <div class="product-imgs">
-                <carousel-gallery :pagination="false" :wrapAround="false" :slides="['1', '2', '3', '4']">
+                <carousel-gallery :pagination="false" :wrapAround="false" :slides="product.imageProducts">
 
                 </carousel-gallery>
             </div>

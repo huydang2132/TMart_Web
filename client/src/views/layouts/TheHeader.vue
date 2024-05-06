@@ -6,7 +6,7 @@
         <div class="search-box">
             <div class="search-box-item">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <b-input ref="refInputSearch" @input="handleSearch()" v-model:modelValue="searchValue"
+                <b-input ref="refInputSearch" @keydown.enter="handleSearch()" v-model:modelValue="searchValue"
                     placeholder="Tìm kiếm..." />
                 <b-button value="Tìm kiếm" />
             </div>
@@ -20,7 +20,9 @@
                     <router-link :to="{ name: 'NotifyPage' }">
                         <i class="fa-solid fa-bell"></i>
                         Thông báo
-                        <span class="quantity-notify">3</span>
+                        <span v-if="notificationListNoRead.length > 0" class="quantity-notify">{{
+                            notificationListNoRead.length
+                        }}</span>
                     </router-link>
                 </div>
                 <div @click="handleClickAccount" class="account-tile" @mouseover="isShowAccOption = true"
@@ -33,7 +35,7 @@
                         <router-link :to="{ name: 'AccountPage' }">Thông tin tài khoản</router-link>
                     </div>
                     <div class="account-router-link">
-                        <router-link :to="{ name: 'OrdersPage' }">Đổi mật khẩu</router-link>
+                        <router-link :to="{ name: 'ChangePassword' }">Đổi mật khẩu</router-link>
                     </div>
                     <div class="account-router-link">
                         <router-link :to="{ name: 'OrdersPage' }">Đơn hàng</router-link>
@@ -56,10 +58,13 @@
 </template>
 
 <script>
+import router from '@/routers/router';
 import { useAuthStore } from '@/stores/auth';
 import { useCartStore } from '@/stores/cart';
+import { useNotificationStore } from '@/stores/notification';
 import { useUserStore } from '@/stores/user';
 import _ from 'lodash';
+import { storeToRefs } from 'pinia';
 import { nextTick } from 'vue';
 
 export default {
@@ -72,8 +77,14 @@ export default {
             cartStore: null,
             cartData: null,
             userStore: null,
-            userInfor: null
+            userInfor: null,
+            noificationStore: null,
         }
+    },
+    setup() {
+        const notifiStore = useNotificationStore();
+        const { notificationListNoRead } = storeToRefs(notifiStore);
+        return { notificationListNoRead }
     },
     methods: {
         /**
@@ -93,8 +104,8 @@ export default {
          * Hàm xử lý chức năng tìm kiếm
          */
         handleSearch: _.debounce(function () {
-            console.log('tìm kiếm', this.searchValue);
-        }, 500),
+            router.push({ name: 'ProductSearch', params: { keyword: this.searchValue } })
+        }, 300),
         handleClickAccount() {
             if (this.authStore.isLoggedIn) {
                 this.$router.push({ name: 'AccountPage' })
@@ -111,9 +122,10 @@ export default {
         this.authStore = useAuthStore();
         this.cartStore = useCartStore();
         this.userStore = useUserStore();
+        this.noificationStore = useNotificationStore();
         await this.userStore.fetchGetById();
+        await this.noificationStore.fetchGetAllByUserAndRead();
         nextTick(async () => {
-
             this.userInfor = this.userStore.userInfor;
         })
     },

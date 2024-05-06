@@ -1,12 +1,12 @@
 package com.project.tmartweb.application.services.notification;
 
 import com.project.tmartweb.application.repositories.NotificationRepository;
-import com.project.tmartweb.application.services.order_detail.IOrderDetailService;
+import com.project.tmartweb.application.services.order.IOrderService;
 import com.project.tmartweb.application.services.user.IUserService;
 import com.project.tmartweb.config.exceptions.NotFoundException;
 import com.project.tmartweb.domain.dtos.NotificationDTO;
 import com.project.tmartweb.domain.entities.Notification;
-import com.project.tmartweb.domain.entities.OrderDetail;
+import com.project.tmartweb.domain.entities.Order;
 import com.project.tmartweb.domain.entities.User;
 import com.project.tmartweb.domain.paginate.BasePagination;
 import com.project.tmartweb.domain.paginate.PaginationDTO;
@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,16 +26,16 @@ import java.util.UUID;
 public class NotificationService implements INotificationService {
     private final NotificationRepository notificationRepository;
     private final IUserService userService;
-    private final IOrderDetailService orderDetailService;
+    private final IOrderService orderService;
     private final ModelMapper mapper;
 
     @Override
     public Notification insert(NotificationDTO notificationDTO) {
         Notification notification = mapper.map(notificationDTO, Notification.class);
         User user = userService.getById(notificationDTO.getUserId());
-        OrderDetail orderDetail = orderDetailService.getById(notificationDTO.getOrderDetailId());
+        Order order = orderService.getById(notificationDTO.getOrderId());
         notification.setUser(user);
-        notification.setOrderDetail(orderDetail);
+        notification.setOrder(order);
         return notificationRepository.save(notification);
     }
 
@@ -43,9 +44,9 @@ public class NotificationService implements INotificationService {
         Notification notification = getById(id);
         mapper.map(notificationDTO, notification);
         User user = userService.getById(notificationDTO.getUserId());
-        OrderDetail orderDetail = orderDetailService.getById(notificationDTO.getOrderDetailId());
+        Order order = orderService.getById(notificationDTO.getOrderId());
         notification.setUser(user);
-        notification.setOrderDetail(orderDetail);
+        notification.setOrder(order);
         return notificationRepository.save(notification);
     }
 
@@ -89,5 +90,22 @@ public class NotificationService implements INotificationService {
         Page<Notification> pageNotifications = notificationRepository.findAllByUserId(userId,
                 PageRequest.of(page, perPage, Sort.by("createdAt").descending()));
         return basePagination.paginate(page, perPage, pageNotifications);
+    }
+
+    @Override
+    public List<Notification> getAllByUserAndRead(UUID userId) {
+        return notificationRepository.findAllByUserIdAndRead(userId, false, Sort.by("createdAt").descending());
+    }
+
+    @Override
+    public void readAllNotifications(UUID userId) {
+        List<Notification> notifications = notificationRepository.findAll();
+        User user = userService.getById(userId);
+        for (Notification notification : notifications) {
+            if (notification.getUser().equals(user)) {
+                notification.setRead(Boolean.TRUE);
+                notificationRepository.save(notification);
+            }
+        }
     }
 }

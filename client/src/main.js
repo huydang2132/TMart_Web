@@ -42,9 +42,9 @@ app.config.globalProperties.$helper = helper;
 app.config.globalProperties.$formatValue = formatValue;
 
 // Vuetify
-import vuetify from './plugins/vuetify'
+import vuetify from './plugins/vuetify';
 
+app.use(vuetify);
 app.use(pinia);
 app.use(router);
-app.use(vuetify);
 app.mount('#app');

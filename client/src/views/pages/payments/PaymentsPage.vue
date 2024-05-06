@@ -132,6 +132,7 @@ import { useCartStore } from '@/stores/cart';
 import { useCouponStore } from '@/stores/coupon';
 import { useOrderStore } from '@/stores/order';
 import { useUserStore } from '@/stores/user';
+import { storeToRefs } from 'pinia';
 import { nextTick, onMounted, onUpdated, reactive, ref } from 'vue';
 
 
@@ -139,6 +140,7 @@ const orderStore = useOrderStore();
 const couponStore = useCouponStore();
 const cartStore = useCartStore();
 const userStore = useUserStore();
+const { ordersByUser } = storeToRefs(orderStore);
 const orderItems = ref([]);
 const cartItems = ref([]);
 const ordersData = ref([]);
@@ -178,9 +180,10 @@ nextTick(async () => {
 
 onMounted(() => {
     nextTick(async () => {
-        userInfor.fullName = orderStore.ordersByUser[0]?.fullName;
-        userInfor.address = orderStore.ordersByUser[0]?.address;
-        userInfor.phoneNumber = orderStore.ordersByUser[0]?.phoneNumber;
+        userInfor.fullName = ordersByUser.value[0]?.fullName;
+        userInfor.address = ordersByUser.value[0]?.address;
+        userInfor.phoneNumber = ordersByUser.value[0]?.phoneNumber;
+        console.log(ordersByUser.value[0]);
     })
 })
 

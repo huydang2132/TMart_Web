@@ -2,6 +2,7 @@ package com.project.tmartweb.application.services.order_detail;
 
 import com.project.tmartweb.application.repositories.OrderDetailRepository;
 import com.project.tmartweb.application.repositories.OrderRepository;
+import com.project.tmartweb.application.responses.OrderDetailResponse;
 import com.project.tmartweb.application.services.product.IProductService;
 import com.project.tmartweb.config.exceptions.NotFoundException;
 import com.project.tmartweb.config.helpers.Calculator;
@@ -13,11 +14,11 @@ import com.project.tmartweb.domain.paginate.BasePagination;
 import com.project.tmartweb.domain.paginate.PaginationDTO;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -78,12 +79,14 @@ public class OrderDetailService implements IOrderDetailService {
     }
 
     @Override
-    public PaginationDTO<OrderDetail> getAllByOrder(UUID id, Integer page, Integer perPage) {
-        if (page == null && perPage == null) {
-            return new PaginationDTO<>(orderDetailRepository.findAll(), null);
+    public List<OrderDetailResponse> getAllByOrder(UUID id) {
+        List<OrderDetail> orderDetails = orderDetailRepository.findAllByOrderId(id);
+        List<OrderDetailResponse> orderDetailResponses = new ArrayList<>();
+        for (OrderDetail orderDetail : orderDetails) {
+            OrderDetailResponse orderDetailResponse = mapper.map(orderDetail, OrderDetailResponse.class);
+            orderDetailResponse.setProduct(orderDetail.getProduct());
+            orderDetailResponses.add(orderDetailResponse);
         }
-        BasePagination<OrderDetail, OrderDetailRepository> basePagination = new BasePagination<>(orderDetailRepository);
-        Page<OrderDetail> orderDetails = orderDetailRepository.findAllByOrderId(id, PageRequest.of(page, perPage));
-        return basePagination.paginate(page, perPage, orderDetails);
+        return orderDetailResponses;
     }
 }

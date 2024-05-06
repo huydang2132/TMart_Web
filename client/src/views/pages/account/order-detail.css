@@ -115,7 +115,7 @@
 }
 
 .detail-body-content .body-content-product>img {
-    width: 80px;
+    width: 60px;
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius);
 }

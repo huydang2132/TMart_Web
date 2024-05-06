@@ -21,8 +21,8 @@ public class FeedbacksController {
     @GetMapping("")
     @RoleAdmin
     public ResponseEntity<?> getAllFeedbacks(
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "10") Integer perPage
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer perPage
     ) {
         var result = feedbackService.getAll(page, perPage);
         return ResponseEntity.ok(result);

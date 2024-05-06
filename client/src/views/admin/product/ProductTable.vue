@@ -3,9 +3,11 @@ import { dialogConfirm } from '@/helpers/swal';
 import ProductModal from './ProductModal.vue';
 import { useProductStore } from '@/stores/product';
 import { nextTick, ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 
 
 const productStore = useProductStore();
+const { loading } = storeToRefs(productStore);
 const page = ref(1);
 const perPage = ref(12);
 const totalPage = ref(0);
@@ -52,6 +54,9 @@ const handleDeleteProduct = async (id) => {
 </script>
 
 <template>
+    <div class="loading" v-if="loading">
+        <spinner-loader></spinner-loader>
+    </div>
     <div class="admin-table">
         <div class="admin-header">
             <h1>Quản lý sản phẩm</h1>

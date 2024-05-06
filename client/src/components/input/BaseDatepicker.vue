@@ -1,7 +1,7 @@
 <template>
-    <VueDatePicker :id="props.id" v-model="dateInput" :format="format" locale="vi"
-        :day-names="['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']" :enable-time-picker="false" month-name-format="long"
-        auto-apply autocomplete="on" />
+    <VueDatePicker :id="props.id" v-model="dateInput" :format="timePicker == false ? format : null" locale="vi"
+        :day-names="['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']" :enable-time-picker="timePicker"
+        month-name-format="long" auto-apply autocomplete="on" />
 </template>
 
 <script setup>
@@ -9,7 +9,11 @@ import { ref, defineProps } from 'vue';
 
 // ---------------------- Props ----------------------
 const props = defineProps({
-    id: String
+    id: String,
+    timePicker: {
+        type: Boolean,
+        default: false
+    }
 })
 
 // ---------------------- Khai báo biến --------------

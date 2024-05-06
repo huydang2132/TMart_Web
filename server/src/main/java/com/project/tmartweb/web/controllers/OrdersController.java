@@ -4,6 +4,7 @@ import com.project.tmartweb.application.services.order.IOrderService;
 import com.project.tmartweb.domain.dtos.OrderDTO;
 import com.project.tmartweb.domain.entities.Cart;
 import com.project.tmartweb.domain.entities.Order;
+import com.project.tmartweb.domain.enums.OrderStatus;
 import com.project.tmartweb.web.base.RestAPI;
 import com.project.tmartweb.web.base.RolesAdminUser;
 import jakarta.validation.Valid;
@@ -24,8 +25,8 @@ public class OrdersController {
     @GetMapping("")
     @RolesAdminUser
     public ResponseEntity<?> getAll(
-            @RequestParam Integer page,
-            @RequestParam Integer perPage
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer perPage
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(orderService.getAll(page, perPage));
     }
@@ -38,8 +39,12 @@ public class OrdersController {
 
     @GetMapping("/user/{id}")
     @RolesAdminUser
-    public ResponseEntity<List<Order>> getByUserId(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.OK).body(orderService.findByUserId(id));
+    public ResponseEntity<List<Order>> getByUserId(
+            @PathVariable UUID id,
+            @RequestParam(required = false) OrderStatus status,
+            @RequestParam(required = false) String keyword
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.findByUserId(id, status, keyword));
     }
 
     @PostMapping("")

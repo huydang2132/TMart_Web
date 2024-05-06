@@ -11,15 +11,15 @@ const props = defineProps({
     <div class="product-tag__container">
         <div class="product-img">
             <p v-if="item?.discount > 0" class="discount">{{ item?.discount }}%</p>
-            <img :src="require('@/assets/imgs/Iphone15-promax.webp')" alt="">
+            <img :src="item?.imageProducts[0]?.url" alt="">
         </div>
         <div class="product-name">
-            <p>{{ props.item?.title }}</p>
+            <p>{{ props?.item?.title }}</p>
         </div>
         <div class="product-star ">
             <b-rating v-if="item?.feedbacks?.length > 0" :value="item?.feedbacks?.star / item?.feedbacks.length"
                 :stars="5" fontSize="12" isReadonly />
-            <p class="number-sales">Đã bán: {{ $helper.formatNumber(item?.orderDetails?.length) }}</p>
+            <p class="number-sales">Đã bán: {{ $helper.formatNumber(item?.soldQuantity) }}</p>
         </div>
         <div class="product-price">
             <p class="price-new">{{

@@ -1,0 +1,10 @@
+.home-admin {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.home-admin>h2 {
+    font-size: 50px;
+}

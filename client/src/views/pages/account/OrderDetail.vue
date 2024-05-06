@@ -6,18 +6,18 @@
                 <div class=" detail-header-item">
                     <h5>Địa chỉ người nhận</h5>
                     <div class="detail-header-address header-item-content">
-                        <b class="full-name">Đặng Đình Huy</b>
-                        <p class="address">Địa chỉ: Khu 9 Xóm Hội - Xã Mê Linh, Xã Mê Linh, Huyện Mê Linh, Hà Nội, Việt
-                            Nam
+                        <b class="full-name">{{ order?.fullName }}</b>
+                        <p class="address">
+                            Địa chỉ: {{ order?.address }}
                         </p>
-                        <p class="phone-number">Điện thoại: 0378858091</p>
+                        <p class="phone-number">Điện thoại: {{ order?.phoneNumber }}</p>
                     </div>
                 </div>
                 <div class="detail-header-item">
                     <h5>Trạng thái</h5>
                     <div class="detail-header-status header-item-content">
-                        <b>Ngày đặt hàng: 12:58 01/02/2021</b>
-                        <p>Đơn hàng đã được giao thành công, ngày 12:58 01/02/2021</p>
+                        <b>Ngày đặt hàng: {{ $formatValue.formatDateTime(order?.createdAt) }}</b>
+                        <p>{{ statusOrder() }}, ngày {{ $formatValue.formatDateTime(order?.updatedAt) }}</p>
                     </div>
                 </div>
                 <div class="detail-header-item">
@@ -47,25 +47,25 @@
                     </div>
                 </div>
                 <div class="line"></div>
-                <div class="detail-body-content">
+                <div v-for="item in orderDetailList" :key="item?.id" class="detail-body-content">
                     <div class="body-content-product detail-body-product">
-                        <img :src="require('@/assets/imgs/Iphone15-promax.webp')" alt="">
+                        <img :src="item.product?.imageProducts[0]?.url" alt="">
                         <div class="product-info">
-                            <p title="" class="product-name">500 Câu Hỏi Luyện Thi Năng Lực Nhật Ngữ Trình Độ N2</p>
-                            <p class="product-classify">Phân loại: Đen</p>
+                            <p title="" class="product-name">{{ item?.product?.title }}</p>
+                            <p class="product-classify">Phân loại: {{ item?.classify }}</p>
                         </div>
                     </div>
                     <div class="detail-body-price">
-                        <p>58.400 ₫</p>
+                        <p>{{ $formatValue.formatMoney(item?.product?.price) }}</p>
                     </div>
                     <div class="detail-body-quantity">
-                        <p>1</p>
+                        <p>{{ item?.quantity }}</p>
                     </div>
                     <div class="detail-body-discount">
-                        <p>17.520 ₫</p>
+                        <p>{{ $formatValue.formatMoney(item?.product?.price - item?.price) }}</p>
                     </div>
                     <div class="detailt-body-total">
-                        <p>40.880 ₫</p>
+                        <p>{{ $formatValue.formatMoney(item?.price * item?.quantity) }}</p>
                     </div>
                 </div>
                 <div class="line"></div>
@@ -78,10 +78,10 @@
                             <p>Tổng thanh toán</p>
                         </div>
                         <div class="total-value">
-                            <p>265.000₫</p>
+                            <p>{{ $formatValue.formatMoney(order?.totalMoney) }}</p>
                             <p>32.000₫</p>
                             <p>-5.000₫</p>
-                            <p>300.000₫</p>
+                            <p>{{ $formatValue.formatMoney(order?.totalMoney) }}</p>
                         </div>
                     </div>
                     <div class="btn">
@@ -97,20 +97,51 @@
 </template>
 
 <script setup>
+import { useOrderStore } from '@/stores/order';
+import { useOrderDetailStore } from '@/stores/orderDetail';
+import { storeToRefs } from 'pinia';
+import { nextTick, ref } from 'vue';
+import { useRoute } from 'vue-router';
+
+
 
 // ---------------------- Props ----------------------
 
 
 // ---------------------- Khai báo biến --------------
+const route = useRoute();
 
+const orderStore = useOrderStore();
+const oderDetailStore = useOrderDetailStore();
+const { orderDetailList } = storeToRefs(oderDetailStore);
+const { order } = storeToRefs(orderStore);
+const orderId = ref(route.params.id);
 
 // ---------------------- Watcher --------------------
 
 
 // ---------------------- Lifecycle ------------------
-
+nextTick(async () => {
+    await orderStore.fetchGetById(orderId.value);
+    await oderDetailStore.fetchGetAllByOrderId(orderId.value);
+    console.log(order.value);
+    console.log(orderDetailList.value);
+})
 
 // ---------------------- Hàm xử lý ------------------
+const statusOrder = () => {
+    if (order.value.status === 'PENDING') {
+        return 'Đơn hàng đang chờ xử lý';
+    } else if (order.value?.status === 'PROCESSED') {
+        return 'Đơn hàng đã xử lý thành công'
+    } else if (order.value?.status === 'SHIPPING') {
+        return 'Đơn hàng đang vận chuyển'
+    } else if (order.value?.status === 'SHIPPED') {
+        return 'Đơn hàng đã được vận chuyển'
+    } else if (order.value?.status === 'CANCELLED') {
+        return 'Đơn hàng đã được hủy thành công'
+    }
+}
 
 </script>
 

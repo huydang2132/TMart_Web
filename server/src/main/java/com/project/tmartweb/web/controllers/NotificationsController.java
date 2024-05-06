@@ -20,8 +20,8 @@ public class NotificationsController {
     @GetMapping("")
     @RoleAdmin
     public ResponseEntity<?> getAllNotifications(
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "10") Integer perPage
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer perPage
     ) {
         var result = notificationService.getAll(page, perPage);
         return ResponseEntity.ok(result);
@@ -37,7 +37,7 @@ public class NotificationsController {
     }
 
     @PutMapping("/read/{id}")
-    @RoleUser
+    @RolesAdminUser
     public ResponseEntity<?> readNotification(
             @PathVariable UUID id
     ) {
@@ -45,11 +45,20 @@ public class NotificationsController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/user-read/{id}")
+    @RolesAdminUser
+    public ResponseEntity<?> getAllByUserAndRead(
+            @PathVariable UUID id
+    ) {
+        var res = notificationService.getAllByUserAndRead(id);
+        return ResponseEntity.ok(res);
+    }
+
     @GetMapping("/user/{id}")
     public ResponseEntity<?> getAllNotificationsByUser(
             @PathVariable UUID id,
-            @RequestParam Integer page,
-            @RequestParam Integer perPage
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer perPage
     ) {
         var result = notificationService.getAllByUser(id, page, perPage);
         return ResponseEntity.ok(result);
@@ -81,5 +90,14 @@ public class NotificationsController {
     ) {
         notificationService.delete(notificationService.getById(id));
         return ResponseEntity.ok("Deleted successfully!");
+    }
+
+    @PutMapping("/read-all/{id}")
+    @RolesAdminUser
+    public ResponseEntity<?> readAllNotifications(
+            @PathVariable UUID id
+    ) {
+        notificationService.readAllNotifications(id);
+        return ResponseEntity.ok("Update successfully!");
     }
 }

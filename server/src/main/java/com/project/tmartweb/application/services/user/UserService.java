@@ -10,10 +10,7 @@ import com.project.tmartweb.config.exceptions.ConflictException;
 import com.project.tmartweb.config.exceptions.NotFoundException;
 import com.project.tmartweb.config.security.CustomUserDetails;
 import com.project.tmartweb.config.security.JwtTokenProvider;
-import com.project.tmartweb.domain.dtos.UserChangePassword;
-import com.project.tmartweb.domain.dtos.UserDTO;
-import com.project.tmartweb.domain.dtos.UserEditProfileDTO;
-import com.project.tmartweb.domain.dtos.UserLoginDTO;
+import com.project.tmartweb.domain.dtos.*;
 import com.project.tmartweb.domain.entities.Role;
 import com.project.tmartweb.domain.entities.Token;
 import com.project.tmartweb.domain.entities.User;
@@ -142,7 +139,8 @@ public class UserService implements IUserService {
         Role role = roleService.getById(userDTO.getRoleId());
         user.setRole(role);
         user.setUpdatedBy(userDTO.getUpdatedBy());
-        mapper.map(userDTO, user);
+        UserUpdateDTO userUpdateDTO = mapper.map(userDTO, UserUpdateDTO.class);
+        mapper.map(userDTO, userUpdateDTO);
         return userRepository.save(user);
     }
 
