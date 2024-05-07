@@ -167,7 +167,7 @@
 
 .order-status>p {
     font-size: 1.1rem;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .order-status.pending>p {
@@ -188,4 +188,12 @@
 
 .order-status.cancelled>p {
     color: var(--color-red);
+}
+
+.order-status.paid>p {
+    color: var(--color-blue-violet);
+}
+
+.order-status.unpaid>p {
+    color: black;
 }

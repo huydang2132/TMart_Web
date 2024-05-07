@@ -24,6 +24,10 @@ const getStatusOrder = (status) => {
     switch (status) {
         case 'PENDING':
             return 'Chờ xác nhận';
+        case 'PAID':
+            return 'Đã thanh toán';
+        case 'UNPAID':
+            return 'Chưa thanh toán';
         case 'PROCESSED':
             return 'Đã xác nhận';
         case 'SHIPPING':
@@ -46,12 +50,16 @@ const handleUpdateStatus = async (item) => {
         dialog('Thông báo', 'warning', 'Đơn hàng đã bị hủy');
         return;
     }
+    if (item?.status === 'UNPAID') {
+        dialog('Thông báo', 'warning', 'Đơn hàng thanh toán không thành công');
+        return;
+    }
     let status = '';
     switch (item?.status) {
         case 'PENDING':
             status = 'PROCESSED';
             break;
-        case 'PROCESSED':
+        case 'PROCESSED', 'PAID':
             status = 'SHIPPING';
             break;
         case 'SHIPPING':
@@ -96,7 +104,7 @@ const handleCancelOrder = async (item) => {
                     <th scope="col">Địa chỉ</th>
                     <th scope="col">Ghi chú</th>
                     <th scope="col">Mã giảm giá</th>
-                    <th scope="col">Số đơn hàng</th>
+                    <th scope="col">Hình thức TT</th>
                     <th scope="col">Tổng tiền</th>
                     <th scope="col">Trạng thái</th>
                     <th scope="col">Chức năng</th>
@@ -116,7 +124,7 @@ const handleCancelOrder = async (item) => {
                         <span>{{ item?.note }}</span>
                     </td>
                     <td>{{ item?.coupon?.code }}</td>
-                    <td>{{ item?.orderDetails?.length }}</td>
+                    <td>{{ item?.paymentMethod }}</td>
                     <td>{{ item?.totalMoney }}</td>
                     <td class="status-order">
                         <span :class="['status-order-item', item?.status.toLowerCase()]">

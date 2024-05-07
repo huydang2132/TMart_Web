@@ -23,8 +23,12 @@
                 <div class="detail-header-item">
                     <h5>Hình thức thanh toán</h5>
                     <div class="detailt-header-payments-method header-item-content">
-                        <b>Thanh toán bằng ví ZaloPay</b>
-                        <p>Thanh toán thất bại. Vui lòng thanh toán lại hoặc chọn phương thức thanh toán khác</p>
+                        <b>Thanh toán {{ order?.paymentMethod == 'COD' ? ' khi nhận hàng' : ' bằng VN Pay' }}</b>
+                        <p v-if="order?.paymentMethod == 'VNPAY'" :class="[{ 'success': order?.status !== 'UNPAID' }]">
+                            {{ order?.status == 'UNPAID' ?
+                                'Thanh toán thất bại. Vui lòng thanh toán lại.' :
+                                'Đã thanh toán thành công.' }}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -85,7 +89,7 @@
                         </div>
                     </div>
                     <div class="btn">
-                        <b-button type="secondary">Mua lại</b-button>
+                        <b-button @click="handleAddToCart()" type="secondary">Mua lại</b-button>
                     </div>
                 </div>
             </div>
@@ -97,8 +101,10 @@
 </template>
 
 <script setup>
+import { useCartStore } from '@/stores/cart';
 import { useOrderStore } from '@/stores/order';
 import { useOrderDetailStore } from '@/stores/orderDetail';
+import { useUserStore } from '@/stores/user';
 import { storeToRefs } from 'pinia';
 import { nextTick, ref } from 'vue';
 import { useRoute } from 'vue-router';
@@ -113,8 +119,11 @@ const route = useRoute();
 
 const orderStore = useOrderStore();
 const oderDetailStore = useOrderDetailStore();
+const cartStore = useCartStore();
+const userStore = useUserStore();
 const { orderDetailList } = storeToRefs(oderDetailStore);
 const { order } = storeToRefs(orderStore);
+const { userId } = storeToRefs(userStore);
 const orderId = ref(route.params.id);
 
 // ---------------------- Watcher --------------------
@@ -140,7 +149,24 @@ const statusOrder = () => {
         return 'Đơn hàng đã được vận chuyển'
     } else if (order.value?.status === 'CANCELLED') {
         return 'Đơn hàng đã được hủy thành công'
+    } else if (order.value?.status === 'PAID') {
+        return 'Đơn hàng đã thanh toán thành công'
+    } else if (order.value?.status === 'UNPAID') {
+        return 'Đơn hàng chưa được thanh toán'
     }
+}
+
+const handleAddToCart = async () => {
+    let data = [];
+    orderDetailList.value.forEach(element => {
+        data.push({
+            productId: element?.product?.id,
+            quantity: element?.quantity,
+            userId: userId.value,
+            classify: element?.classify
+        })
+    });
+    await cartStore.fetchInsertMultiple(data);
 }
 
 </script>

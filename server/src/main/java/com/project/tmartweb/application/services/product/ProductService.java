@@ -135,7 +135,9 @@ public class ProductService implements IProductService {
 
     @Override
     public Product getById(UUID id) {
-        return findById(id).orElseThrow(() -> new NotFoundException("Product not found"));
+        Product product = findById(id).orElseThrow(() -> new NotFoundException("Product not found"));
+        setSoldQuantity(List.of(product));
+        return product;
     }
 
     @Override

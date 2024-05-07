@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -89,7 +90,11 @@ public class CartService implements ICartService {
 
     @Override
     public List<Cart> insertMultiple(List<CartDTO> cartDTOS) {
-        return List.of();
+        List<Cart> carts = new ArrayList<>();
+        for (CartDTO cartDTO : cartDTOS) {
+            carts.add(insert(cartDTO));
+        }
+        return carts;
     }
 
     @Override

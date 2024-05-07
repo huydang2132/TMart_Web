@@ -1,8 +1,10 @@
 package com.project.tmartweb.application.services.order;
 
 import com.project.tmartweb.application.repositories.*;
+import com.project.tmartweb.application.responses.VNPayResponse;
 import com.project.tmartweb.application.services.cart.CartService;
 import com.project.tmartweb.application.services.coupon.CouponService;
+import com.project.tmartweb.application.services.payment.VNPayService;
 import com.project.tmartweb.application.services.product.ProductService;
 import com.project.tmartweb.application.services.user.UserService;
 import com.project.tmartweb.config.exceptions.InvalidParamException;
@@ -14,6 +16,7 @@ import com.project.tmartweb.domain.entities.*;
 import com.project.tmartweb.domain.enums.OrderStatus;
 import com.project.tmartweb.domain.paginate.BasePagination;
 import com.project.tmartweb.domain.paginate.PaginationDTO;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
@@ -40,6 +43,7 @@ public class OrderService implements IOrderService {
     private final ProductService productService;
     private final ProductRepository productRepository;
     private final NotificationRepository notificationRepository;
+    private final VNPayService vnpayService;
 
     @Override
     @Transactional
@@ -115,7 +119,9 @@ public class OrderService implements IOrderService {
             notification.setContent("Đơn hàng của bạn đã được hủy thành công. ");
         }
         notificationRepository.save(notification);
-        order.setAddress(orderDTO.getAddress());
+        if (orderDTO.getAddress() != null) {
+            order.setAddress(orderDTO.getAddress());
+        }
         return orderRepository.save(order);
     }
 
@@ -158,5 +164,42 @@ public class OrderService implements IOrderService {
         }
         total = total * (100 - discount) / 100;
         return total;
+    }
+
+    @Override
+    public void FeedbackOrder(UUID orderId) {
+        Order order = getById(orderId);
+        order.setFeedback(true);
+        orderRepository.save(order);
+    }
+
+    @Override
+    @Transactional
+    public VNPayResponse createOrder(OrderDTO orderDTO, HttpServletRequest request) {
+        Order order = insert(orderDTO);
+        String urlPayment = "";
+        try {
+            if (order.getPaymentMethod().equals("VNPAY")) {
+                urlPayment = vnpayService.createOrder((int) order.getTotalMoney(), String.valueOf(order.getId()), request);
+                order.setStatus(OrderStatus.UNPAID);
+                orderRepository.save(order);
+            }
+            return new VNPayResponse("VNPay", urlPayment);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public int orderReturn(HttpServletRequest request) {
+        int code = vnpayService.orderReturn(request);
+        Order order = getById(UUID.fromString(request.getParameter("vnp_OrderInfo")));
+        if (code == 1) {
+            order.setStatus(OrderStatus.PAID);
+        } else {
+            order.setStatus(OrderStatus.UNPAID);
+        }
+        orderRepository.save(order);
+        return code;
     }
 }

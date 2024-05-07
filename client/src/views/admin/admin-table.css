@@ -65,7 +65,7 @@
 }
 
 .admin-table table .value-too-long {
-    max-width: 250px;
+    max-width: 200px;
 }
 
 .admin-table table .value-too-long>span {
@@ -129,4 +129,13 @@
 
 .status-order-item.cancelled {
     background-color: var(--color-red);
+}
+
+.status-order-item.paid {
+    background-color: var(--color-blue-violet);
+}
+
+.status-order-item.unpaid {
+    background-color: black;
+    color: white;
 }

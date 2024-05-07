@@ -7,6 +7,7 @@ import com.project.tmartweb.domain.entities.Order;
 import com.project.tmartweb.domain.enums.OrderStatus;
 import com.project.tmartweb.web.base.RestAPI;
 import com.project.tmartweb.web.base.RolesAdminUser;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,10 +48,28 @@ public class OrdersController {
         return ResponseEntity.status(HttpStatus.OK).body(orderService.findByUserId(id, status, keyword));
     }
 
+    @PutMapping("/feedback/{id}")
+    @RolesAdminUser
+    public ResponseEntity<?> FeedbackOrder(@PathVariable UUID id) {
+        orderService.FeedbackOrder(id);
+        return ResponseEntity.status(HttpStatus.OK).body("Updated successfully");
+    }
+
     @PostMapping("")
     @RolesAdminUser
-    public ResponseEntity<Order> insert(@RequestBody @Valid OrderDTO orderDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.insert(orderDTO));
+    public ResponseEntity<?> insert(
+            @RequestBody @Valid OrderDTO orderDTO,
+            HttpServletRequest request
+    ) {
+        var response = orderService.createOrder(orderDTO, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/return")
+    @RolesAdminUser
+    public ResponseEntity<?> orderReturn(HttpServletRequest request) {
+        var response = orderService.orderReturn(request);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PutMapping("/{id}")

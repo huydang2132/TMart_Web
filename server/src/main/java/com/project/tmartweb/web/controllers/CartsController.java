@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -54,5 +55,19 @@ public class CartsController {
     public ResponseEntity<?> updateCart(@PathVariable UUID id, @RequestBody CartDTO cartDTO) {
         var result = cartService.update(id, cartDTO);
         return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/multiple")
+    @RolesAdminUser
+    public ResponseEntity<?> insertCarts(@RequestBody List<CartDTO> cartDTOS) {
+        var result = cartService.insertMultiple(cartDTOS);
+        return ResponseEntity.status(201).body(result);
+    }
+
+    @DeleteMapping("/multiple")
+    @RolesAdminUser
+    public ResponseEntity<?> deleteCarts(@RequestBody List<UUID> ids) {
+        var result = cartService.deleteMultiple(ids);
+        return ResponseEntity.ok("Deleted successfully");
     }
 }

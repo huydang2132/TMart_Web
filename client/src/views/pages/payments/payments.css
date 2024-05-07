@@ -82,6 +82,10 @@
     flex: 4;
 }
 
+.product-info .product-info-name>img {
+    border: 1px solid var(--color-border);
+}
+
 .product-info .product-info-classify {
     flex: 1;
     text-align: center;

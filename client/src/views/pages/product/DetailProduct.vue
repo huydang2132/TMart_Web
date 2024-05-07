@@ -2,7 +2,7 @@
     <div class="detail-product">
         <div class="product-infor">
             <div class="product-imgs">
-                <carousel-gallery :pagination="false" :wrapAround="false" :slides="product.imageProducts">
+                <carousel-gallery :pagination="false" :wrapAround="false" :slides="product?.imageProducts">
 
                 </carousel-gallery>
             </div>
@@ -24,7 +24,7 @@
                     </div>
                     <span class="line"></span>
                     <div class="product-sold">
-                        <ins>{{ $helper.formatNumber(product?.orderDetails?.length) }}</ins> <span>Đã bán</span>
+                        <ins>{{ $helper.formatNumber(product?.soldQuantity) }}</ins> <span>Đã bán</span>
                     </div>
                 </div>
                 <div class="product-price">
@@ -63,7 +63,6 @@
                 <div class="button-handle">
                     <b-button @click="handleAddToCart" type="secondary" icon="fa-solid fa-cart-plus"
                         value="Thêm vào giỏ hàng" />
-                    <b-button type="primary" value="Mua ngay" @click="handleBuyNow()" />
                 </div>
             </div>
         </div>
@@ -80,7 +79,6 @@
 <script setup>
 import { nextTick, ref, watch } from 'vue';
 import ReviewProduct from './ReviewProduct.vue';
-import router from '@/routers/router';
 import { useRoute } from 'vue-router';
 import { useProductStore } from '@/stores/product';
 import { useCartStore } from '@/stores/cart';
@@ -129,10 +127,6 @@ const reduce = () => {
 
 const increment = () => {
     quantity.value = quantity.value < quantityProduct.value ? quantity.value += 1 : quantityProduct.value;
-}
-
-const handleBuyNow = () => {
-    router.push({ name: 'Payments' })
 }
 
 const handleAddToCart = () => {

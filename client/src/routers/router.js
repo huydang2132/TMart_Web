@@ -199,6 +199,14 @@ const routes = [
         ]
     },
     {
+        path: '/payment-success',
+        name: 'PaymentSuccess',
+        component: () => import('@/views/pages/payments/PaymentSuccess.vue'),
+        meta: {
+            title: 'Thanh toán'
+        }
+    },
+    {
         path: '/login',
         name: 'Login',
         component: () => import('@/views/pages/auth/LoginPage.vue'),

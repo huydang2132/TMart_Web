@@ -28,6 +28,8 @@ public class OrderDTO extends BaseDTO {
 
     private OrderStatus status;
 
+    private boolean isFeedback;
+
     private UUID userId;
 
     private String couponId;

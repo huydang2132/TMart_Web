@@ -35,6 +35,9 @@ public class Order extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
+    @Column(name = "is_feedback")
+    private boolean isFeedback = false;
+
     @Column(name = "total_money")
     private double totalMoney;
 

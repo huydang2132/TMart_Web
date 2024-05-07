@@ -30,6 +30,21 @@ class baseService {
         const res = await axios.delete(`${this.endpoint}/${id}`);
         return res;
     }
+
+    async insertMultiple(data) {
+        const res = await axios.post(`${this.endpoint}/multiple`, data);
+        return res;
+    }
+
+    async updateMultiple(data) {
+        const res = await axios.put(`${this.endpoint}/multiple`, data);
+        return res;
+    }
+
+    async deleteMultiple(data) {
+        const res = await axios.delete(`${this.endpoint}/multiple`, { data: data });
+        return res;
+    }
 }
 
 export default baseService;

@@ -25,7 +25,7 @@
                     <div class="cart-content" v-for="item in cartData" :key="item?.id">
                         <div class="cart-content-name cart-name">
                             <b-checkbox v-model="selectedItem" :value="item" @change="handleSelect(item)" />
-                            <img :src="require('@/assets/imgs/Iphone15-promax.webp')" alt="">
+                            <img :src="item?.product?.imageProducts[0]?.url" alt="">
                             <span :title="item?.product?.title">
                                 {{ item?.product?.title }}
                             </span>
@@ -52,7 +52,8 @@
                                 item?.product?.discount) * item?.quantity) }}</p>
                         </div>
                         <div class="cart-content-option cart-option">
-                            <b-button class="btn" icon="fa-solid fa-trash-can" color="var(--color-grey)" />
+                            <b-button @click="handleDeleteCart(item?.id)" class="btn" icon="fa-solid fa-trash-can"
+                                color="var(--color-grey)" />
                         </div>
                     </div>
                 </div>
@@ -100,7 +101,7 @@ import { useCartStore } from '@/stores/cart';
 import { useOrderStore } from '@/stores/order';
 import _ from 'lodash';
 import { useCouponStore } from '@/stores/coupon';
-import { dialog } from '@/helpers/swal';
+import { dialog, dialogConfirm } from '@/helpers/swal';
 
 // ------------------------- Khai báo biến ----------------------
 const cartData = ref([]);
@@ -254,6 +255,13 @@ const handleAddCoupon = async () => {
         );
         totalMoney.value = orderStore.totalMoney;
     }
+}
+
+const handleDeleteCart = (id) => {
+    dialogConfirm("Xác nhận xóa", "Bạn có chắc muốn xóa sản phẩm này?", async () => {
+        await cartStore.fetchDelete(id);
+        cartData.value = cartStore.cartByUser.data;
+    })
 }
 </script>
 

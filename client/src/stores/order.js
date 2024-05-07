@@ -14,7 +14,8 @@ export const useOrderStore = defineStore('order', {
         order: {},
         ordersByUser: [],
         loadingOrder: false,
-        successOrder: false
+        successOrder: false,
+        codeStatusPayment: null
     }),
     getters: {},
     actions: {
@@ -71,6 +72,10 @@ export const useOrderStore = defineStore('order', {
             try {
                 const res = await orderService.insert(data);
                 if (res.status === 201) {
+                    if (data.paymentMethod === 'VNPAY') {
+                        window.location.href = res.data.url;
+                        return;
+                    }
                     router.push({ name: 'HomePage' })
                     dialog('Đặt hàng thành công', 'success', null);
                 }
@@ -105,6 +110,20 @@ export const useOrderStore = defineStore('order', {
         fetchGetCoupon(orderItem, coupon) {
             this.orderItem = orderItem;
             this.coupon = coupon;
+        },
+
+        async fetchPaymentReturn(params) {
+            try {
+                this.loadingOrder = true;
+                const res = await orderService.paymentReturn(params);
+                if (res.status === 200) {
+                    this.codeStatusPayment = res.data;
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
+                this.loadingOrder = false;
+            }
         }
     },
 })

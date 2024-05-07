@@ -46,7 +46,9 @@ export const useCartStore = defineStore('cart', {
         async fetchDelete(id) {
             try {
                 const res = await cartService.delete(id);
-                console.log(res);
+                if (res.status === 200) {
+                    await this.fetchGetAllByUser();
+                }
             } catch (error) {
                 dialog('Xóa đơn hàng thất bại', 'error', error.response.data.userMessage);
                 console.error(error);
@@ -79,6 +81,20 @@ export const useCartStore = defineStore('cart', {
 
         fetchGetCartItems(cartItems) {
             this.cartItems = cartItems;
-        }
+        },
+
+        async fetchInsertMultiple(data) {
+            try {
+                const res = await cartService.insertMultiple(data);
+                if (res.status === 201) {
+                    toastify('Thêm vào giỏ hàng thành công!', 'success');
+                    this.fetchGetAllByUser();
+                }
+                this.carts = res.data;
+            } catch (error) {
+                dialog('Thêm vào giỏ hàng thất bại', 'error', error.response.data.userMessage);
+                console.error(error);
+            }
+        },
     },
 })

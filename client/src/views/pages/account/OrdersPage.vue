@@ -10,6 +10,10 @@
                         :class="['order-menu-item', 'order-all', { 'active': status === null }]">
                         <p>Tất cả đơn</p>
                     </div>
+                    <div @click="handleFilter('UNPAID')"
+                        :class="['order-menu-item', 'order-peding', { 'active': status === 'UNPAID' }]">
+                        <p>Chưa thanh toán</p>
+                    </div>
                     <div @click="handleFilter('PENDING')"
                         :class="['order-menu-item', 'order-peding', { 'active': status === 'PENDING' }]">
                         <p>Đang xử lý</p>
@@ -72,7 +76,10 @@
                             <p>{{ $formatValue.formatMoney(item.totalMoney) }}</p>
                         </div>
                         <div class="option">
-                            <b-button value="Mua lại" type="secondary" />
+                            <b-button v-if="item.status === 'SHIPPED' && item?.feedback === false" value="Đánh giá"
+                                type="secondary" />
+                            <b-button @click="handleAddToCart(item.orderDetails)" v-if="item.status === 'SHIPPED'"
+                                value="Mua lại" type="secondary" />
                             <b-button @click="redirectOrderDetail(item.id)" value="Xem chi tiết" type="secondary" />
                         </div>
                     </div>
@@ -84,6 +91,7 @@
 
 <script setup>
 import router from '@/routers/router';
+import { useCartStore } from '@/stores/cart';
 import { useOrderStore } from '@/stores/order';
 import { useUserStore } from '@/stores/user';
 import _ from 'lodash';
@@ -97,6 +105,7 @@ import { nextTick, onMounted, ref, watch } from 'vue';
 const refInputSearch = ref(null);
 const orderStore = useOrderStore();
 const userStore = useUserStore();
+const cartStore = useCartStore();
 const { ordersByUser, loadingOrder } = storeToRefs(orderStore);
 const { userId } = storeToRefs(userStore);
 const keyword = ref(null);
@@ -126,6 +135,10 @@ const statusOrder = (status) => {
     switch (status) {
         case 'PENDING':
             return 'Đang xử lý';
+        case 'PAID':
+            return 'Đã thanh toán';
+        case 'UNPAID':
+            return 'Chưa thanh toán';
         case 'PROCESSED':
             return 'Đã xử lý';
         case 'SHIPPING':
@@ -146,6 +159,19 @@ const findByKeyword = _.debounce(async function () {
 const handleFilter = (statusOrder) => {
     status.value = statusOrder;
     findByKeyword();
+}
+
+const handleAddToCart = async (orderDetails) => {
+    let data = [];
+    orderDetails.forEach(element => {
+        data.push({
+            productId: element?.product?.id,
+            quantity: element?.quantity,
+            userId: userId.value,
+            classify: element?.classify
+        })
+    });
+    await cartStore.fetchInsertMultiple(data);
 }
 
 </script>

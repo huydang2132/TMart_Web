@@ -16,6 +16,11 @@ class orderService extends baseService {
         );
         return res;
     }
+
+    async paymentReturn(params) {
+        const res = await axios.get(`${this.endpoint}/return`, { params: { ...params } });
+        return res;
+    }
 }
 
 export default new orderService();

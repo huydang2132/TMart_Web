@@ -56,7 +56,7 @@
             </div>
             <div class="product-info-content" v-for="item in orderItems" :key="item?.product?.id">
                 <div class="content-name product-info-name">
-                    <img :src="require('@/assets/imgs/Iphone15-promax.webp')" alt="">
+                    <img :src="item?.product?.imageProducts[0]?.url" alt="">
                     <span :title="item?.product?.title">
                         {{ item?.product?.title }}
                     </span>
@@ -87,14 +87,14 @@
             <div class="line"></div>
             <div class="payments-method-body">
                 <div class="payments-method-item">
-                    <input id="cod" type="radio" name="paymentsMethod" checked />
+                    <input id="cod" type="radio" value="COD" name="paymentsMethod" v-model="paymentMethod" />
                     <label for="cod">
                         <i class="fa-solid fa-coins"></i>
                         Thanh toán khi nhận hàng
                     </label>
                 </div>
                 <div class="payments-method-item">
-                    <input id="vnpay" type="radio" name="paymentsMethod" />
+                    <input id="vnpay" type="radio" value="VNPAY" name="paymentsMethod" v-model="paymentMethod" />
                     <label for="vnpay">
                         <i class="fa-solid fa-wallet"></i>
                         Thanh toán với VNPay
@@ -154,6 +154,7 @@ const userInfor = reactive({
 });
 const userId = ref(null);
 const showChangeAddress = ref(false);
+const paymentMethod = ref('COD')
 
 nextTick(async () => {
     userId.value = userStore.userId;
@@ -176,15 +177,13 @@ nextTick(async () => {
     }
     await orderStore.fetchGetAllByUser(userStore.userId);
     ordersData.value = orderStore.ordersByUser;
+    userInfor.fullName = ordersByUser?.value[0]?.fullName;
+    userInfor.address = ordersByUser?.value[0]?.address;
+    userInfor.phoneNumber = ordersByUser?.value[0]?.phoneNumber;
 })
 
 onMounted(() => {
-    nextTick(async () => {
-        userInfor.fullName = ordersByUser.value[0]?.fullName;
-        userInfor.address = ordersByUser.value[0]?.address;
-        userInfor.phoneNumber = ordersByUser.value[0]?.phoneNumber;
-        console.log(ordersByUser.value[0]);
-    })
+
 })
 
 onUpdated(() => {
@@ -197,6 +196,7 @@ onUpdated(() => {
 })
 
 const handleOrder = async () => {
+    console.log(paymentMethod.value);
     if (userInfor.fullName == null || userInfor.address == null || userInfor.phoneNumber == null) {
         dialog('Vui lòng điền đầy đủ thông tin', 'error');
         return;
@@ -208,7 +208,8 @@ const handleOrder = async () => {
         cartItems: cartItems.value,
         couponId: couponCode.value,
         userId: userId.value,
-        createdBy: userStore.fullName
+        createdBy: userStore.fullName,
+        paymentMethod: paymentMethod.value
     });
     await cartStore.fetchGetAllByUser();
 }
