@@ -14,9 +14,10 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -74,12 +75,31 @@ public class FeedbackService implements IFeedbackService {
     }
 
     @Override
-    public PaginationDTO<Feedback> getAllByProduct(UUID id, Integer page, Integer perPage) {
+    public PaginationDTO<Feedback> getAllByProduct(UUID id, Integer page, Integer perPage, Integer star) {
         if (page == null && perPage == null) {
-            return new PaginationDTO<>(feedbackRepository.findAllByProductId(id), null);
+            return new PaginationDTO<>(feedbackRepository.findAllByProductId(id, star), null);
         }
         Page<Feedback> feedbacks = feedbackRepository.findAllByProductId(id,
-                PageRequest.of(page, perPage, Sort.by("createdAt").descending()));
+                PageRequest.of(page, perPage), star);
         return basePagination.paginate(page, perPage, feedbacks);
+    }
+
+    @Override
+    public List<Feedback> insertMultiple(List<FeedbackDTO> feedbackDTOS) {
+        List<Feedback> feedbacks = new ArrayList<>();
+        for (FeedbackDTO feedbackDTO : feedbackDTOS) {
+            feedbacks.add(insert(feedbackDTO));
+        }
+        return feedbacks;
+    }
+
+    @Override
+    public List<Feedback> updateMultiple(List<FeedbackDTO> feedbackDTOS) {
+        return List.of();
+    }
+
+    @Override
+    public int deleteMultiple(List<UUID> uuids) {
+        return 0;
     }
 }

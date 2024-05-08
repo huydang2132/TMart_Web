@@ -11,12 +11,11 @@
                     {{ product?.title }}
                 </h3>
                 <div class="product-rating">
-                    <div v-if="product?.feedbacks?.star" class="product-star">
+                    <div v-if="product?.feedbacks?.length > 0" class="product-star">
                         <ins>
-                            {{ product?.feedbacks?.star / product?.feedbacks?.length }}
+                            {{ calculateStar(product?.feedbacks) }}
                         </ins>
-                        <b-rating :value="product?.feedbacks?.length > 0 ?
-                            product?.feedbacks?.star / product?.feedbacks.length : 0" isReadonly />
+                        <b-rating :value="calculateStar(product?.feedbacks)" isReadonly />
                     </div>
                     <span class="line"></span>
                     <div class="quantity-rating">
@@ -72,12 +71,12 @@
             </h3>
             <pre class="description-content">{{ product.description }}</pre>
         </div>
-        <ReviewProduct />
+        <ReviewProduct :avg-star="avgStar" />
     </div>
 </template>
 
 <script setup>
-import { nextTick, ref, watch } from 'vue';
+import { nextTick, ref } from 'vue';
 import ReviewProduct from './ReviewProduct.vue';
 import { useRoute } from 'vue-router';
 import { useProductStore } from '@/stores/product';
@@ -86,30 +85,36 @@ import { useUserStore } from '@/stores/user';
 
 
 // --------------------- Khai báo biến ----------------------
-const star = ref(4);
 const quantity = ref(1);
 const product = ref({});
 const route = useRoute();
 const productId = ref(route.params.id);
 const quantityProduct = ref(0);
+const avgStar = ref(0);
 
 const cartStore = useCartStore();
 const userStore = useUserStore();
 
 // --------------------- Lifecycle vue ----------------------
-watch(() => star.value, () => {
-    console.log(star.value);
-})
+
 const productStore = useProductStore();
 
 nextTick(async () => {
     await productStore.fetchGetById(productId.value);
     product.value = productStore.product;
     quantityProduct.value = product.value.quantity;
-    console.log(product.value);
+    calculateStar(product.value?.feedbacks);
 })
 
 // --------------------- Hàm xử lý --------------------------
+const calculateStar = (feedbacks) => {
+    let totalStar = 0;
+    feedbacks.forEach(feedback => {
+        totalStar += feedback.star;
+    })
+    avgStar.value = (totalStar / feedbacks?.length).toFixed(1);
+    return (totalStar / feedbacks?.length).toFixed(1);
+}
 
 const validInputQuantity = () => {
     const maxQuantity = product.value.quantity;

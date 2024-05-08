@@ -201,6 +201,7 @@ const handleRedrectPayments = async () => {
             orderStore.fetchGetCoupon(cartSelected.value, couponCode.value);
             router.push({ name: 'Payments' })
         }
+        return;
     }
     orderStore.fetchGetCoupon(cartSelected.value, couponCode.value);
     router.push({ name: 'Payments' })

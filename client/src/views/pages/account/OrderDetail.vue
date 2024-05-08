@@ -82,14 +82,18 @@
                             <p>Tổng thanh toán</p>
                         </div>
                         <div class="total-value">
-                            <p>{{ $formatValue.formatMoney(order?.totalMoney) }}</p>
+                            <p>{{ $formatValue.formatMoney(calculateOldMoney()) }}</p>
                             <p>32.000₫</p>
-                            <p>-5.000₫</p>
+                            <p>
+                                - {{ $formatValue.formatMoney(calculateDiscountMoney()) }}
+                            </p>
                             <p>{{ $formatValue.formatMoney(order?.totalMoney) }}</p>
                         </div>
                     </div>
                     <div class="btn">
-                        <b-button @click="handleAddToCart()" type="secondary">Mua lại</b-button>
+                        <b-button v-if="order?.status === 'SHIPPED' && order?.feedback === false"
+                            @click="handleRouteFeedback(order?.id)" type="secondary">Đánh giá</b-button>
+                        <b-button @click="handleAddToCart()" type="primary">Mua lại</b-button>
                     </div>
                 </div>
             </div>
@@ -101,6 +105,7 @@
 </template>
 
 <script setup>
+import router from '@/routers/router';
 import { useCartStore } from '@/stores/cart';
 import { useOrderStore } from '@/stores/order';
 import { useOrderDetailStore } from '@/stores/orderDetail';
@@ -133,8 +138,6 @@ const orderId = ref(route.params.id);
 nextTick(async () => {
     await orderStore.fetchGetById(orderId.value);
     await oderDetailStore.fetchGetAllByOrderId(orderId.value);
-    console.log(order.value);
-    console.log(orderDetailList.value);
 })
 
 // ---------------------- Hàm xử lý ------------------
@@ -169,6 +172,25 @@ const handleAddToCart = async () => {
     await cartStore.fetchInsertMultiple(data);
 }
 
+const calculateDiscountMoney = () => {
+    let total = 0;
+    if (order.value?.coupon?.discount) {
+        total = (order.value?.totalMoney / (100 - (order.value?.coupon?.discount)) * 100) - order.value?.totalMoney;
+    }
+    return total;
+}
+
+const calculateOldMoney = () => {
+    let total = order.value?.totalMoney;
+    if (order.value?.coupon?.discount) {
+        total = order.value?.totalMoney / (100 - (order.value?.coupon?.discount)) * 100
+    }
+    return total
+}
+
+const handleRouteFeedback = (id) => {
+    router.push({ name: 'Feedback', params: { id: id } })
+}
 </script>
 
 <style scoped src="./order-detail.css"></style>

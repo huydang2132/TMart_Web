@@ -5,6 +5,14 @@ const props = defineProps({
     item: Object
 })
 
+const calculateStar = (feedbacks) => {
+    let totalStar = 0;
+    feedbacks.forEach(feedback => {
+        totalStar += feedback.star;
+    })
+    return totalStar / feedbacks?.length;
+}
+
 </script>
 
 <template>
@@ -17,8 +25,8 @@ const props = defineProps({
             <p>{{ props?.item?.title }}</p>
         </div>
         <div class="product-star ">
-            <b-rating v-if="item?.feedbacks?.length > 0" :value="item?.feedbacks?.star / item?.feedbacks.length"
-                :stars="5" fontSize="12" isReadonly />
+            <b-rating v-if="item?.feedbacks?.length > 0" :value="calculateStar(item?.feedbacks)" :stars="5"
+                fontSize="12" isReadonly />
             <p class="number-sales">Đã bán: {{ $helper.formatNumber(item?.soldQuantity) }}</p>
         </div>
         <div class="product-price">

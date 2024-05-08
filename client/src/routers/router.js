@@ -126,6 +126,15 @@ const routes = [
                             authenticate: true
                         }
                     },
+                    {
+                        path: '/feedback/:id',
+                        name: 'Feedback',
+                        component: () => import('@/views/pages/product/FeedbackProduct.vue'),
+                        meta: {
+                            title: 'Đánh giá sản phẩm',
+                            authenticate: true
+                        }
+                    },
                 ]
             },
         ]

@@ -76,7 +76,8 @@
                             <p>{{ $formatValue.formatMoney(item.totalMoney) }}</p>
                         </div>
                         <div class="option">
-                            <b-button v-if="item.status === 'SHIPPED' && item?.feedback === false" value="Đánh giá"
+                            <b-button @click="handleRouteFeedback(item?.id)"
+                                v-if="item.status === 'SHIPPED' && item?.feedback === false" value="Đánh giá"
                                 type="secondary" />
                             <b-button @click="handleAddToCart(item.orderDetails)" v-if="item.status === 'SHIPPED'"
                                 value="Mua lại" type="secondary" />
@@ -174,6 +175,9 @@ const handleAddToCart = async (orderDetails) => {
     await cartStore.fetchInsertMultiple(data);
 }
 
+const handleRouteFeedback = (id) => {
+    router.push({ name: 'Feedback', params: { id: id } })
+}
 </script>
 
 <style scoped src="./orders.css"></style>

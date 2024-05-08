@@ -162,6 +162,11 @@
     text-align: right;
 }
 
+.detail-body-total .btn {
+    display: flex;
+    gap: 10px;
+}
+
 .detail-body-total .btn>button {
     padding: 10px 30px;
 }

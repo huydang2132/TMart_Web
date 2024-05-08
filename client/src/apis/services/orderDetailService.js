@@ -1,6 +1,7 @@
 import axios from "../axios";
+import baseService from "./baseService";
 
-class orderDetailService {
+class orderDetailService extends baseService {
     endpoint = "/order-details";
 
     async getAllByOrderId(id) {

@@ -57,6 +57,7 @@ export const useOrderStore = defineStore('order', {
 
         async fetchUpdateOrder(id, data, page, perPage) {
             try {
+                this.loadingOrder = true;
                 const res = await orderService.update(id, data);
                 if (res.status === 200) {
                     toastify('Cập nhật đơn hàng thành công', 'success');
@@ -65,11 +66,14 @@ export const useOrderStore = defineStore('order', {
             } catch (error) {
                 dialog('Cập nhật đơn hàng thất bại', 'error', error?.response?.data?.userMessage);
                 console.error(error);
+            } finally {
+                this.loadingOrder = false;
             }
         },
 
         async fetchInsertOrder(data) {
             try {
+                this.loadingOrder = true;
                 const res = await orderService.insert(data);
                 if (res.status === 201) {
                     if (data.paymentMethod === 'VNPAY') {
@@ -82,6 +86,8 @@ export const useOrderStore = defineStore('order', {
             } catch (error) {
                 dialog('Đặt hàng thất bại', 'error', error?.response?.data?.userMessage);
                 console.error(error);
+            } finally {
+                this.loadingOrder = false;
             }
         },
 
@@ -118,6 +124,20 @@ export const useOrderStore = defineStore('order', {
                 const res = await orderService.paymentReturn(params);
                 if (res.status === 200) {
                     this.codeStatusPayment = res.data;
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
+                this.loadingOrder = false;
+            }
+        },
+
+        async fetchFeedbackOrder(id) {
+            try {
+                this.loadingOrder = true;
+                const res = await orderService.feedbackOrder(id);
+                if (res.status === 200) {
+                    console.log(res);
                 }
             } catch (error) {
                 console.error(error);

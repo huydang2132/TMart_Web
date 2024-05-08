@@ -1,46 +1,50 @@
 <template>
     <div id="review-product">
+        <div class="loading" v-if="loadingFeedback">
+            <spinner-loader></spinner-loader>
+        </div>
         <div class="review-header">
             <h3>ĐÁNH GIÁ SẢN PHẨM</h3>
             <div class="review-filter">
                 <div class="filter-title">
-                    <label>3.5/5</label>
-                    <b-rating :value="3.5" isReadonly fontSize="22" />
+                    <label>{{ props.avgStar }}/5</label>
                 </div>
                 <div class="filter-star">
-                    <div class="filter-star-item all-star active">Tất cả</div>
-                    <div class="filter-star-item five-star">5 Sao</div>
-                    <div class="filter-star-item four-star">4 Sao</div>
-                    <div class="filter-star-item three-star">3 Sao</div>
-                    <div class="filter-star-item two-star">2 Sao</div>
-                    <div class="filter-star-item one-star">1 Sao</div>
+                    <div @click="handleFilter(null)" :class="['filter-star-item', 'all-star', { 'active': star === null }]">
+                        Tất cả</div>
+                    <div @click="handleFilter(5)" :class="['filter-star-item', 'five-star', { 'active': star === 5 }]">5 Sao
+                    </div>
+                    <div @click="handleFilter(4)" :class="['filter-star-item', 'four-star', { 'active': star === 4 }]">4 Sao
+                    </div>
+                    <div @click="handleFilter(3)" :class="['filter-star-item', 'three-star', { 'active': star === 3 }]">3 Sao
+                    </div>
+                    <div @click="handleFilter(2)" :class="['filter-star-item', 'two-star', { 'active': star === 2 }]">2 Sao
+                    </div>
+                    <div @click="handleFilter(1)" :class="['filter-star-item', 'one-star', { 'active': star === 1 }]">1 Sao
+                    </div>
                 </div>
             </div>
         </div>
         <div class="review-body">
-            <div class="review-content" v-for="item in 3" :key="item">
+            <div class="review-content" v-for="item in feedbackList" :key="item.id">
                 <div class="review-item">
                     <div class="reviewer-avt">
                         <img :src="require('@/assets/imgs/white-bear.jpg')" alt="">
                     </div>
                     <div class="reviewer-info">
-                        <label>huydang2132</label>
-                        <b-rating :value="4" isReadonly />
+                        <label>{{ item?.user?.userName }}</label>
+                        <b-rating :value="item?.star" isReadonly />
                         <div class="reviewer-more-info">
                             <p class="reviewer-time">
-                                13-04-2023 08:09
+                                {{ $formatValue.formatDateTime(item?.createdAt) }}
                             </p>
                             <div class="line"></div>
-                            <p class="reviewer-classify">
-                                Phân loại hàng: ĐEN
-                            </p>
                         </div>
                         <div class="item-content">
                             <p>
-                                Giao hàng cẩn thận, hàng đẹp
+                                {{ item?.note }}
                             </p>
                             <div class="item-content-img">
-                                <img :src="require('@/assets/imgs/Iphone15-promax.webp')" alt="">
                                 <img :src="require('@/assets/imgs/Iphone15-promax.webp')" alt="">
                             </div>
                         </div>
@@ -50,23 +54,68 @@
         </div>
         <div class="review-footer">
             <div class="paging">
-                <v-pagination :length="6" :size="45" color="#006fff" active-color="#0138ff" theme="#ffa500"></v-pagination>
+                <v-pagination v-model="page" :length="totalPage" :size="40" color="#006fff" active-color="#0138ff"
+                    theme="#ffa500"></v-pagination>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
+import { useFeedbackStore } from '@/stores/feedback';
+import { storeToRefs } from 'pinia';
+import { nextTick, ref, watch, defineProps } from 'vue';
+import { useRoute } from 'vue-router';
 
+const props = defineProps({
+    avgStar: Number
+})
+
+const feedbackStore = useFeedbackStore();
+const { loadingFeedback, feedbackList, pagination } = storeToRefs(feedbackStore);
+const totalPage = ref(pagination.value.lastPage + 1);
+const page = ref(1);
+const perPage = ref(10);
+const star = ref(null);
+
+const route = useRoute();
+const productId = ref(route.params.id);
+
+nextTick(async () => {
+    await feedbackStore.fetchGetAllByProduct(productId.value, page.value - 1, perPage.value, star.value);
+    totalPage.value = pagination.value.lastPage + 1;
+})
+
+watch(() => page.value, async () => {
+    await feedbackStore.fetchGetAllByProduct(productId.value, page.value - 1, perPage.value, star.value);
+})
+
+const handleFilter = async (value) => {
+    star.value = value;
+    await feedbackStore.fetchGetAllByProduct(productId.value, page.value - 1, perPage.value, star.value);
+}
 </script>
 
 <style scoped>
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: var(--bg-opacity);
+}
+
 #review-product {
     width: 100%;
     background-color: var(--color-white);
     border-radius: var(--border-radius-page);
     padding: 20px;
     box-shadow: 0 3px 5px var(--color-greyish);
+    position: relative;
 }
 
 .review-header>h3 {

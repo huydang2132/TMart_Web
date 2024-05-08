@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -31,10 +32,11 @@ public class FeedbacksController {
     @GetMapping("/product/{id}")
     public ResponseEntity<?> getAllFeedbacksByProduct(
             @PathVariable("id") UUID id,
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "10") Integer perPage
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer perPage,
+            @RequestParam(required = false) Integer star
     ) {
-        var result = feedbackService.getAllByProduct(id, page, perPage);
+        var result = feedbackService.getAllByProduct(id, page, perPage, star);
         return ResponseEntity.status(200).body(result);
     }
 
@@ -74,5 +76,14 @@ public class FeedbacksController {
         Feedback feedback = feedbackService.getById(id);
         feedbackService.delete(feedback);
         return ResponseEntity.status(200).body("Deleted successfully");
+    }
+
+    @PostMapping("/multiple")
+    @RolesAdminUser
+    public ResponseEntity<?> insertMultipleFeedbacks(
+            @RequestBody List<FeedbackDTO> feedbackDTOS
+    ) {
+        var result = feedbackService.insertMultiple(feedbackDTOS);
+        return ResponseEntity.status(201).body(result);
     }
 }

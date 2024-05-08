@@ -1,3 +1,16 @@
+.loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: var(--bg-opacity);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
 .payments-page {
     width: 100%;
     display: flex;

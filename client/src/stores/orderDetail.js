@@ -22,6 +22,21 @@ export const useOrderDetailStore = defineStore('orderDetail', {
             } finally {
                 this.loadingOrderDetail = false;
             }
+        },
+
+        async fetchGetById(id) {
+            this.loadingOrderDetail = true;
+            try {
+                const res = await orderDetailService.getById(id);
+                if (res.status === 200) {
+                    this.orderDetail = res.data;
+                    this.loadingOrderDetail = false;
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
+                this.loadingOrderDetail = false;
+            }
         }
     },
 })

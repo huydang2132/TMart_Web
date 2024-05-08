@@ -21,6 +21,11 @@ class orderService extends baseService {
         const res = await axios.get(`${this.endpoint}/return`, { params: { ...params } });
         return res;
     }
+
+    async feedbackOrder(id) {
+        const res = await axios.put(`${this.endpoint}/feedback/${id}`);
+        return res;
+    }
 }
 
 export default new orderService();

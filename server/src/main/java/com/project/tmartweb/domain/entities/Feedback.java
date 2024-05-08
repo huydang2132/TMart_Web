@@ -26,7 +26,7 @@ public class Feedback extends BaseEntity {
     @Max(5)
     private int star = 0;
 
-    @Column(name = "image", length = 100)
+    @Column(name = "image")
     private String image;
 
     @ManyToOne

@@ -78,6 +78,24 @@ export const useGalleryStore = defineStore('gallery', {
             } finally {
                 this.isLoading = false;
             }
+        },
+
+        async fetchDelete(id) {
+            try {
+                this.isLoading = true;
+                this.isSuccess = false;
+                const res = await galleryService.delete(id);
+                if (res.status === 200) {
+                    toastify('Xóa thành công', 'success');
+                    this.fetchGetAll();
+                    this.isSuccess = true;
+                }
+            } catch (error) {
+                dialog('Xóa thất bại', 'error', error?.response?.data?.userMessage);
+                console.error(error);
+            } finally {
+                this.isLoading = false;
+            }
         }
     },
 })

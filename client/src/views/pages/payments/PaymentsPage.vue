@@ -1,4 +1,7 @@
 <template>
+    <div class="loading" v-if="loadingOrder">
+        <spinner-loader />
+    </div>
     <div class="payments-page">
         <div class="address component-page" v-if="showChangeAddress == false">
             <div class="address-title">
@@ -140,7 +143,7 @@ const orderStore = useOrderStore();
 const couponStore = useCouponStore();
 const cartStore = useCartStore();
 const userStore = useUserStore();
-const { ordersByUser } = storeToRefs(orderStore);
+const { ordersByUser, loadingOrder } = storeToRefs(orderStore);
 const orderItems = ref([]);
 const cartItems = ref([]);
 const ordersData = ref([]);

@@ -1,8 +1,7 @@
 <script setup>
 import { useGalleryStore } from '@/stores/gallery';
-import { useProductStore } from '@/stores/product';
 import { storeToRefs } from 'pinia';
-import { defineEmits, nextTick, defineProps } from 'vue';
+import { defineEmits, nextTick, defineProps, ref } from 'vue';
 
 const props = defineProps({
     statusForm: String,
@@ -12,15 +11,18 @@ const props = defineProps({
 const emits = defineEmits(['closeModal']);
 
 const galleryStore = useGalleryStore();
-const productStore = useProductStore();
 
-const { gallery } = storeToRefs(galleryStore);
+const { gallery, isLoading, isSuccess } = storeToRefs(galleryStore);
+
+const productId = ref(null);
+const image = ref(null);
+const imagePreview = ref(null);
 
 nextTick(async () => {
-    await productStore.fetchGetAll();
     if (props.statusForm === 'EDIT') {
         await galleryStore.fetchGetById(props.galleryId);
-        console.log(gallery.value);
+        imagePreview.value = gallery?.value?.image;
+        productId.value = gallery?.value?.product?.id;
     }
 })
 
@@ -28,40 +30,47 @@ const handleCloseModal = () => {
     emits('closeModal');
 }
 
+const changeImg = (event) => {
+    image.value = event.target.files[0];
+    imagePreview.value = URL.createObjectURL(event.target.files[0]);
+}
+
+const handleSubmit = async () => {
+    let formData = new FormData();
+    formData.append('image', image.value);
+    if (props.statusForm === 'ADD') {
+        await galleryStore.fetchInsert(productId.value, formData);
+    }
+    else {
+        await galleryStore.fetchUpdate(props.galleryId, productId.value, formData);
+    }
+    if (isSuccess.value === true) {
+        emits('closeModal');
+    }
+}
 </script>
 
 <template>
     <div class="admin-modal__container">
+        <div v-if="isLoading" class="loading">
+            <spinner-loader></spinner-loader>
+        </div>
         <div class="admin-modal__section" v-click-outside="handleCloseModal">
             <div class="modal-header">
                 <h5>Thêm mới sản phẩm</h5>
                 <button @click="handleCloseModal()"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="modal-body">
-                <form class="form-gallery row g-3 form-group">
-                    <table class="col-md-12 table table-bordered border-primary">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Tên sản phẩm</th>
-                                <th scope="col">Ngày tạo</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr style="cursor: pointer;" v-for="(item) in 5" :key="item">
-                                <td class="value-too-long" :title="item">
-                                    <span>{{ item }}</span>
-                                </td>
-                                <td>{{ item }}</td>
-                                <td>{{ item }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <v-pagination v-model="page" size="35" :length="4" rounded="circle"></v-pagination>
+                <form @submit.prevent="handleSubmit" class="form-gallery row g-3 form-group">
+                    <div class="form-item col-md-12">
+                        <label for="productId" class="form-label">Mã sản phẩm</label>
+                        <input v-model="productId" type="text" class="form-control" id="productId" required>
+                    </div>
                     <div class="form-item col-md-12">
                         <label for="images" class="form-label">Ảnh sản phẩm</label>
                         <input @change="changeImg($event)" multiple="multiple" type="file" class="form-control"
-                            id="images">
+                            id="images" required>
+                        <img class="mt-3" :src="imagePreview" alt="">
                     </div>
                     <div class="btn-submit col-12">
                         <button class="btn btn-primary" type="submit">Lưu</button>

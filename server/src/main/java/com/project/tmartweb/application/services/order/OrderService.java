@@ -1,9 +1,11 @@
 package com.project.tmartweb.application.services.order;
 
 import com.project.tmartweb.application.repositories.*;
+import com.project.tmartweb.application.responses.MailOrder;
 import com.project.tmartweb.application.responses.VNPayResponse;
 import com.project.tmartweb.application.services.cart.CartService;
 import com.project.tmartweb.application.services.coupon.CouponService;
+import com.project.tmartweb.application.services.email.IEmailService;
 import com.project.tmartweb.application.services.payment.VNPayService;
 import com.project.tmartweb.application.services.product.ProductService;
 import com.project.tmartweb.application.services.user.UserService;
@@ -44,6 +46,7 @@ public class OrderService implements IOrderService {
     private final ProductRepository productRepository;
     private final NotificationRepository notificationRepository;
     private final VNPayService vnpayService;
+    private final IEmailService emailService;
 
     @Override
     @Transactional
@@ -94,35 +97,40 @@ public class OrderService implements IOrderService {
     @Override
     @Transactional
     public Order update(UUID id, OrderDTO orderDTO) {
-        Order order = getById(id);
-        order.setStatus(orderDTO.getStatus());
-        Notification notification = new Notification();
-        notification.setUser(order.getUser());
-        notification.setOrder(order);
-        if (orderDTO.getStatus() == OrderStatus.PROCESSED) {
-            notification.setTitle("Đơn hàng đã xử lý thành công.");
-            notification.setContent("Đơn hàng của bạn đã được xử lý thành công. " +
-                    " Chúng tôi sẽ giao cho đơn vị vận chuyển trong thời gian sớm nhất.");
+        try {
+            Order order = getById(id);
+            order.setStatus(orderDTO.getStatus());
+            Notification notification = new Notification();
+            notification.setUser(order.getUser());
+            notification.setOrder(order);
+            if (orderDTO.getStatus() == OrderStatus.PROCESSED) {
+                notification.setTitle("Đơn hàng đã xử lý thành công.");
+                notification.setContent("Đơn hàng của bạn đã được xử lý thành công. " +
+                        " Chúng tôi sẽ giao cho đơn vị vận chuyển trong thời gian sớm nhất.");
+            }
+            if (orderDTO.getStatus() == OrderStatus.SHIPPING) {
+                notification.setTitle("Đơn hàng đang được giao.");
+                notification.setContent("Đơn hàng của bạn đã được giao cho đơn vị vận chuyển. " +
+                        " Hãy chú ý điện thoại nhé, đơn hàng sẽ được giao tới bạn trong thời gian sớm nhất có thể.");
+            }
+            if (orderDTO.getStatus() == OrderStatus.SHIPPED) {
+                notification.setTitle("Đơn hàng đã giao thành công.");
+                notification.setContent("Đơn hàng của bạn đã được giao thành công. " +
+                        " Hãy đánh trải nghiệm, đánh giá sản phẩm và nếu có lỗi gì hãy liên hệ với chúng tôi ngay nhé.");
+                emailService.sendEmail(order.getUser().getEmail(), "Đơn hàng", MailOrder.orderShipped());
+            }
+            if (orderDTO.getStatus() == OrderStatus.CANCELLED) {
+                notification.setTitle("Đơn hàng đã hủy thành công.");
+                notification.setContent("Đơn hàng của bạn đã được hủy thành công. ");
+            }
+            notificationRepository.save(notification);
+            if (orderDTO.getAddress() != null) {
+                order.setAddress(orderDTO.getAddress());
+            }
+            return orderRepository.save(order);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        if (orderDTO.getStatus() == OrderStatus.SHIPPING) {
-            notification.setTitle("Đơn hàng đang được giao.");
-            notification.setContent("Đơn hàng của bạn đã được giao cho đơn vị vận chuyển. " +
-                    " Hãy chú ý điện thoại nhé, đơn hàng sẽ được giao tới bạn trong thời gian sớm nhất có thể.");
-        }
-        if (orderDTO.getStatus() == OrderStatus.SHIPPED) {
-            notification.setTitle("Đơn hàng đã giao thành công.");
-            notification.setContent("Đơn hàng của bạn đã được giao thành công. " +
-                    " Hãy đánh trải nghiệm, đánh giá sản phẩm và nếu có lỗi gì hãy liên hệ với chúng tôi ngay nhé.");
-        }
-        if (orderDTO.getStatus() == OrderStatus.CANCELLED) {
-            notification.setTitle("Đơn hàng đã hủy thành công.");
-            notification.setContent("Đơn hàng của bạn đã được hủy thành công. ");
-        }
-        notificationRepository.save(notification);
-        if (orderDTO.getAddress() != null) {
-            order.setAddress(orderDTO.getAddress());
-        }
-        return orderRepository.save(order);
     }
 
     @Override
@@ -179,6 +187,7 @@ public class OrderService implements IOrderService {
         Order order = insert(orderDTO);
         String urlPayment = "";
         try {
+            emailService.sendEmail(order.getUser().getEmail(), "Đơn hàng", MailOrder.orderSuccess());
             if (order.getPaymentMethod().equals("VNPAY")) {
                 urlPayment = vnpayService.createOrder((int) order.getTotalMoney(), String.valueOf(order.getId()), request);
                 order.setStatus(OrderStatus.UNPAID);

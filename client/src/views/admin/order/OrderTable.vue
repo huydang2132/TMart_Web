@@ -59,7 +59,7 @@ const handleUpdateStatus = async (item) => {
         case 'PENDING':
             status = 'PROCESSED';
             break;
-        case 'PROCESSED', 'PAID':
+        case 'PROCESSED' || 'PAID':
             status = 'SHIPPING';
             break;
         case 'SHIPPING':

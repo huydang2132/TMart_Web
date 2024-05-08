@@ -3,6 +3,7 @@ import { useGalleryStore } from '@/stores/gallery';
 import { storeToRefs } from 'pinia'
 import { nextTick, ref } from 'vue';
 import GalleryModal from './GalleryModal.vue';
+import { dialogConfirm } from '@/helpers/swal';
 
 const galleryStore = useGalleryStore();
 const showModal = ref(false);
@@ -28,6 +29,12 @@ const handleEditGallery = (id) => {
 const handleCloseModal = () => {
     showModal.value = false;
 }
+
+const handleDeleteGallery = async (id) => {
+    dialogConfirm('Xác nhận xóa', 'Bạn có chắc muốn xóa trưng bày này?', async () => {
+        await galleryStore.fetchDelete(id);
+    })
+}
 </script>
 
 <template>
@@ -47,25 +54,25 @@ const handleCloseModal = () => {
                     <th scope="col">#</th>
                     <th scope="col">Tên sản phẩm</th>
                     <th scope="col">Ngày tạo</th>
-                    <th scope="col">Người tạo</th>
-                    <th scope="col">Ảnh</th>
+                    <th class="image-gallery" scope="col">Ảnh</th>
                     <th class="action" scope="col">Chức năng</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="(item, index) in galleryList" :key="item?.id">
                     <th width="50px" scope="row">{{ index + 1 }}</th>
-                    <td class="value-too-long" :title="item?.title">
+                    <td class="value-too-long gallery-title" :title="item?.title">
                         <span>{{ item?.product.title }}</span>
                     </td>
-                    <td>{{ item?.createdAt }}</td>
-                    <td>{{ item?.createdBy }}</td>
-                    <td></td>
+                    <td>{{ $formatValue.formatDateTime(item?.createdAt) }}</td>
+                    <td class="image-gallery">
+                        <img :src="item?.image" :alt="item?.title" />
+                    </td>
                     <td class="action">
                         <button @click="handleEditGallery(item?.id)" class="btn-edit">
                             <i class="fa-solid fa-pencil"></i>
                         </button>
-                        <button @click="handleDeleteProduct(item?.id)" class="btn-delete">
+                        <button @click="handleDeleteGallery(item?.id)" class="btn-delete">
                             <i class="fa-solid fa-trash-can"></i>
                         </button>
                     </td>

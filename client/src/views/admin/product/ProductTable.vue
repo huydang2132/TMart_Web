@@ -69,9 +69,9 @@ const handleDeleteProduct = async (id) => {
             <thead>
                 <tr>
                     <th scope="col">#</th>
+                    <th scope="col">Mã sản phẩm</th>
                     <th scope="col">Tên sản phẩm</th>
                     <th scope="col">Tên danh mục</th>
-                    <th scope="col">Mô tả</th>
                     <th scope="col">Giá bán</th>
                     <th scope="col">Số lượng</th>
                     <th scope="col">Giảm giá</th>
@@ -81,13 +81,11 @@ const handleDeleteProduct = async (id) => {
             <tbody>
                 <tr v-for="(item, index) in productStore.products.data" :key="item?.id">
                     <th width="50px" scope="row">{{ (index + 1) + (perPage * (page - 1)) }}</th>
+                    <td>{{ item?.id }}</td>
                     <td class="value-too-long" :title="item?.title">
                         <span>{{ item?.title }}</span>
                     </td>
                     <td>{{ item?.category?.name }}</td>
-                    <td class="value-too-long" :title="item?.description">
-                        <span>{{ item?.description }}</span>
-                    </td>
                     <td>{{ $formatValue.formatMoney(item?.price) }}</td>
                     <td>{{ item?.quantity }}</td>
                     <td>{{ item?.discount }}%</td>

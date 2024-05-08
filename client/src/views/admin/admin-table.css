@@ -68,6 +68,10 @@
     max-width: 200px;
 }
 
+.admin-table table .value-too-long.gallery-title {
+    max-width: 250px;
+}
+
 .admin-table table .value-too-long>span {
     white-space: nowrap;
     overflow: hidden;
@@ -138,4 +142,13 @@
 .status-order-item.unpaid {
     background-color: black;
     color: white;
+}
+
+.image-gallery {
+    text-align: center;
+}
+
+.image-gallery>img {
+    width: 150px;
+
 }
