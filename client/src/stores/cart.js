@@ -9,6 +9,7 @@ export const useCartStore = defineStore('cart', {
         cart: {},
         cartByUser: {},
         cartItems: [],
+        loadingCart: false,
     }),
     getters: {},
     actions: {
@@ -88,7 +89,7 @@ export const useCartStore = defineStore('cart', {
                 const res = await cartService.insertMultiple(data);
                 if (res.status === 201) {
                     toastify('Thêm vào giỏ hàng thành công!', 'success');
-                    this.fetchGetAllByUser();
+                    await this.fetchGetAllByUser();
                 }
                 this.carts = res.data;
             } catch (error) {
@@ -96,5 +97,19 @@ export const useCartStore = defineStore('cart', {
                 console.error(error);
             }
         },
+
+        async fetchDeleteMultiple(ids) {
+            try {
+                this.loadingCart = true;
+                const res = await cartService.deleteMultiple(ids);
+                if (res.status === 200) {
+                    await this.fetchGetAllByUser();
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
+                this.loadingCart = false;
+            }
+        }
     },
 })

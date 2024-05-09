@@ -6,18 +6,16 @@
         </section>
     </main>
     <TheFooter />
-    <ChatBot />
 </template>
 
 <script>
 import TheHeader from './TheHeader.vue';
 import TheFooter from './TheFooter.vue';
-import ChatBot from '../pages/chatbot/ChatBot.vue';
 
 export default {
     name: 'TheContainer',
     components: {
-        TheHeader, TheFooter, ChatBot
+        TheHeader, TheFooter
     }
 }
 </script>

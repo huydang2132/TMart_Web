@@ -18,7 +18,8 @@
                         <p>Thành tiền</p>
                     </div>
                     <div class="title-option cart-option">
-                        <b-button class="btn" icon="fa-solid fa-trash-can" color="var(--color-grey)" />
+                        <b-button @click="handleDeleteMultipleCart()" class="btn" icon="fa-solid fa-trash-can"
+                            color="var(--color-grey)" />
                     </div>
                 </div>
                 <div class="cart-body">
@@ -170,6 +171,20 @@ onUpdated(async () => {
 // ------------------------ Watcher -----------------------------
 
 // ------------------------ Hàm xử lý ---------------------------
+const handleDeleteMultipleCart = async () => {
+    let ids = [];
+    cartSelected.value.forEach(item => {
+        ids.push(item?.id);
+    })
+    if (ids.length === 0) {
+        dialog('Vui là chọn ít nhất 1 sản phâm', 'error');
+        return;
+    }
+    dialogConfirm('Xác nhận xóa', 'Bạn có muốn xóa nhưng sản phẩm đang được chọn', async () => {
+        await cartStore.fetchDeleteMultiple(ids);
+        cartData.value = cartStore.cartByUser.data;
+    })
+}
 
 const validInputQuantity = (item) => {
     handleUpdateQuantityCart(item)

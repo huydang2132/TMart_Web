@@ -41,8 +41,9 @@
                     <div class="options">
                         <h5>Màu sắc</h5>
                         <div class="option-item">
-                            <div :class="['option-value', { 'option-active': index % 2 !== 0 }]"
-                                v-for="(item, index) in ['Đen', 'Xanh', 'Trắng']" :key="index">
+                            <div @click="changeClassify(item)"
+                                :class="['option-value', { 'option-active': item === classify }]"
+                                v-for="(item) in ['Đen', 'Xanh', 'Trắng']" :key="item">
                                 <img :src="require('@/assets/imgs/Iphone15-promax.webp')" alt="">
                                 <p class="option-label">{{ item }}</p>
                             </div>
@@ -91,7 +92,7 @@ const route = useRoute();
 const productId = ref(route.params.id);
 const quantityProduct = ref(0);
 const avgStar = ref(0);
-
+const classify = ref('Đen');
 const cartStore = useCartStore();
 const userStore = useUserStore();
 
@@ -107,6 +108,10 @@ nextTick(async () => {
 })
 
 // --------------------- Hàm xử lý --------------------------
+const changeClassify = (item) => {
+    classify.value = item;
+}
+
 const calculateStar = (feedbacks) => {
     let totalStar = 0;
     feedbacks.forEach(feedback => {
@@ -139,6 +144,7 @@ const handleAddToCart = () => {
         productId: productId.value,
         quantity: quantity.value,
         userId: userStore.userId,
+        classify: classify.value,
         createdBy: userStore.fullName
     });
 }

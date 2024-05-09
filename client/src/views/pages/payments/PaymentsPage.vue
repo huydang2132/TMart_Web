@@ -65,7 +65,7 @@
                     </span>
                 </div>
                 <div class="content-classify product-info-classify">
-                    <span>Màu: XANH NAVY,29</span>
+                    <span>Màu: {{ item?.classify }}</span>
                 </div>
                 <div class="content-price product-info-price">
                     <span>

@@ -7,20 +7,26 @@
             <h3>ĐÁNH GIÁ SẢN PHẨM</h3>
             <div class="review-filter">
                 <div class="filter-title">
-                    <label>{{ props.avgStar }}/5</label>
+                    <label>{{ feedbackList.length == 0 ? 0 : props.avgStar }}/5</label>
                 </div>
                 <div class="filter-star">
-                    <div @click="handleFilter(null)" :class="['filter-star-item', 'all-star', { 'active': star === null }]">
+                    <div @click="handleFilter(null)"
+                        :class="['filter-star-item', 'all-star', { 'active': star === null }]">
                         Tất cả</div>
-                    <div @click="handleFilter(5)" :class="['filter-star-item', 'five-star', { 'active': star === 5 }]">5 Sao
+                    <div @click="handleFilter(5)" :class="['filter-star-item', 'five-star', { 'active': star === 5 }]">5
+                        Sao
                     </div>
-                    <div @click="handleFilter(4)" :class="['filter-star-item', 'four-star', { 'active': star === 4 }]">4 Sao
+                    <div @click="handleFilter(4)" :class="['filter-star-item', 'four-star', { 'active': star === 4 }]">4
+                        Sao
                     </div>
-                    <div @click="handleFilter(3)" :class="['filter-star-item', 'three-star', { 'active': star === 3 }]">3 Sao
+                    <div @click="handleFilter(3)" :class="['filter-star-item', 'three-star', { 'active': star === 3 }]">
+                        3 Sao
                     </div>
-                    <div @click="handleFilter(2)" :class="['filter-star-item', 'two-star', { 'active': star === 2 }]">2 Sao
+                    <div @click="handleFilter(2)" :class="['filter-star-item', 'two-star', { 'active': star === 2 }]">2
+                        Sao
                     </div>
-                    <div @click="handleFilter(1)" :class="['filter-star-item', 'one-star', { 'active': star === 1 }]">1 Sao
+                    <div @click="handleFilter(1)" :class="['filter-star-item', 'one-star', { 'active': star === 1 }]">1
+                        Sao
                     </div>
                 </div>
             </div>
