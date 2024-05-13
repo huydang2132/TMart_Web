@@ -23,17 +23,6 @@ create table users(
   	updated_by varchar(100)
 );
 
-create table tokens(
-	user_id uuid references users(id),
-	token varchar(255),
-	token_type varchar(50),
-	expiration_date timestamp,
-  	expired bool default false,
-  	revoked bool default false,
-  	created_at timestamp,
-	primary key (user_id, token)
-);
-
 create table categories(
 	id uuid primary key,
 	name varchar(100),
@@ -140,17 +129,6 @@ create table notifications(
 	order_detail_id uuid references order_detail(id),
 	content text,
 	read bool default false,
-	created_at timestamp,
-	created_by varchar(100),
-  	updated_at timestamp,
-  	updated_by varchar(100)
-);
-
-create table chat_log(
-	id uuid primary key,
-	user_id uuid references users(id),
-	role varchar(20) not null,
-	message text,
 	created_at timestamp,
 	created_by varchar(100),
   	updated_at timestamp,

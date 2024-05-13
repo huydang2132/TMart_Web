@@ -12,9 +12,9 @@ spring:
     basename: i18n/messages
     encoding: utf-8
   datasource:
-    url: jdbc:postgresql://localhost:5432/TMartDb
-    username: postgres
-    password: huy123
+    url: jdbc:postgresql://ep-white-field-a1z61bj4-pooler.ap-southeast-1.aws.neon.tech:5432/verceldb
+    username: default
+    password: SWm0qihD3Pfs
   jpa:
     hibernate:
       ddl-auto: update
