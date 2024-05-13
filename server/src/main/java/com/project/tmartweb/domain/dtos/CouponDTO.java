@@ -1,6 +1,5 @@
 package com.project.tmartweb.domain.dtos;
 
-import com.project.tmartweb.domain.dtos.base.BaseDTO;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -14,7 +13,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Getter
 @Setter
-public class CouponDTO extends BaseDTO {
+public class CouponDTO {
     @NotBlank(message = "Mã giảm giá không được để trống!")
     private String code;
 

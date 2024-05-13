@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-    baseURL: 'https://tmartweb-production.up.railway.app/api/v1'
+    baseURL: 'http://localhost:6060/api/v1'
 });
 
 instance.interceptors.request.use((config) => {

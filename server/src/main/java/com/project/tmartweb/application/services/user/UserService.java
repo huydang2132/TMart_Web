@@ -121,7 +121,6 @@ public class UserService implements IUserService {
         String encoderPassword = passwordEncoder.encode(userDTO.getPassword());
         user.setPassword(encoderPassword);
         user.setRole(role);
-        user.setCreatedBy(userDTO.getCreatedBy());
         return userRepository.save(user);
     }
 
@@ -138,7 +137,6 @@ public class UserService implements IUserService {
         }
         Role role = roleService.getById(userDTO.getRoleId());
         user.setRole(role);
-        user.setUpdatedBy(userDTO.getUpdatedBy());
         UserUpdateDTO userUpdateDTO = mapper.map(userDTO, UserUpdateDTO.class);
         mapper.map(userDTO, userUpdateDTO);
         return userRepository.save(user);

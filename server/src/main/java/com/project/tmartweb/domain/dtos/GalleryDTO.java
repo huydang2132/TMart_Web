@@ -1,6 +1,5 @@
 package com.project.tmartweb.domain.dtos;
 
-import com.project.tmartweb.domain.dtos.base.BaseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-public class GalleryDTO extends BaseDTO {
+public class GalleryDTO {
     private MultipartFile image;
 
     private UUID productId;

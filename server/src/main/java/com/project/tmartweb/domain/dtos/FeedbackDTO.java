@@ -1,6 +1,5 @@
 package com.project.tmartweb.domain.dtos;
 
-import com.project.tmartweb.domain.dtos.base.BaseDTO;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
@@ -14,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-public class FeedbackDTO extends BaseDTO {
+public class FeedbackDTO {
     private String note;
 
     @Min(0)

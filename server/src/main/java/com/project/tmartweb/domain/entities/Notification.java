@@ -1,6 +1,6 @@
 package com.project.tmartweb.domain.entities;
 
-import com.project.tmartweb.domain.entities.base.BaseEntity;
+import com.project.tmartweb.domain.entities.base.AbstractAuditingEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "notifications")
-public class Notification extends BaseEntity {
+public class Notification extends AbstractAuditingEntity {
     @Column(name = "title")
     private String title;
 

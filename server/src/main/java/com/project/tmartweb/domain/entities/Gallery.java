@@ -1,6 +1,6 @@
 package com.project.tmartweb.domain.entities;
 
-import com.project.tmartweb.domain.entities.base.BaseEntity;
+import com.project.tmartweb.domain.entities.base.AbstractAuditingEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "galeries")
-public class Gallery extends BaseEntity {
+public class Gallery extends AbstractAuditingEntity {
     @Column(name = "image")
     private String image;
 

@@ -1,7 +1,7 @@
 package com.project.tmartweb.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.project.tmartweb.domain.entities.base.BaseEntity;
+import com.project.tmartweb.domain.entities.base.AbstractAuditingEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -16,7 +16,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "feedbacks")
-public class Feedback extends BaseEntity {
+public class Feedback extends AbstractAuditingEntity {
 
     @Column(name = "note")
     private String note;

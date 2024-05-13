@@ -1,7 +1,7 @@
 package com.project.tmartweb.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.project.tmartweb.domain.entities.base.BaseEntity;
+import com.project.tmartweb.domain.entities.base.AbstractAuditingEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "order_detail")
-public class OrderDetail extends BaseEntity {
+public class OrderDetail extends AbstractAuditingEntity {
     @Column(name = "price")
     @Min(0)
     private double price;

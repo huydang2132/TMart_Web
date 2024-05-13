@@ -5,6 +5,12 @@
 <template>
     <div class="admin-page">
         <div class="sidebar">
+            <div class="logo">
+                <router-link :to="{ name: 'HomePage' }">
+                    <span class="t">T</span>
+                    <span class="mart">Mart</span>
+                </router-link>
+            </div>
             <ul>
                 <li>
                     <router-link :to="{ name: 'HomeAdmin' }">
@@ -57,6 +63,27 @@
 </template>
 
 <style lang="css" scoped>
+.admin-page .sidebar .logo>a {
+    display: block;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 5px 0;
+}
+
+.admin-page .sidebar .logo>a>.t {
+    color: var(--color-orange);
+    font-size: 2rem;
+
+}
+
+.admin-page .sidebar .logo>a>.mart {
+    color: var(--color-white);
+    font-size: 2rem;
+    font-style: italic;
+}
+
 .admin-page {
     display: flex;
 }

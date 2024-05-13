@@ -1,6 +1,5 @@
 package com.project.tmartweb.domain.dtos;
 
-import com.project.tmartweb.domain.dtos.base.BaseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +11,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDTO extends BaseDTO {
+public class ProductDTO {
     private UUID categoryId;
 
     private String title;

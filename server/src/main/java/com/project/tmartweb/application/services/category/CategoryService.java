@@ -39,7 +39,6 @@ public class CategoryService implements ICategoryService {
     public Category update(UUID id, CategoryDTO categoryDTO) {
         Category category = getById(id);
         mapper.map(categoryDTO, category);
-        category.setUpdatedBy(categoryDTO.getUpdatedBy());
         return categoryRepository.save(category);
     }
 

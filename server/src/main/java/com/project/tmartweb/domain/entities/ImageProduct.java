@@ -1,7 +1,7 @@
 package com.project.tmartweb.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.project.tmartweb.domain.entities.base.BaseEntity;
+import com.project.tmartweb.domain.entities.base.AbstractAuditingEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "image_product")
-public class ImageProduct extends BaseEntity {
+public class ImageProduct extends AbstractAuditingEntity {
     @Column(name = "image_name", length = 100)
     private String imageName;
 

@@ -31,6 +31,9 @@
                 </div>
                 <div v-if="authStore.isLoggedIn" @mouseover="isShowAccOption = true"
                     @mouseleave="isShowAccOption = false" v-show="isShowAccOption" class="account-box">
+                    <div class="account-router-link" v-if="isAdmin">
+                        <router-link :to="{ name: 'HomeAdmin' }">Trang quản trị</router-link>
+                    </div>
                     <div class="account-router-link">
                         <router-link :to="{ name: 'AccountPage' }">Thông tin tài khoản</router-link>
                     </div>
@@ -58,6 +61,7 @@
 </template>
 
 <script>
+import { verifyJwt } from '@/helpers/verifyJwt';
 import router from '@/routers/router';
 import { useAuthStore } from '@/stores/auth';
 import { useCartStore } from '@/stores/cart';
@@ -79,6 +83,7 @@ export default {
             userStore: null,
             userInfor: null,
             noificationStore: null,
+            isAdmin: false
         }
     },
     setup() {
@@ -128,6 +133,14 @@ export default {
         nextTick(async () => {
             this.userInfor = this.userStore.userInfor;
         })
+        const user = JSON.parse(localStorage.getItem('user'));
+        const token = user?.token;
+        if (token) {
+            const payloadData = await verifyJwt(token);
+            if (payloadData?.role === 'ADMIN') {
+                this.isAdmin = true;
+            }
+        }
     },
     mounted() {
         this.$nextTick(() => {
@@ -326,6 +339,14 @@ export default {
     color: var(--color-text);
     display: block;
     padding: 10px;
+}
+
+.redirect .redirect__account .account-box .account-router-link:first-child {
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.redirect .redirect__account .account-box .account-router-link:last-child {
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
 }
 
 .redirect .redirect__account .account-box .account-router-link>button {

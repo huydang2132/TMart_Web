@@ -2,7 +2,7 @@ package com.project.tmartweb.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.project.tmartweb.domain.entities.base.BaseEntity;
+import com.project.tmartweb.domain.entities.base.AbstractAuditingEntity;
 import com.project.tmartweb.domain.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "orders")
-public class Order extends BaseEntity {
+public class Order extends AbstractAuditingEntity {
     @Column(name = "full_name", length = 100)
     private String fullName;
 

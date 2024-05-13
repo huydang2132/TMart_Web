@@ -1,6 +1,5 @@
 package com.project.tmartweb.domain.dtos;
 
-import com.project.tmartweb.domain.dtos.base.BaseDTO;
 import com.project.tmartweb.domain.enums.RoleId;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +12,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Getter
 @Setter
-public class UserDTO extends BaseDTO {
+public class UserDTO {
     private String userName;
 
     private String password;

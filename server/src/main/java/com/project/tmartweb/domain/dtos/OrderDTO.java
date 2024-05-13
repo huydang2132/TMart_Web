@@ -1,6 +1,5 @@
 package com.project.tmartweb.domain.dtos;
 
-import com.project.tmartweb.domain.dtos.base.BaseDTO;
 import com.project.tmartweb.domain.enums.OrderStatus;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -15,7 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-public class OrderDTO extends BaseDTO {
+public class OrderDTO {
     @NotBlank(message = "Không được bỏ trống họ và tên!")
     private String fullName;
 

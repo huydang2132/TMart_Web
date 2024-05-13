@@ -92,7 +92,6 @@ public class ProductService implements IProductService {
         Category category = categoryService.getById(productDTO.getCategoryId());
         Product product = mapper.map(productDTO, Product.class);
         product.setCategory(category);
-        product.setCreatedBy(productDTO.getCreatedBy());
         return productRepository.save(product);
     }
 
@@ -102,7 +101,6 @@ public class ProductService implements IProductService {
         Category category = categoryService.getById(productDTO.getCategoryId());
         mapper.map(productDTO, product);
         product.setCategory(category);
-        product.setUpdatedBy(productDTO.getUpdatedBy());
         return productRepository.save(product);
     }
 

@@ -1,7 +1,7 @@
 package com.project.tmartweb.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.project.tmartweb.domain.entities.base.BaseEntity;
+import com.project.tmartweb.domain.entities.base.AbstractAuditingEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +16,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "products")
-public class Product extends BaseEntity {
+public class Product extends AbstractAuditingEntity {
     private String title;
 
     private double price;
