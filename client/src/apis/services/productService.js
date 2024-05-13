@@ -30,13 +30,12 @@ class productService extends baseService {
         }
     }
 
-    async getAllDeleted(page, perPage, keyword) {
+    async getAllDeleted(page, perPage) {
         const res = await axios.get('/products/deleted',
             {
                 params: {
                     page: page,
-                    perPage: perPage,
-                    keyword: keyword
+                    perPage: perPage
                 }
             }
         );

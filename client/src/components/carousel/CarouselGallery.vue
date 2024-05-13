@@ -60,7 +60,7 @@ const slideTo = (val) => {
         <Carousel id="thumbnails" :breakpoints="breakpoints" :autoplay="props.autoplay" :wrap-around="props.wrapAround"
             v-model="currentSlide">
             <Slide v-for="slide in props.slides" :key="slide">
-                <img class="carousel__item" @click="slideTo(slide - 1)" :src="slide?.url" alt="">
+                <img class="carousel__item" @click="slideTo(slide)" :src="slide?.url" alt="">
             </Slide>
 
             <template #addons>

@@ -24,10 +24,15 @@ export const useProductStore = defineStore('product', {
     },
     actions: {
         async fetchGetAll(page, perPage, keyword) {
-            this.loading = true;
-            const res = await productService.getAll(page, perPage, keyword);
-            if (res) {
-                this.products = res;
+            try {
+                this.loading = true;
+                const res = await productService.getAll(page, perPage, keyword);
+                if (res) {
+                    this.products = res;
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
                 this.loading = false;
             }
         },
@@ -35,6 +40,21 @@ export const useProductStore = defineStore('product', {
         async getAllByCategory(id, page, perPage) {
             const res = await productService.getAllByCategory(id, page, perPage);
             this.productsByCategory = res;
+        },
+
+        async fetchGetAllDeleted(page, perPage) {
+            try {
+                this.loading = true;
+                const res = await productService.getAllDeleted(page, perPage);
+                if (res.status === 200) {
+                    this.products = res;
+                }
+            } catch (error) {
+                toastify('Không tìm thấy sản phẩm', 'error');
+                console.error(error);
+            } finally {
+                this.loading = false;
+            }
         },
 
         async fetchGetById(id) {
@@ -86,12 +106,13 @@ export const useProductStore = defineStore('product', {
                 if (res.status === 201) {
                     dialog('Thêm sản phẩm thành công', 'success', null);
                     await this.fetchGetAll(0, 12);
-                    this.loading = false;
                     return res.data;
                 }
             } catch (error) {
                 dialog('Thêm sản phẩm thất bại', 'error', error?.response?.data?.userMessage);
                 console.error(error);
+            } finally {
+                this.loading = false;
             }
         },
 
@@ -100,12 +121,13 @@ export const useProductStore = defineStore('product', {
                 this.loading = true;
                 const res = await productService.uploadImage(id, data);
                 if (res.status === 200) {
-                    this.loading = false;
                     await this.fetchGetAll(0, 12);
                 }
             } catch (error) {
                 dialog('Thêm ảnh sản phẩm thất bại', 'error', error?.response?.data?.userMessage);
                 console.error(error);
+            } finally {
+                this.loading = false;
             }
         },
 

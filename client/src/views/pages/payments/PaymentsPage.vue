@@ -115,7 +115,7 @@
                     </div>
                     <div class="payments-value">
                         <p>{{ $formatValue.formatMoney(totalMoney / ((100 - discount) / 100)) }}</p>
-                        <p>32.000 ₫</p>
+                        <p>0 ₫</p>
                         <p>- {{ $formatValue.formatMoney((totalMoney / ((100 - discount) / 100)) - totalMoney) }}</p>
                         <p>{{ $formatValue.formatMoney(totalMoney) }}</p>
                     </div>

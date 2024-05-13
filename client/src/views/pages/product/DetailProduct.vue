@@ -44,7 +44,6 @@
                             <div @click="changeClassify(item)"
                                 :class="['option-value', { 'option-active': item === classify }]"
                                 v-for="(item) in ['Đen', 'Xanh', 'Trắng']" :key="item">
-                                <img :src="require('@/assets/imgs/Iphone15-promax.webp')" alt="">
                                 <p class="option-label">{{ item }}</p>
                             </div>
                         </div>

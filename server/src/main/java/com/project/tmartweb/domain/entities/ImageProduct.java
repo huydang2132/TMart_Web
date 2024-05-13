@@ -18,7 +18,7 @@ public class ImageProduct extends AbstractAuditingEntity {
     @Column(name = "image_name", length = 100)
     private String imageName;
 
-    @Column(name = "url")
+    @Column(name = "url", length = 500)
     private String url;
 
     @JsonBackReference

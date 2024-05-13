@@ -5,7 +5,6 @@ import com.project.tmartweb.application.services.product.IProductService;
 import com.project.tmartweb.domain.dtos.ProductDTO;
 import com.project.tmartweb.domain.entities.Product;
 import com.project.tmartweb.web.base.RestAPI;
-import com.project.tmartweb.web.base.RoleAdmin;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -58,7 +57,6 @@ public class ProductsControllers {
     }
 
     @GetMapping("/deleted")
-    @RoleAdmin
     public ResponseEntity<?> getAllDeletedProducts(
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer perPage

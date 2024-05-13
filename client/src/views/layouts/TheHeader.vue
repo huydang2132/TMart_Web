@@ -109,8 +109,11 @@ export default {
          * Hàm xử lý chức năng tìm kiếm
          */
         handleSearch: _.debounce(function () {
-            router.push({ name: 'ProductSearch', params: { keyword: this.searchValue } })
+            if (this.searchValue) {
+                router.push({ name: 'ProductSearch', params: { keyword: this.searchValue } })
+            }
         }, 300),
+
         handleClickAccount() {
             if (this.authStore.isLoggedIn) {
                 this.$router.push({ name: 'AccountPage' })
@@ -128,12 +131,14 @@ export default {
         this.cartStore = useCartStore();
         this.userStore = useUserStore();
         this.noificationStore = useNotificationStore();
-        await this.userStore.fetchGetById();
-        await this.noificationStore.fetchGetAllByUserAndRead();
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user && this.authStore.isLoggedIn) {
+            await this.userStore.fetchGetById();
+            await this.noificationStore.fetchGetAllByUserAndRead();
+        }
         nextTick(async () => {
             this.userInfor = this.userStore.userInfor;
         })
-        const user = JSON.parse(localStorage.getItem('user'));
         const token = user?.token;
         if (token) {
             const payloadData = await verifyJwt(token);

@@ -51,6 +51,7 @@ const handleDeleteProduct = async (id) => {
     })
     await productStore.fetchGetAll(page.value - 1, perPage.value);
 }
+
 </script>
 
 <template>
@@ -62,7 +63,6 @@ const handleDeleteProduct = async (id) => {
             <h1>Quản lý sản phẩm</h1>
             <div class="btn-group">
                 <b-button @click="handleAddProduct" type="primary">Thêm sản phẩm</b-button>
-                <b-button type="primary">Sản phẩm đã xóa</b-button>
             </div>
         </div>
         <table class="table table-bordered border-primary">

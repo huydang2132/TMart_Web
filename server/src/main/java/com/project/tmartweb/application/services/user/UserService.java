@@ -109,8 +109,9 @@ public class UserService implements IUserService {
 
     @Override
     public User insert(UserDTO userDTO) {
-        String phoneNumber = userDTO.getPhoneNumber();
-        if (phoneNumber != null && userRepository.existsByPhoneNumber(phoneNumber)) {
+        Optional<String> phoneNumber = Optional.ofNullable(userDTO.getPhoneNumber());
+        if (phoneNumber.isPresent()
+                && userRepository.existsByPhoneNumber(phoneNumber.get())) {
             throw new ConflictException("Số điện thoại dã tồn tại", "Phone number is already exists");
         }
         if (userRepository.existsByEmail(userDTO.getEmail())) {
@@ -127,9 +128,11 @@ public class UserService implements IUserService {
     @Override
     public User update(UUID id, UserDTO userDTO) {
         User user = getById(id);
-        String phoneNumber = userDTO.getPhoneNumber();
-        if (!user.getPhoneNumber().equals(phoneNumber) && phoneNumber
-                != null && userRepository.existsByPhoneNumber(phoneNumber)) {
+        Optional<String> phoneNumber = Optional.ofNullable(userDTO.getPhoneNumber());
+        if (phoneNumber.isPresent()
+                && user.getPhoneNumber() != null
+                && !user.getPhoneNumber().equals(phoneNumber.get())
+                && userRepository.existsByPhoneNumber(phoneNumber.get())) {
             throw new ConflictException("Số điện thoại dã tồn tại", "Phone number is already exists");
         }
         if (!user.getEmail().equals(userDTO.getEmail()) && userRepository.existsByEmail(userDTO.getEmail())) {
@@ -139,6 +142,7 @@ public class UserService implements IUserService {
         user.setRole(role);
         UserUpdateDTO userUpdateDTO = mapper.map(userDTO, UserUpdateDTO.class);
         mapper.map(userDTO, userUpdateDTO);
+        mapper.map(userUpdateDTO, user);
         return userRepository.save(user);
     }
 

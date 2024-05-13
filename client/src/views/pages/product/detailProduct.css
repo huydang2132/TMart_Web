@@ -137,14 +137,13 @@
     width: fit-content;
     display: flex;
     align-items: center;
-    padding: 5px;
-    padding-right: 18px;
+    padding: 5px 10px;
     gap: 10px;
     font-weight: 500;
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius);
     cursor: pointer;
-
+    justify-content: center;
 }
 
 .option-item .option-value:hover {

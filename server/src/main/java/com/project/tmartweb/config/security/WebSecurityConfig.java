@@ -36,6 +36,7 @@ public class WebSecurityConfig {
                             .permitAll()
                             .requestMatchers(HttpMethod.GET, apiPrefix + "/products/**").permitAll()
                             .requestMatchers(HttpMethod.GET, apiPrefix + "/categories/**").permitAll()
+                            .requestMatchers(HttpMethod.GET, apiPrefix + "/galleries/**").permitAll()
                             .requestMatchers(HttpMethod.GET, apiPrefix + "/feedbacks/**").permitAll()
                             .anyRequest().authenticated();
                 })

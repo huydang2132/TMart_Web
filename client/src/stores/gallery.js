@@ -22,7 +22,6 @@ export const useGalleryStore = defineStore('gallery', {
                     this.pagination = res.data.pagination;
                 }
             } catch (error) {
-                toastify('Lấy dữ liệu thất bại', 'error');
                 console.error(error);
             } finally {
                 this.isLoading = false;
