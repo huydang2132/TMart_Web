@@ -34,12 +34,13 @@ public class CartService implements ICartService {
     @Override
     public Cart insert(CartDTO cartDTO) {
         Optional<Cart> cartExists = cartRepository.findByProductId(cartDTO.getProductId());
-        if (cartExists.isPresent()) {
+        User user = userService.getById(cartDTO.getUserId());
+
+        if (cartExists.isPresent() && cartExists.get().getUser().getId().equals(cartDTO.getUserId())) {
             cartExists.get().setQuantity(cartExists.get().getQuantity() + cartDTO.getQuantity());
             return cartRepository.save(cartExists.get());
         }
         Cart cart = mapper.map(cartDTO, Cart.class);
-        User user = userService.getById(cartDTO.getUserId());
         Product product = productService.getById(cartDTO.getProductId());
         cart.setUser(user);
         cart.setProduct(product);

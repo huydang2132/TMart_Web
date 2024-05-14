@@ -83,6 +83,9 @@ import { useRoute } from 'vue-router';
 import { useProductStore } from '@/stores/product';
 import { useCartStore } from '@/stores/cart';
 import { useUserStore } from '@/stores/user';
+import { useAuthStore } from '@/stores/auth';
+import { storeToRefs } from 'pinia';
+import router from '@/routers/router';
 
 
 // --------------------- Khai báo biến ----------------------
@@ -95,6 +98,8 @@ const avgStar = ref(0);
 const classify = ref('Đen');
 const cartStore = useCartStore();
 const userStore = useUserStore();
+const authStore = useAuthStore();
+const { isLoggedIn } = storeToRefs(authStore);
 
 // --------------------- Lifecycle vue ----------------------
 
@@ -140,12 +145,15 @@ const increment = () => {
 }
 
 const handleAddToCart = () => {
+    if (!isLoggedIn.value) {
+        router.push({ name: 'Login', query: { redirect: router.currentRoute.value.fullPath } });
+        return;
+    }
     cartStore.fetchInsert({
         productId: productId.value,
         quantity: quantity.value,
         userId: userStore.userId,
         classify: classify.value,
-        createdBy: userStore.fullName
     });
 }
 </script>

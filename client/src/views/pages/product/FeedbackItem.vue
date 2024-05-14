@@ -19,8 +19,7 @@ const feedbackData = reactive({
     star: 0,
     note: null,
     productId: props.data?.id,
-    userId: userId.value,
-    createdBy: userStore.fullName
+    userId: userId.value
 })
 
 nextTick(async () => {

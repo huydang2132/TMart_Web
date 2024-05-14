@@ -2,7 +2,6 @@
 import { toastify } from '@/helpers/toastify';
 import { useCategoryStore } from '@/stores/category';
 import { useProductStore } from '@/stores/product';
-import { useUserStore } from '@/stores/user';
 import { defineEmits, nextTick, reactive, ref, defineProps, toRaw } from 'vue';
 
 const props = defineProps({
@@ -16,7 +15,6 @@ const categoryStore = useCategoryStore();
 const categoriesData = ref([]);
 const productStore = useProductStore();
 const productImages = ref([]);
-const userStore = useUserStore();
 
 const isChangeImg = ref(false)
 
@@ -27,8 +25,7 @@ const productData = reactive({
     quantity: 1,
     discount: 0,
     description: null,
-    images: null,
-    createdBy: userStore.fullName
+    images: null
 });
 
 nextTick(async () => {

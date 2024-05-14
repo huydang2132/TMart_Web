@@ -211,7 +211,6 @@ const handleOrder = async () => {
         cartItems: cartItems.value,
         couponId: couponCode.value,
         userId: userId.value,
-        createdBy: userStore.fullName,
         paymentMethod: paymentMethod.value
     });
     await cartStore.fetchGetAllByUser();

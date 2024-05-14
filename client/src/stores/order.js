@@ -103,6 +103,7 @@ export const useOrderStore = defineStore('order', {
 
         async fetchGetAllByUser(id, status, keyword) {
             try {
+                this.loadingOrder = true;
                 const res = await orderService.getAllByUser(id, status, keyword);
                 if (res.status === 200) {
                     this.ordersByUser = res.data;
@@ -110,6 +111,8 @@ export const useOrderStore = defineStore('order', {
             } catch (error) {
                 toastify('Lỗi không lấy được đơn hàng', 'error');
                 console.error(error);
+            } finally {
+                this.loadingOrder = false;
             }
         },
 

@@ -1,6 +1,5 @@
 <script setup>
 import { useCategoryStore } from '@/stores/category';
-import { useUserStore } from '@/stores/user';
 import { defineEmits, defineProps, nextTick, reactive } from 'vue';
 
 const props = defineProps({
@@ -11,11 +10,9 @@ const props = defineProps({
 const emits = defineEmits(['closeModal']);
 
 const categoryStore = useCategoryStore();
-const userStore = useUserStore();
 
 const categoryData = reactive({
-    name: null,
-    createdBy: userStore.fullName
+    name: null
 })
 
 nextTick(async () => {
