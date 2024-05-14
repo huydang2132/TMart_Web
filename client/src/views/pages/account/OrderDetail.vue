@@ -83,7 +83,7 @@
                         </div>
                         <div class="total-value">
                             <p>{{ $formatValue.formatMoney(calculateOldMoney()) }}</p>
-                            <p>32.000₫</p>
+                            <p>0 ₫</p>
                             <p>
                                 - {{ $formatValue.formatMoney(calculateDiscountMoney()) }}
                             </p>

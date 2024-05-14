@@ -50,7 +50,7 @@ export const useGalleryStore = defineStore('gallery', {
                 const res = await galleryService.insert(productId, image);
                 if (res.status === 201) {
                     toastify('Thêm thành công', 'success');
-                    this.fetchGetAll();
+                    await this.fetchGetAll();
                     this.isSuccess = true;
                 }
             } catch (error) {
@@ -68,7 +68,7 @@ export const useGalleryStore = defineStore('gallery', {
                 const res = await galleryService.update(id, productId, image);
                 if (res.status === 200) {
                     toastify('Cập nhật thành công', 'success');
-                    this.fetchGetAll();
+                    await this.fetchGetAll();
                     this.isSuccess = true;
                 }
             } catch (error) {
@@ -86,7 +86,7 @@ export const useGalleryStore = defineStore('gallery', {
                 const res = await galleryService.delete(id);
                 if (res.status === 200) {
                     toastify('Xóa thành công', 'success');
-                    this.fetchGetAll();
+                    await this.fetchGetAll();
                     this.isSuccess = true;
                 }
             } catch (error) {

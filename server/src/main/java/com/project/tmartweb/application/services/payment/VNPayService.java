@@ -29,7 +29,7 @@ public class VNPayService {
         vnp_Params.put("vnp_Version", VNPayConfig.vnpVersion);
         vnp_Params.put("vnp_Command", VNPayConfig.vnpCommand);
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
-        vnp_Params.put("vnp_Amount", String.valueOf(amount * 100));
+        vnp_Params.put("vnp_Amount", String.valueOf(amount));
         vnp_Params.put("vnp_CurrCode", "VND");
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
         vnp_Params.put("vnp_OrderInfo", orderInfo);

@@ -20,7 +20,6 @@ const orderId = ref(route.params.id);
 
 nextTick(async () => {
     await orderDetailStore.fetchGetAllByOrderId(orderId.value);
-    console.log(orderDetailList.value);
 })
 
 const backToOrderPage = () => {
@@ -30,11 +29,13 @@ const backToOrderPage = () => {
 const handleFeedback = async () => {
     if (feedbackListData.value.length == 0) {
         dialog('Lỗi', 'error', 'Vui lý đánh giá cho sản phâm');
+        feedbackStore.fetchPushDataFeedback([]);
         return;
     }
     for (let i = 0; i < feedbackListData.value.length; i++) {
-        if (feedbackListData.value[i].star == '') {
+        if (feedbackListData.value[i].star == 0) {
             dialog('Lỗi', 'error', 'Vui lý đánh giá cho sản phâm');
+            feedbackStore.fetchPushDataFeedback([]);
             return;
         }
     }

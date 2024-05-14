@@ -22,7 +22,7 @@
                         Thông báo
                         <span v-if="notificationListNoRead.length > 0" class="quantity-notify">{{
                             notificationListNoRead.length
-                        }}</span>
+                            }}</span>
                     </router-link>
                 </div>
                 <div @click="handleClickAccount" class="account-tile" @mouseover="isShowAccOption = true"
@@ -32,7 +32,7 @@
                 <div v-if="authStore.isLoggedIn" @mouseover="isShowAccOption = true"
                     @mouseleave="isShowAccOption = false" v-show="isShowAccOption" class="account-box">
                     <div class="account-router-link" v-if="isAdmin">
-                        <router-link :to="{ name: 'HomeAdmin' }">Trang quản trị</router-link>
+                        <router-link :to="{ name: 'HomeAdmin' }">Hệ thống quản trị</router-link>
                     </div>
                     <div class="account-router-link">
                         <router-link :to="{ name: 'AccountPage' }">Thông tin tài khoản</router-link>

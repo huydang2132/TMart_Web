@@ -2,7 +2,8 @@
     <div class="detail-product">
         <div class="product-infor">
             <div class="product-imgs">
-                <carousel-gallery :pagination="false" :wrapAround="false" :slides="product?.imageProducts">
+                <carousel-gallery v-if="product?.imageProducts?.length > 0" :pagination="false" :wrapAround="false"
+                    :slides="product?.imageProducts">
 
                 </carousel-gallery>
             </div>

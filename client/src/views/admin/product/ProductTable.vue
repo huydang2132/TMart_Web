@@ -47,7 +47,8 @@ const handleCloseModal = () => {
 
 const handleDeleteProduct = async (id) => {
     dialogConfirm('Xác nhận xóa', 'Bạn có chắc muốn xóa sản phẩm này', async () => {
-        await productStore.fetchDelete(id);
+        page.value = 1;
+        await productStore.fetchDelete(id, 0, perPage.value);
     })
     await productStore.fetchGetAll(page.value - 1, perPage.value);
 }

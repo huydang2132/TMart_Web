@@ -67,12 +67,13 @@ export const useProductStore = defineStore('product', {
             }
         },
 
-        async fetchDelete(id) {
+        async fetchDelete(id, page, perPage) {
             try {
                 this.loading = true;
                 const res = await productService.delete(id);
                 if (res.status === 200) {
                     toastify('Xóa sản phẩm thành công', 'success');
+                    await this.fetchGetAll(page, perPage);
                 }
             } catch (error) {
                 dialog('Xóa sản phẩm thất bại', 'error', error?.response?.data?.userMessage);
@@ -89,7 +90,7 @@ export const useProductStore = defineStore('product', {
                 this.product = res;
                 if (res.status === 200) {
                     toastify('Cập nhật sản phẩm thành công', 'success');
-                    this.fetchGetAll(0, 12);
+                    await this.fetchGetAll(0, 12);
                 }
             } catch (error) {
                 dialog('Cập nhật sản phẩm thất bại', 'error', error?.response?.data?.userMessage);
