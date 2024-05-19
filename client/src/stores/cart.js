@@ -25,12 +25,15 @@ export const useCartStore = defineStore('cart', {
 
         async fetchGetAllByUser() {
             try {
+                this.loadingCart = true;
                 const userId = JSON.parse(localStorage.getItem('user'))?.id
                 const res = await cartService.getAllByUser(userId);
                 this.cartByUser = res.data;
             } catch (error) {
                 toastify('Lỗi không lấy được đơn hàng', 'error');
                 console.error(error);
+            } finally {
+                this.loadingCart = false;
             }
         },
 

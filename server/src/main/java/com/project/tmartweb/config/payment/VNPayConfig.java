@@ -2,17 +2,25 @@ package com.project.tmartweb.config.payment;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 @Configuration
 @Log4j2
 public class VNPayConfig {
+    private static final Logger log = LoggerFactory.getLogger(VNPayConfig.class);
     public static String vnpPayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
     public static String vnpReturnUrl = "http://localhost:8080/payment-success";
     public static String vnpTmnCode = "K9IVE6GQ";

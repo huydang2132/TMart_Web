@@ -22,7 +22,7 @@
                         Thông báo
                         <span v-if="notificationListNoRead.length > 0" class="quantity-notify">{{
                             notificationListNoRead.length
-                            }}</span>
+                        }}</span>
                     </router-link>
                 </div>
                 <div @click="handleClickAccount" class="account-tile" @mouseover="isShowAccOption = true"
@@ -221,11 +221,11 @@ export default {
 
 #header .search-box .search-box-item>input {
     border: none;
-    width: 85%;
+    width: 80%;
 }
 
 #header .search-box .search-box-item>button {
-    width: 15%;
+    width: 20%;
     background-color: transparent;
     color: var(--color-primary);
     border-radius: unset;

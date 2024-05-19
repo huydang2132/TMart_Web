@@ -1,31 +1,20 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import OpenAI from "openai";
 
-const MODEL_NAME = "gemini-1.0-pro";
-const API_KEY = process.env.API_KEY;
 
-const genAI = new GoogleGenerativeAI(API_KEY);
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY
+});
 
 export const chatbot = async (req, res) => {
     try {
         const prompt = req.body.prompt || 'Xin chào';
-        const model = genAI.getGenerativeModel({ model: MODEL_NAME });
-        const generationConfig = {
-            temperature: 0.9,
-            topK: 1,
-            topP: 1,
-            maxOutputTokens: 2024,
-        };
-        const parts = [
-            { text: prompt },
-        ]
-        const result = await model.generateContent({
-            contents: [{ role: "user", parts }],
-            generationConfig,
+        const model = "ft:gpt-3.5-turbo-0125:personal:tmartbot:9QeT8Ohh";
+        const completion = await openai.chat.completions.create({
+            messages: [{ role: "user", content: prompt }],
+            model: model,
         });
-        const response = await result.response;
-        const text = response.text();
-        res.status(200).json(text);
-        // console.log(response);
+        res.status(200).json(completion.choices[0].message.content);
+        console.log(completion);
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: error });

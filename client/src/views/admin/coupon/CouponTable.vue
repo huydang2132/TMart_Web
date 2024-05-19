@@ -46,9 +46,9 @@ const handleDelete = async (id) => {
     </div>
     <div class="admin-table">
         <div class="admin-header">
-            <h1>Quản lý danh mục sản phẩm</h1>
+            <h1>Quản lý mã giảm giá</h1>
             <div class="btn-group">
-                <b-button @click="handleShowFormAdd" type="primary">Thêm danh mục</b-button>
+                <b-button @click="handleShowFormAdd" type="primary">Thêm mã giảm giá</b-button>
             </div>
         </div>
         <table class="table table-bordered border-primary">

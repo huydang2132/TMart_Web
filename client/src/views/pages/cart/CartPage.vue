@@ -1,4 +1,7 @@
 <template>
+    <div class="loading" v-if="loadingCart">
+        <spinner-loader></spinner-loader>
+    </div>
     <div class="cart">
         <h3>GIỎ HÀNG</h3>
         <div class="cart-section">
@@ -103,6 +106,7 @@ import { useOrderStore } from '@/stores/order';
 import _ from 'lodash';
 import { useCouponStore } from '@/stores/coupon';
 import { dialog, dialogConfirm } from '@/helpers/swal';
+import { storeToRefs } from 'pinia';
 
 // ------------------------- Khai báo biến ----------------------
 const cartData = ref([]);
@@ -115,6 +119,7 @@ const orderStore = useOrderStore();
 const couponCode = ref(null);
 const couponStore = useCouponStore();
 const cartSelected = ref([]);
+const { loadingCart } = storeToRefs(cartStore);
 
 const selectAll = computed({
     get() {

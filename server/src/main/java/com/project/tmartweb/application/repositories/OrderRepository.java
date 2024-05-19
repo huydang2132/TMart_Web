@@ -1,5 +1,6 @@
 package com.project.tmartweb.application.repositories;
 
+import com.project.tmartweb.application.responses.Statistical;
 import com.project.tmartweb.domain.entities.Order;
 import com.project.tmartweb.domain.enums.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,4 +21,7 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     List<Order> findByUserId(@Param("userId") UUID userId,
                              @Param("status") OrderStatus status,
                              @Param("keyword") String keyword);
+
+    @Query("select ord from Order ord ")
+    List<Statistical> statisticals(int month, int year);
 }

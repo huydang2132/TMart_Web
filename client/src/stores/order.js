@@ -3,6 +3,7 @@ import { dialog } from '@/helpers/swal';
 import { toastify } from '@/helpers/toastify';
 import router from '@/routers/router';
 import { defineStore } from 'pinia'
+import { useUserStore } from './user';
 
 export const useOrderStore = defineStore('order', {
     state: () => ({
@@ -61,7 +62,26 @@ export const useOrderStore = defineStore('order', {
                 const res = await orderService.update(id, data);
                 if (res.status === 200) {
                     toastify('Cập nhật đơn hàng thành công', 'success');
-                    this.fetchGetAllOrder(page, perPage);
+                    await this.fetchGetAllOrder(page, perPage);
+                }
+            } catch (error) {
+                dialog('Cập nhật đơn hàng thất bại', 'error', error?.response?.data?.userMessage);
+                console.error(error);
+            } finally {
+                this.loadingOrder = false;
+            }
+        },
+
+        async fetchCancelOrder(id) {
+            try {
+                this.loadingOrder = true;
+                const userStore = useUserStore();
+                const res = await orderService.update(id, {
+                    status: 'CANCELLED'
+                });
+                if (res.status === 200) {
+                    toastify('Hủy đơn hàng thành công!', 'success');
+                    await this.fetchGetAllByUser(userStore.userId);
                 }
             } catch (error) {
                 dialog('Cập nhật đơn hàng thất bại', 'error', error?.response?.data?.userMessage);

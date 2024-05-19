@@ -47,10 +47,10 @@
                     <b-button @click="findByKeyword()" value="Tìm đơn hàng" />
                 </div>
             </div>
+            <div class="loading" v-if="loadingOrder">
+                <spinner-loader />
+            </div>
             <div class="order-body order-component" v-for="item in ordersByUser" :key="item">
-                <div class="loading" v-if="loadingOrder">
-                    <spinner-loader />
-                </div>
                 <div class="order-body-content">
                     <div class="content-header">
                         <div :class="['order-status', item?.status.toLowerCase()]">
@@ -76,6 +76,9 @@
                             <p>{{ $formatValue.formatMoney(item.totalMoney) }}</p>
                         </div>
                         <div class="option">
+                            <b-button class="btn-cancel" @click="handleCancelOrder(item)"
+                                v-if="item.status === 'PROCESSED' || item.status === 'PAID' || item.status === 'UNPAID'"
+                                value="Hủy đơn" type="secondary" />
                             <b-button @click="handleRouteFeedback(item?.id)"
                                 v-if="item.status === 'SHIPPED' && item?.feedback === false" value="Đánh giá"
                                 type="secondary" />
@@ -91,6 +94,7 @@
 </template>
 
 <script setup>
+import { dialog, dialogConfirm } from '@/helpers/swal';
 import router from '@/routers/router';
 import { useCartStore } from '@/stores/cart';
 import { useOrderStore } from '@/stores/order';
@@ -177,6 +181,16 @@ const handleAddToCart = async (orderDetails) => {
 
 const handleRouteFeedback = (id) => {
     router.push({ name: 'Feedback', params: { id: id } })
+}
+
+const handleCancelOrder = async (item) => {
+    if (item?.status === 'CANCELLED') {
+        dialog('Thông báo', 'warning', 'Đơn hàng đã bị hủy');
+        return;
+    }
+    dialogConfirm('Xác nhận', 'Hủy đơn hàng?', async () => {
+        await orderStore.fetchCancelOrder(item?.id);
+    })
 }
 </script>
 
