@@ -10,13 +10,16 @@ export const useUserStore = defineStore('user', {
         user: {},
         usersData: [],
         pagination: {},
-        userId: JSON.parse(localStorage.getItem('user'))?.id,
+        userId: JSON.parse(localStorage.getItem('user'))?.id ? JSON.parse(localStorage.getItem('user'))?.id : null,
         fullName: JSON.parse(localStorage.getItem('user'))?.fullName,
         isLoading: false,
         isSuccess: false
     }),
     getters: {},
     actions: {
+        fetchSetUserId() {
+            this.userId = JSON.parse(localStorage.getItem('user'))?.id;
+        },
         async fetchGetAll(page, perPage) {
             try {
                 this.isLoading = true;
@@ -75,7 +78,7 @@ export const useUserStore = defineStore('user', {
                 } catch (error) {
                     if (error?.response?.status === 401) {
                         authStore.fetchLogout();
-                        toastify(error.response?.data?.userMessage, 'error')
+                        toastify("Phiên đăng nhập đã hết hạn", 'error')
                         return;
                     }
                 }

@@ -59,11 +59,16 @@ export const useProductStore = defineStore('product', {
 
         async fetchGetById(id) {
             try {
+                this.loading = true;
                 const res = await productService.getById(id);
-                this.product = res.data;
+                if (res.status === 200) {
+                    this.product = res.data;
+                }
             } catch (error) {
                 toastify('Không tìm thấy sản phẩm', 'error');
                 console.error(error);
+            } finally {
+                this.loading = false;
             }
         },
 

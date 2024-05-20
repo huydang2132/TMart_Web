@@ -22,6 +22,9 @@ export const useAuthStore = defineStore('auth', {
                     console.log(user);
                     localStorage.setItem('user', user);
                     this.isLoggedIn = true;
+                    const userStore = useUserStore();
+                    userStore.fetchSetUserId();
+                    await userStore.fetchGetById();
                 }
             } catch (error) {
                 dialog('Đăng nhập thất bại', 'error', error?.response?.data?.userMessage);

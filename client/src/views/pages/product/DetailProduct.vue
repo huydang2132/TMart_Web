@@ -1,4 +1,7 @@
 <template>
+    <div class="loading" v-if="loading">
+        <spinner-loader />
+    </div>
     <div class="detail-product">
         <div class="product-infor">
             <div class="product-imgs">
@@ -98,12 +101,14 @@ const avgStar = ref(0);
 const classify = ref('Đen');
 const cartStore = useCartStore();
 const userStore = useUserStore();
+const { userId } = storeToRefs(userStore);
 const authStore = useAuthStore();
 const { isLoggedIn } = storeToRefs(authStore);
 
 // --------------------- Lifecycle vue ----------------------
 
 const productStore = useProductStore();
+const { loading } = storeToRefs(productStore);
 
 nextTick(async () => {
     await productStore.fetchGetById(productId.value);
@@ -152,7 +157,7 @@ const handleAddToCart = () => {
     cartStore.fetchInsert({
         productId: productId.value,
         quantity: quantity.value,
-        userId: userStore.userId,
+        userId: userId.value,
         classify: classify.value,
     });
 }

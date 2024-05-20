@@ -28,7 +28,7 @@
                     </div>
                     <div class="col">
                         <label for="phoneNumber">Số điện thoại người nhận</label>
-                        <b-input v-model="userInfor.phoneNumber" id="phoneNumber" />
+                        <b-input type="number" v-model="userInfor.phoneNumber" id="phoneNumber" />
                     </div>
                     <div class="col">
                         <label for="address">Địa chỉ</label>
