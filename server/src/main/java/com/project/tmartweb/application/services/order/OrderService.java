@@ -1,7 +1,12 @@
 package com.project.tmartweb.application.services.order;
 
-import com.project.tmartweb.application.repositories.*;
+import com.project.tmartweb.application.repositories.CouponRepository;
+import com.project.tmartweb.application.repositories.NotificationRepository;
+import com.project.tmartweb.application.repositories.OrderDetailRepository;
+import com.project.tmartweb.application.repositories.OrderRepository;
+import com.project.tmartweb.application.repositories.ProductRepository;
 import com.project.tmartweb.application.responses.MailOrder;
+import com.project.tmartweb.application.responses.Statistical;
 import com.project.tmartweb.application.responses.VNPayResponse;
 import com.project.tmartweb.application.services.cart.CartService;
 import com.project.tmartweb.application.services.coupon.CouponService;
@@ -14,7 +19,13 @@ import com.project.tmartweb.config.exceptions.NotFoundException;
 import com.project.tmartweb.config.helpers.Calculator;
 import com.project.tmartweb.domain.dtos.CartDTO;
 import com.project.tmartweb.domain.dtos.OrderDTO;
-import com.project.tmartweb.domain.entities.*;
+import com.project.tmartweb.domain.entities.Cart;
+import com.project.tmartweb.domain.entities.Coupon;
+import com.project.tmartweb.domain.entities.Notification;
+import com.project.tmartweb.domain.entities.Order;
+import com.project.tmartweb.domain.entities.OrderDetail;
+import com.project.tmartweb.domain.entities.Product;
+import com.project.tmartweb.domain.entities.User;
 import com.project.tmartweb.domain.enums.OrderStatus;
 import com.project.tmartweb.domain.paginate.BasePagination;
 import com.project.tmartweb.domain.paginate.PaginationDTO;
@@ -28,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -122,6 +134,11 @@ public class OrderService implements IOrderService {
             if (orderDTO.getStatus() == OrderStatus.CANCELLED) {
                 notification.setTitle("Đơn hàng đã hủy thành công.");
                 notification.setContent("Đơn hàng của bạn đã được hủy thành công. ");
+                for (OrderDetail orderDetail : order.getOrderDetails()) {
+                    Product product = orderDetail.getProduct();
+                    product.setQuantity(product.getQuantity() + orderDetail.getQuantity());
+                    productRepository.save(product);
+                }
             }
             notificationRepository.save(notification);
             if (orderDTO.getAddress() != null) {
@@ -210,5 +227,24 @@ public class OrderService implements IOrderService {
         }
         orderRepository.save(order);
         return code;
+    }
+
+    @Override
+    public List<Statistical> statisticals(int year) {
+        if (year == 0) {
+            year = Calendar.getInstance().get(Calendar.YEAR);
+        }
+        List<Statistical> statistical = orderRepository.statistical(year);
+        List<Statistical> result = new ArrayList<>();
+        int currentMonthIndex = 0;
+        for (int month = 1; month <= 12; month++) {
+            if (currentMonthIndex < statistical.size() && statistical.get(currentMonthIndex).getMonth() == month) {
+                result.add(statistical.get(currentMonthIndex));
+                currentMonthIndex++;
+            } else {
+                result.add(new Statistical(month, 0.0));
+            }
+        }
+        return result;
     }
 }

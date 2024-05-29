@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Statistical {
-    private String month;
+    private Integer month;
 
-    private double totalMoney;
+    private Double totalMoney;
 }

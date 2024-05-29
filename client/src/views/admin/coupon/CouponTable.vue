@@ -17,7 +17,7 @@ const perPage = ref(12);
 
 nextTick(async () => {
     await couponStore.fetchGetAll(page.value - 1, perPage.value);
-    console.log(couponsList.value);
+    totalPage.value = pagination.value.lastPage + 1;
 })
 
 const handleShowFormAdd = () => {
@@ -86,7 +86,7 @@ const handleDelete = async (id) => {
                 </tr>
             </tbody>
         </table>
-        <v-pagination v-model="page" size="40" :length="totalPage" rounded="circle"></v-pagination>
+        <v-pagination v-model="page" :size="totalPage" :length="totalPage" rounded="circle"></v-pagination>
     </div>
     <CouponModal v-if="isShowForm" :page="page - 1" :perPage="perPage" :statusForm="statusForm" :couponCode="couponCode"
         @closeModal="isShowForm = false">

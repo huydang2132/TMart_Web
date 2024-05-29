@@ -1,5 +1,6 @@
 package com.project.tmartweb.application.services.order;
 
+import com.project.tmartweb.application.responses.Statistical;
 import com.project.tmartweb.application.responses.VNPayResponse;
 import com.project.tmartweb.application.services.base.IBaseService;
 import com.project.tmartweb.domain.dtos.OrderDTO;
@@ -21,4 +22,6 @@ public interface IOrderService extends IBaseService<Order, OrderDTO, UUID> {
     VNPayResponse createOrder(OrderDTO orderDTO, HttpServletRequest request);
 
     int orderReturn(HttpServletRequest request);
+
+    List<Statistical> statisticals(int year);
 }

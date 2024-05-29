@@ -16,7 +16,8 @@ export const useOrderStore = defineStore('order', {
         ordersByUser: [],
         loadingOrder: false,
         successOrder: false,
-        codeStatusPayment: null
+        codeStatusPayment: null,
+        statistical: []
     }),
     getters: {},
     actions: {
@@ -167,6 +168,20 @@ export const useOrderStore = defineStore('order', {
             } finally {
                 this.loadingOrder = false;
             }
-        }
+        },
+
+        async fetchStatisticOrder(year) {
+            try {
+                this.loadingOrder = true;
+                const res = await orderService.statisticalOrder(year);
+                if (res.status === 200) {
+                    this.statistical = res.data;
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
+                this.loadingOrder = false;
+            }
+        },
     },
 })

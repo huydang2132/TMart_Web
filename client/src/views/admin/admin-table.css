@@ -19,7 +19,7 @@
 
 .admin-table .admin-header .btn-group {
     display: flex;
-    gap: 20px;
+    gap: 10px;
 }
 
 .admin-table .admin-header .btn-group>button {
