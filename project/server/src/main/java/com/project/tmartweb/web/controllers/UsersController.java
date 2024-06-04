@@ -17,7 +17,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -45,8 +52,7 @@ public class UsersController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(
-            @Valid @RequestBody UserLoginDTO userLoginDTO
-    ) {
+            @Valid @RequestBody UserLoginDTO userLoginDTO) {
         var token = userService.Login(userLoginDTO);
         return ResponseEntity.status(200).body(token);
     }
@@ -55,8 +61,7 @@ public class UsersController {
     @RoleAdmin
     public ResponseEntity<?> getAll(
             @RequestParam(required = false) Integer page,
-            @RequestParam(required = false) Integer perPage
-    ) {
+            @RequestParam(required = false) Integer perPage) {
         var result = userService.getAll(page, perPage);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
@@ -113,7 +118,7 @@ public class UsersController {
     @PutMapping("/change-password/{id}")
     @RolesAdminUser
     public ResponseEntity<?> changePassword(@PathVariable UUID id,
-                                            @Valid @RequestBody UserChangePassword userChangePassword) {
+            @Valid @RequestBody UserChangePassword userChangePassword) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.changePassword(id, userChangePassword));
     }
 
